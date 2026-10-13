@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b0b0b" />
+  <title>BernAPlan | Desktop Command Center</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="shell" id="shell">
+    <header class="topbar">
+      <div class="identity" aria-label="BernAPlan by HireBerna">
+        <div id="brandPicture" class="brand-mark">HB</div>
+        <div><div class="brand-name">HIRE<span>BERNA</span></div><div class="brand-caption">BUILT WITH STRATEGY. DELIVERED WITH HEART.</div></div>
+      </div>
+      <div class="app-title"><strong>DESKTOP <span>COMMAND CENTER</span></strong><small>YOUR WEEK. YOUR GOALS. YOUR PLAYBOOK.</small></div>
+      <div class="toolbar">
+        <button class="quiet" id="jumpToday" type="button">Today</button>
+        <button class="quiet" id="settingsButton" type="button">⚙ Customize</button>
+        <button class="orange-button" id="newTask" type="button">+ New Block</button>
+      </div>
+    </header>
+    <main class="layout">
+      <section class="planner" aria-labelledby="playbookTitle">
+        <div class="planner-heading">
+          <div><div class="eyebrow">YOUR LIVE WEEKLY CALENDAR</div><h1 id="playbookTitle">Weekly Action Playbook</h1></div>
+          <div class="week-picker"><button id="prevWeek" class="icon-btn" aria-label="Previous week">‹</button><span id="weekLabel"></span><button id="nextWeek" class="icon-btn" aria-label="Next week">›</button></div>
+        </div>
+        <div class="calendar-holder"><div class="calendar-grid" id="calendar" aria-label="Seven-day interactive action calendar"></div></div>
+        <div class="bottom-bar"><div><strong>NON-NEGOTIABLES</strong><span class="muted"> • Build momentum, one block at a time</span></div><button class="subtle-button" id="editNonneg">Edit weekly essentials</button></div>
+        <div id="nonnegStrip" class="nonneg-strip"></div>
+        <div class="footer-brand"><span>HIRE<b>BERNA</b></span><span>CREATIVE WORK. REAL OPPORTUNITIES. A BRIGHTER TOMORROW.</span><strong>HB</strong></div>
+      </section>
+      <aside class="sidepanel">
+        <section class="panel"><div class="panel-title"><h2>Weekly Scoreboard</h2><span id="metricCount" class="accent"></span></div><div id="scoreboard"></div><button type="button" class="full-link" id="editScoreboard">+ Customize metrics & goals</button></section>
+        <section class="panel"><div class="panel-title"><h2>This Week</h2><span id="progressLabel" class="accent">0%</span></div><div class="progress-track"><div id="progressBar" class="progress-fill"></div></div><div class="stats-grid"><div><strong id="doneBlocks">0</strong><small>Blocks done</small></div><div><strong id="totalBlocks">0</strong><small>Planned blocks</small></div><div><strong id="openBlocks">0</strong><small>Remaining</small></div></div></section>
+        <section class="panel"><div class="panel-title"><h2>My Essentials</h2><span id="nonnegCount" class="accent"></span></div><div id="nonnegPanel" class="essentials"></div></section>
+        <section class="panel helper"><div class="panel-title"><h2>Make it yours</h2></div><p>Change your tasks, times, theme and metrics. Everything here is editable—even on Free.</p><button type="button" class="full-link" id="openSetup">Open easy setup →</button></section>
+      </aside>
+    </main>
+  </div>
+  <div id="overlay" class="overlay hidden" aria-hidden="true"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
