@@ -37,3 +37,13 @@ Audit the original Windows release's *editable source*, then integrate this cale
 ## Existing prototype users
 
 The new build uses the same localStorage key, but browser files opened from different local paths can have separate storage contexts. Export a JSON backup from the older prototype before switching if your work matters. If you choose **Build a guided weekly plan** again under **Customize → My schedule**, it replaces the task layout **only after a confirmation**; export a backup first. Custom instructions are not silently overwritten by the automatic generic-template guidance upgrade.
+
+## ACTION System update (Phase 2 prototype)
+- **Start Block** provides a local 5/15/25-minute focus session and the next checklist action.
+- **I don't feel like doing this** adapts encouragement to overwhelm, uncertainty, distractions, low energy, or fear of imperfect work.
+- **Show my results & finish** distinguishes self-reported completion from user-documented results (description or link). No claim of independent verification.
+- **Weekly Reality Check** records actual wins, obstacles, and a suggested adjustment without automatically overwriting the user's plan.
+- The weekly scoreboard now counts documented outcomes separately from completed blocks.
+- The HTML is standalone (all scripts and styles inlined) and has zero paid dependencies.
+- Existing browser saves use the same storage key and support the new optional proof/session/review fields. Back up data before opening the HTML from a new file location.
+- **Not yet delivered:** native Windows wallpaper integration, Android launcher, native iOS widgets, live calendar APIs, independent proof verification, cross-device sync.
