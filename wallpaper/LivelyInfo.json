@@ -1,0 +1,15 @@
+{
+  "AppVersion": "2.0.0.0",
+  "Version": 0,
+  "Title": "BernAPlan — Desktop Command Center",
+  "Thumbnail": null,
+  "Preview": null,
+  "Desc": "Offline interactive seven-day command center with task guidance and Missions. No native notifier is installed.",
+  "Author": "HireBerna",
+  "License": "Proprietary preview; free beta use",
+  "Contact": null,
+  "Type": 1,
+  "FileName": "index.html",
+  "Arguments": null,
+  "IsAbsolutePath": false
+}
