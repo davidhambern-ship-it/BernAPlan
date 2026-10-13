@@ -28,3 +28,32 @@
 .guided-next{border-color:var(--accent)!important;background:#281c12!important}
 .guided-next p{font-size:17px;line-height:1.45;font-weight:700;color:#fff}.mini-primary{font-size:12px;padding:9px 13px;min-height:36px}.mini-primary:disabled{opacity:.48;cursor:default}
 @media(max-width:660px){.wizard-grid{grid-template-columns:1fr;max-height:40vh}.wizard-tile{min-height:65px}.guided-next p{font-size:15px}}
+
+/* BernAPlan ACTION coach -- included in the free local-first build */
+.action-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 16px;margin-bottom:15px;background:linear-gradient(110deg,#28170c,#151718);border:1px solid var(--accent);border-radius:12px}
+.action-heading strong,.focus-label{color:var(--accent);font-size:12px;font-weight:900;letter-spacing:1.3px}
+.action-heading p{color:#d9d1cc;margin-top:5px;font-size:12px}
+.action-heading button{white-space:nowrap}
+.section-box.proof-summary{border-color:#705130}
+.proof-summary p+p{margin-top:8px}
+.help-btn{margin-top:10px;width:100%;white-space:normal}
+.focus-hero{background:#271910;border:1px solid var(--accent);border-radius:10px;padding:20px;margin-bottom:14px}
+.focus-hero h3{font-size:24px;margin:10px 0;color:#fff}
+.focus-hero p{font-size:13px;color:#d7c9bd;line-height:1.5}
+.focus-tools{text-align:center}
+.focus-clock{font-variant-numeric:tabular-nums;font-weight:900;letter-spacing:1px;font-size:clamp(44px,6vw,70px);line-height:1.2;margin:14px 0;color:#fff}
+.minute-buttons{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:14px 0}
+.focus-tools .modal-actions{justify-content:center}
+.rescue-choices{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:13px 0}
+.rescue-choices .wizard-tile{text-align:left;padding:10px;font-size:13px}
+.rescue-answer{border-color:var(--accent)}
+.rescue-next{margin-top:11px;color:#ffe4d0!important;border-top:1px solid #5b4b3a;padding-top:9px}
+.proof-context{padding:13px 15px;border:1px solid #6d4b2f;background:#251910;border-radius:10px;margin-bottom:13px}
+.proof-context h3{color:var(--accent);margin-bottom:7px;font-size:15px}
+.proof-context p{line-height:1.5;font-size:13px}
+.reality-stats{margin-top:11px;color:#ddd;font-size:11px;text-align:center}
+.review-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 17px}
+.review-summary>div{border:1px solid #4d3d33;border-radius:8px;padding:13px 8px;text-align:center;background:#1e1b18}
+.review-summary strong{font-size:24px;display:block;color:var(--accent)}
+.review-summary small{display:block;color:#c6c6c6;font-size:11px;margin-top:5px}
+@media(max-width:600px){.action-heading{align-items:flex-start;flex-direction:column}.rescue-choices{grid-template-columns:1fr}.review-summary strong{font-size:19px}}
