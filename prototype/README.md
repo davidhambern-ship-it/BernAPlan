@@ -4,7 +4,7 @@ This is a **working, independent, static prototype** of the new weekly calendarâ
 
 ## Try it
 
-Open `index.html` in a modern browser (Edge or Chrome). There are no dependencies, installs, API keys, paid services, accounts, builds, or backend calls. All files work from a local folder. Optionally, serve them with `python -m http.server 8000` and open `http://localhost:8000/`.
+**Fixed local-opening build:** `index.html` is now self-contained with its styling and JavaScript embedded. Download/open that single file directly in Edge or Chrome; you do not need any other files beside it. The separate `app.js` and `styles.css` are retained as editable source files. There are no dependencies, installs, API keys, paid services, accounts, builds, or backend calls. Optionally, serve it locally with `python -m http.server 8000` and open `http://localhost:8000/`. The previous unstyled-screen issue happened when `index.html` was opened without its referenced assets.
 
 On first launch, choose an Everyday, Business, Student, Creator, or Blank template. All templates have **generic user tasks**, never HireBerna's personal to-do list. Customize them after setup.
 
