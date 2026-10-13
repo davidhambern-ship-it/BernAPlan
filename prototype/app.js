@@ -277,7 +277,12 @@ function defaultState(){return {version:1,configured:false,profile:{name:'My Com
 function load(){try{const raw=localStorage.getItem(KEY);if(!raw)return defaultState();const parsed=JSON.parse(raw);if(parsed.version!==1||!Array.isArray(parsed.tasks)||!Array.isArray(parsed.slots)||!Array.isArray(parsed.metrics))throw Error('Unsupported save format');return {...defaultState(),...parsed,profile:{...defaultState().profile,...parsed.profile},weeks:parsed.weeks||{}}}catch(e){console.warn('Could not read BernAPlan save:',e);alert('Your local BernAPlan save could not be loaded. We will not overwrite it; you can export a copy from your browser storage before proceeding.');return defaultState()}}
 let preventWrite=false;
 function save(){if(preventWrite)return;try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){toast('Device storage is full. Export a backup; changes may not persist.')}}
-function weekRecord(){return state.weeks[selectedWeek]??(state.weeks[selectedWeek]={complete:{},checks:{},notes:{},metrics:{},nonneg:{}})}
+function weekRecord(){
+ const w=state.weeks[selectedWeek]??(state.weeks[selectedWeek]={complete:{},checks:{},notes:{},metrics:{},nonneg:{}});
+ w.complete??={};w.checks??={};w.notes??={};w.metrics??={};w.nonneg??={};
+ w.proofs??={};w.sessions??={};w.review??={};
+ return w;
+}
 function createTask(day,slot,title,description){return {id:id(),day,slot,title,description,kind:'task',objective:`Make meaningful progress on ${title.toLowerCase()}.`,instructions:['Define the specific result you want by the end of the block.','Work on the most valuable part first.','Capture what you completed and your next action.'],tips:['Keep the task small enough for the available time.','Minimize distractions and record real results.'],checklist:[`Decide what success looks like`,`Complete the main action`,`Record your progress`],metricId:''}}
 function applyTemplate(template,overwrite=true,preferences={}){
  const source=CATALOG[template]||CATALOG.everyday;
@@ -330,33 +335,149 @@ function draw(){applyTheme();$('.eyebrow').textContent=state.profile.name.toUppe
 function renderCalendar(){const week=weekRecord();const calendar=$('#calendar');calendar.style.setProperty('--slot-count',String(state.slots.length));calendar.innerHTML='';let top=document.createElement('div');top.className='col-header';top.style.color='var(--accent)';top.textContent='TIME / FOCUS';calendar.append(top);
 for(let day=0;day<7;day++){const d=addDays(fromKey(selectedWeek),day),h=document.createElement('div');h.className='col-header'+(localDateKey(d)===localDateKey(new Date())?' today':'');h.innerHTML=`${DAY_NAMES[day].toUpperCase()}<br><small style="font-weight:400;color:#999;margin-left:4px">${esc(d.toLocaleDateString(undefined,{month:'short',day:'numeric'}))}</small>`;calendar.append(h)}
 state.slots.forEach((slot,row)=>{const label=document.createElement('div');label.className='time-label';label.innerHTML=`<strong>${esc(timeLabel(slot.time))}</strong><small>${esc(slot.label)}</small>`;calendar.append(label);for(let day=0;day<7;day++){const cell=document.createElement('div');cell.className='calendar-cell'+(localDateKey(addDays(fromKey(selectedWeek),day))===localDateKey(new Date())?' is-today':'');const tasks=state.tasks.filter(t=>t.day===day&&t.slot===row);if(!tasks.length){const empty=document.createElement('button');empty.className='empty-card';empty.textContent='+ Add block';empty.title='Add a block';empty.onclick=()=>openEditor(null,day,row);cell.append(empty)}else{tasks.forEach(t=>{const b=document.createElement('button');b.className='task-card'+(week.complete[t.id]?' done':'');b.innerHTML=`<span class="card-title">${esc(t.title)}</span><span class="card-desc">${esc(t.description||t.objective)}</span><span class="card-footer"><span class="type-pill">${esc(t.kind)}</span><span class="card-check">${week.complete[t.id]?'✓':'○'}</span></span>`;b.onclick=()=>openTask(t.id);cell.append(b)});if(tasks.length>1)cell.style.overflowY='auto'}calendar.append(cell)}});
-const total=state.tasks.length,done=state.tasks.filter(t=>week.complete[t.id]).length;$('#doneBlocks').textContent=done;$('#totalBlocks').textContent=total;$('#openBlocks').textContent=total-done;const p=total?Math.round(done/total*100):0;$('#progressLabel').textContent=p+'%';$('#progressBar').style.width=p+'%';}
+const total=state.tasks.length,done=state.tasks.filter(t=>week.complete[t.id]).length;$('#doneBlocks').textContent=done;$('#totalBlocks').textContent=total;$('#openBlocks').textContent=total-done;const p=total?Math.round(done/total*100):0;$('#progressLabel').textContent=p+'%';$('#progressBar').style.width=p+'%';$('#actionProofStats').textContent=state.tasks.filter(t=>week.complete[t.id]&&week.proofs?.[t.id]?.level==='documented').length+' documented outcomes · '+state.tasks.filter(t=>week.complete[t.id]).length+' completed';}
 function renderScoreboard(){const week=weekRecord();$('#metricCount').textContent=state.metrics.length+' TRACKED';$('#scoreboard').innerHTML=state.metrics.map(m=>{const value=m.id==='tasks'?state.tasks.filter(t=>week.complete[t.id]).length:(Number(week.metrics[m.id])||0),target=Number(m.target)||0,percent=target?Math.min(100,Math.max(0,value/target*100)):0;return `<div class="score-line"><span class="score-label" title="${esc(m.name)}">${esc(m.name)}</span><div class="score-track"><div class="score-fill" style="width:${percent}%"></div></div><span class="score-value">${esc(String(value))}/${esc(String(target))}</span></div>`}).join('')||'<p class="small-hint">Add a metric to begin tracking your wins.</p>'}
 function renderEssentials(){const week=weekRecord();const count=state.essentials.filter(e=>week.nonneg[e.id]).length;$('#nonnegCount').textContent=`${count}/${state.essentials.length}`;$('#nonnegPanel').innerHTML=state.essentials.map(e=>`<label><input type="checkbox" data-nonneg="${esc(e.id)}" ${week.nonneg[e.id]?'checked':''}/><span>${esc(e.name)}</span></label>`).join('')||'<p class="small-hint">Add essentials in Setup.</p>';$('#nonnegStrip').innerHTML=state.essentials.map(e=>`<button class="nonneg-chip ${week.nonneg[e.id]?'hit':''}" data-nonneg-btn="${esc(e.id)}">${week.nonneg[e.id]?'✓':'○'} ${esc(e.name)}</button>`).join('')}
 function setNonneg(item,value){weekRecord().nonneg[item]=value;save();draw()}
 const openModal=(html,wide=false)=>{const ov=$('#overlay');ov.classList.remove('hidden');ov.setAttribute('aria-hidden','false');ov.innerHTML=`<div class="modal ${wide?'wide':''}" role="dialog" aria-modal="true" aria-label="BernAPlan dialog">${html}</div>`;ov.querySelector('.close-btn')?.addEventListener('click',closeModal);ov.querySelector('input,button,textarea,select')?.focus()};
-function closeModal(){const ov=$('#overlay');ov.classList.add('hidden');ov.setAttribute('aria-hidden','true');ov.innerHTML='';activeTask=null;editingTask=false}
+function closeModal(){if(focusTick){clearInterval(focusTick);focusTick=null;}const ov=$('#overlay');ov.classList.add('hidden');ov.setAttribute('aria-hidden','true');ov.innerHTML='';activeTask=null;editingTask=false}
 function head(title,subtitle=''){return `<div class="modal-header"><div><h2>${esc(title)}</h2><p>${esc(subtitle)}</p></div><button type="button" class="close-btn" aria-label="Close">×</button></div>`}
 function bullets(lines,ordered=false){const tag=ordered?'ol':'ul';return `<${tag}>${(lines||[]).map(t=>`<li>${esc(t)}</li>`).join('')}</${tag}>`}
 const lines=text=>String(text||'').split(/\r?\n/).map(t=>t.trim()).filter(Boolean);
-function openTask(taskId){const t=state.tasks.find(t=>t.id===taskId);if(!t)return;activeTask=taskId;const week=weekRecord();const checks=week.checks[t.id]||[];const duration=slotEnd(t.slot);const subtitle=`${DAY_NAMES[t.day]} • ${timeLabel(state.slots[t.slot].time)} – ${timeLabel(duration)} • ${t.kind}`;
-openModal(head(t.title,subtitle)+`<div class="modal-columns"><div><div class="section-box"><h3>◎ Why you're doing this</h3><p>${esc(t.objective||t.description||'Choose a clear result for this block.')}</p>${t.personalFocus?`<p class="personal-goal">✦ ${esc(t.personalFocus)}</p>`:''}</div><div class="section-box"><h3>☷ Follow these steps</h3><p class="small-hint">Work through these in order. You do not need to know how to do everything before starting.</p>${bullets(t.instructions,true)}</div>${t.example?`<div class="section-box guide-example"><h3>◈ Here's what that looks like</h3><p>${esc(t.example)}</p></div>`:''}<div class="section-box"><h3>✦ Tips that make this easier</h3>${bullets(t.tips)}</div>${t.success?`<div class="section-box guide-success"><h3>✓ You'll know you're done when...</h3><p>${esc(t.success)}</p></div>`:''}</div><div><div class="section-box guided-next"><h3>→ Your next small action</h3><p id="nextHint">${esc((t.checklist||[]).find((_,i)=>!checks[i])||'All checklist steps are done. Review your result and mark this block complete.')}</p><button type="button" id="doNextStep" class="primary-btn mini-primary">✓ I did this step</button></div><div class="section-box"><h3>☑ Follow-along checklist <span id="checkCount"></span></h3>${(t.checklist||[]).map((text,index)=>`<label class="todo"><input type="checkbox" data-check="${index}" ${checks[index]?'checked':''}/><span>${esc(text)}</span></label>`).join('')||'<p class="small-hint">Add checklist steps when editing.</p>'}</div><div class="section-box"><h3>▤ Your Notes</h3><div class="field"><textarea id="taskNotes" placeholder="Results, ideas, links or next steps…">${esc(week.notes[t.id]||'')}</textarea></div><button type="button" id="saveNotes" class="secondary-btn">Save notes</button></div></div></div><div class="modal-actions"><button id="markDone" type="button" class="primary-btn">${week.complete[t.id]?'↩ Mark not done':'✓ Mark complete'}</button><button id="editThisTask" type="button" class="secondary-btn">✎ Edit block</button><button id="logProgress" type="button" class="secondary-btn">＋ Log a result</button>${t.kind!=='task'?'<button id="exportIcs" class="secondary-btn">↓ Export calendar event</button>':''}</div>`,true);
-const updateCoach=()=>{
- const c=week.checks[t.id]||(week.checks[t.id]=[]);
- const remaining=(t.checklist||[]).findIndex((_,i)=>!c[i]);
- $('#checkCount').textContent=`(${(t.checklist||[]).filter((_,i)=>!!c[i]).length}/${(t.checklist||[]).length})`;
- $('#nextHint').textContent=remaining===-1?'Great work. Review your result, add notes if useful, and mark the block complete.':t.checklist[remaining];
- $('#doNextStep').disabled=remaining===-1;
- $('#doNextStep').textContent=remaining===-1?'All steps finished':'✓ I did this step';
+/* ACTION execution system: local-only focus sessions, adaptive micro-steps, honest evidence. */
+let focusTick=null;
+function taskProofQuestion(t){
+ const title=t.title.toLowerCase();
+ if(/priorit|plan the day|plan school|plan content|plan next week|pipeline planning|organize task/.test(title))return 'What are your top priorities or planned outcomes, and which first action have you scheduled?';
+ if(/proposal|outreach|follow.up|client communication|network|community repl|respond/.test(title))return 'How many messages did you send or follow up on? Record an actual next step or a link to your tracker.';
+ if(/study|read|learn|practice|quiz|flashcard|exam|lesson/.test(title))return 'Which topic did you cover? Write one thing you learned or demonstrate it with a short answer.';
+ if(/design|create|record|edit|project|portfolio|deliver|draft|publish|release|creative|video|script/.test(title))return 'What did you produce or finish? Describe the deliverable and include a file link if you have one.';
+ if(/meeting|appointment|interview|class/.test(title))return 'Did the commitment happen? Write one takeaway or a follow-up action.';
+ if(/exercise|health|movement|workout/.test(title))return 'What activity did you do, and for how long? Self-report is fine if there is no external record.';
+ if(/review|reflect|weekly reset|check|track progress/.test(title))return 'What changed, what did you learn, and what will you do differently next?';
+ return 'What specific result happened? Add a short description or supporting link if one exists.';
+}
+function nextAction(t,week){const c=week.checks[t.id]||[];return (t.checklist||[]).find((_,i)=>!c[i])||(t.steps||t.instructions||[])[0]||'Choose one clear, manageable first action.'}
+function sessionFor(t){return weekRecord().sessions[t.id]||null}
+function sessionSeconds(session){if(!session)return 0;return Math.max(0,Number(session.elapsed)||0)+(session.running?Math.max(0,Math.floor((Date.now()-session.startedAt)/1000)):0)}
+function formatFocus(seconds){const m=Math.floor(seconds/60),sec=seconds%60;return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`}
+function openTask(taskId){
+ const t=state.tasks.find(t=>t.id===taskId);if(!t)return;
+ activeTask=taskId;const week=weekRecord(),checks=week.checks[t.id]||[],proof=week.proofs[t.id];
+ const duration=slotEnd(t.slot),subtitle=`${DAY_NAMES[t.day]} • ${timeLabel(state.slots[t.slot].time)} – ${timeLabel(duration)} • ${t.kind}`;
+ const proofMessage=week.complete[t.id]?(proof?.level==='documented'?'Documented result saved — user-provided, not independently verified.':'Completed by self-report; no evidence recorded.'):'Completion is not recorded yet.';
+ openModal(head(t.title,subtitle)+`
+ <div class="action-heading"><div><strong>YOUR ACTION COACH</strong><p>Start small. Work one step at a time. Show what you finished.</p></div><button type="button" id="startBlock" class="primary-btn">▶ Start Block</button></div>
+ <div class="modal-columns"><div>
+  <div class="section-box"><h3>◎ Why you're doing this</h3><p>${esc(t.objective||t.description||'Choose a clear result for this block.')}</p>${t.personalFocus?`<p class="personal-goal">✦ ${esc(t.personalFocus)}</p>`:''}</div>
+  <div class="section-box"><h3>☷ Follow these steps</h3><p class="small-hint">Follow these in order. One useful step is enough to get moving.</p>${bullets(t.instructions,true)}</div>
+  ${t.example?`<div class="section-box guide-example"><h3>◈ Here's what that looks like</h3><p>${esc(t.example)}</p></div>`:''}
+  <div class="section-box"><h3>✦ How experienced people approach this</h3>${bullets(t.tips)}</div>
+  ${t.success?`<div class="section-box guide-success"><h3>✓ What a finished result looks like</h3><p>${esc(t.success)}</p></div>`:''}
+ </div><div>
+  <div class="section-box guided-next"><h3>→ Your next small action</h3><p id="nextHint"></p><button type="button" id="doNextStep" class="primary-btn mini-primary">✓ I did this step</button></div>
+  <div class="section-box"><h3>☑ Follow-along checklist <span id="checkCount"></span></h3>${(t.checklist||[]).map((item,index)=>`<label class="todo"><input type="checkbox" data-check="${index}" ${checks[index]?'checked':''}/><span>${esc(item)}</span></label>`).join('')||'<p class="small-hint">Add steps through Edit Block.</p>'}</div>
+  <div class="section-box"><h3>◇ Need a hand getting started?</h3><p>You don't have to feel motivated first. Tell us what's getting in the way.</p><button type="button" class="secondary-btn help-btn" id="getUnstuck">I don't feel like doing this</button></div>
+  <div class="section-box"><h3>▤ Your Notes</h3><div class="field"><textarea id="taskNotes" placeholder="Results, ideas, links or next steps…">${esc(week.notes[t.id]||'')}</textarea></div><button type="button" id="saveNotes" class="secondary-btn">Save notes</button></div>
+  <div class="section-box proof-summary"><h3>◉ Completion & accountability</h3><p>${esc(proofMessage)}</p>${proof?.result?`<p><strong>Recorded:</strong> ${esc(proof.result)}</p>`:''}<p class="small-hint">${esc(taskProofQuestion(t))}</p></div>
+ </div></div>
+ <div class="modal-actions"><button id="markDone" type="button" class="primary-btn">${week.complete[t.id]?'↩ Undo completion':'✓ Show my results & finish'}</button><button id="editThisTask" type="button" class="secondary-btn">✎ Edit block</button><button id="logProgress" type="button" class="secondary-btn">＋ Log a number</button>${t.kind!=='task'?'<button id="exportIcs" class="secondary-btn">↓ Export calendar event</button>':''}</div>`,true);
+ const updateCoach=()=>{
+  const c=week.checks[t.id]||(week.checks[t.id]=[]), remaining=(t.checklist||[]).findIndex((_,i)=>!c[i]);
+  $('#checkCount').textContent=`(${(t.checklist||[]).filter((_,i)=>!!c[i]).length}/${(t.checklist||[]).length})`;
+  $('#nextHint').textContent=remaining===-1?'All steps checked! Now record your actual result.':t.checklist[remaining];
+  $('#doNextStep').disabled=remaining===-1;
+  $('#doNextStep').textContent=remaining===-1?'All steps finished':'✓ I did this step';
  };
  updateCoach();
- document.querySelectorAll('[data-check]').forEach(input=>input.onchange=e=>{
-  const c=week.checks[t.id]||(week.checks[t.id]=[]);c[Number(input.dataset.check)]=e.target.checked;save();updateCoach();
- });
- $('#doNextStep').onclick=()=>{const c=week.checks[t.id]||(week.checks[t.id]=[]);const i=(t.checklist||[]).findIndex((_,ix)=>!c[ix]);if(i<0)return;c[i]=true;const input=document.querySelector(`[data-check="${i}"]`);if(input)input.checked=true;save();updateCoach()};
-$('#saveNotes').onclick=()=>{week.notes[t.id]=$('#taskNotes').value;save();toast('Notes saved')};
-$('#markDone').onclick=()=>{week.notes[t.id]=$('#taskNotes').value;week.complete[t.id]=!week.complete[t.id];save();draw();if(week.complete[t.id]){closeModal();openLog(t.id)}else{closeModal();toast('Block marked as not completed')}};
-$('#editThisTask').onclick=()=>openEditor(t);$('#logProgress').onclick=()=>openLog(t.id);if(t.kind!=='task')$('#exportIcs').onclick=()=>exportCalendarEvent(t)}
+ document.querySelectorAll('[data-check]').forEach(input=>input.onchange=e=>{const c=week.checks[t.id]||(week.checks[t.id]=[]);c[Number(input.dataset.check)]=e.target.checked;save();updateCoach();});
+ $('#doNextStep').onclick=()=>{const c=week.checks[t.id]||(week.checks[t.id]=[]),i=(t.checklist||[]).findIndex((_,ix)=>!c[ix]);if(i<0)return;c[i]=true;const input=document.querySelector(`[data-check="${i}"]`);if(input)input.checked=true;save();updateCoach();};
+ $('#saveNotes').onclick=()=>{week.notes[t.id]=$('#taskNotes').value;save();toast('Notes saved')};
+ $('#startBlock').onclick=()=>{week.notes[t.id]=$('#taskNotes').value;save();openFocusTask(t.id)};
+ $('#getUnstuck').onclick=()=>{week.notes[t.id]=$('#taskNotes').value;save();openMotivation(t.id)};
+ $('#markDone').onclick=()=>{week.notes[t.id]=$('#taskNotes').value;if(week.complete[t.id]){week.complete[t.id]=false;save();draw();openTask(t.id);toast('Completion undone. Your evidence is kept for your records.')}else{save();openCompleteTask(t.id)}};
+ $('#editThisTask').onclick=()=>openEditor(t);$('#logProgress').onclick=()=>openLog(t.id);
+ if(t.kind!=='task')$('#exportIcs').onclick=()=>exportCalendarEvent(t);
+}
+function openFocusTask(taskId){
+ const t=state.tasks.find(x=>x.id===taskId);if(!t)return;
+ const week=weekRecord();let session=week.sessions[t.id]||(week.sessions[t.id]={elapsed:0,running:false,minutes:5,startedAt:null});
+ const html=head('Focus on: '+t.title,'One step, one timer, no pressure. The timer is optional.')+`
+ <div class="focus-hero"><span class="focus-label">START HERE</span><h3>${esc(nextAction(t,week))}</h3><p>${esc(t.objective)}</p></div>
+ <div class="section-box focus-tools"><h3>Focus timer</h3><div class="focus-clock" id="focusClock">05:00</div><p class="small-hint">The timer helps you focus; it does not prove the task was done.</p>
+ <div class="minute-buttons"><button class="secondary-btn" data-minutes="5">5 minutes</button><button class="secondary-btn" data-minutes="15">15 minutes</button><button class="secondary-btn" data-minutes="25">25 minutes</button></div>
+ <div class="modal-actions"><button id="toggleFocus" class="primary-btn">▶ Start focus</button><button id="finishFocus" class="secondary-btn">✓ I finished this step</button><button id="focusHelp" class="secondary-btn">I'm stuck</button><button id="focusBack" class="secondary-btn">← Back to instructions</button></div></div>`;
+ openModal(html);
+ const clock=$('#focusClock'),start=$('#toggleFocus');
+ function update(){const sec=sessionSeconds(session),remaining=Math.max(0,session.minutes*60-sec);clock.textContent=formatFocus(remaining);start.textContent=session.running?'Ⅱ Pause focus':sec>0?'▶ Resume focus':'▶ Start focus';if(remaining===0&&session.running){session.elapsed=session.minutes*60;session.running=false;session.startedAt=null;save();clock.textContent='00:00';toast('Focus interval finished. Record what you actually completed.')}}
+ function pause(){if(session.running){session.elapsed=sessionSeconds(session);session.startedAt=null;session.running=false;save()}}
+ document.querySelectorAll('[data-minutes]').forEach(btn=>btn.onclick=()=>{pause();session.minutes=Number(btn.dataset.minutes);session.elapsed=0;save();update();});
+ start.onclick=()=>{if(session.running)pause();else{if(sessionSeconds(session)>=session.minutes*60)session.elapsed=0;session.running=true;session.startedAt=Date.now();save()}update()};
+ $('#finishFocus').onclick=()=>{pause();const c=week.checks[t.id]||(week.checks[t.id]=[]),i=(t.checklist||[]).findIndex((_,n)=>!c[n]);if(i>=0){c[i]=true;save();toast('One step completed. Keep going!')}openTask(t.id)};
+ $('#focusHelp').onclick=()=>{pause();openMotivation(t.id)};
+ $('#focusBack').onclick=()=>{pause();openTask(t.id)};
+ update();focusTick=setInterval(update,1000);
+}
+function openMotivation(taskId){
+ const t=state.tasks.find(x=>x.id===taskId);if(!t)return;
+ const options=[['overwhelm','It feels like too much'],['starting','I don’t know where to start'],['focus','I keep getting distracted'],['energy','I’m exhausted'],['fear','I’m afraid I’ll do it wrong']];
+ const first=nextAction(t,weekRecord());
+ const actions={
+  overwhelm:['Shrink the task','Ignore the whole project for now. Your only job is the first small step. If that is still too big, work on it for two minutes.'],
+  starting:['Make the first move obvious','Open the document, gather your supplies, or write the first sentence. Do not worry about finishing yet.'],
+  focus:['Clear one distraction','Close one unrelated tab, silence notifications briefly, and give just five minutes to this task.'],
+  energy:['Make room for recovery','Rest or do a two-minute version. If you genuinely need a break, choose a new time without treating that as failure.'],
+  fear:['Try a rough first draft','A first attempt is allowed to be imperfect. Make a draft you can improve later; you are not being graded here.']
+ };
+ const show=(kind)=>{
+  const a=actions[kind],next=esc(first);
+  openModal(head('Let’s make '+t.title+' easier','You are allowed to start small, rest, or ask for help.')+`<p class="small-hint">What is making this difficult right now?</p><div class="rescue-choices">${options.map(([key,label])=>`<button type="button" class="wizard-tile ${kind===key?'active':''}" data-rescue="${key}">${esc(label)}</button>`).join('')}</div>
+  <div class="section-box rescue-answer"><h3>✦ ${esc(a[0])}</h3><p>${esc(a[1])}</p><p class="rescue-next"><strong>Your actual next action:</strong> ${next}</p></div>
+  <div class="modal-actions"><button class="primary-btn" id="rescueStart">▶ Try five minutes</button><button class="secondary-btn" id="rescueBack">← Back to task</button></div>`,true);
+  document.querySelectorAll('[data-rescue]').forEach(el=>el.onclick=()=>show(el.dataset.rescue));
+  $('#rescueStart').onclick=()=>openFocusTask(t.id);
+  $('#rescueBack').onclick=()=>openTask(t.id);
+ };
+ const obstacle=state.profile.guidance?.obstacle;show(obstacle==='overwhelm'?'overwhelm':obstacle==='focus'?'focus':obstacle==='starting'?'starting':'starting');
+}
+function openCompleteTask(taskId){
+ const t=state.tasks.find(x=>x.id===taskId);if(!t)return;
+ const week=weekRecord(),old=week.proofs[t.id]||{},question=taskProofQuestion(t),checks=week.checks[t.id]||[];
+ const count=(t.checklist||[]).filter((_,i)=>checks[i]).length,total=(t.checklist||[]).length;
+ openModal(head('Show your results: '+t.title,'This is for your own accountability, not an outside audit.')+`
+ <div class="proof-context"><h3>What were you trying to accomplish?</h3><p>${esc(t.success||t.objective||t.description)}</p></div>
+ <div class="section-box"><h3>◉ What actually happened?</h3><p>${esc(question)}</p>
+ <div class="field"><label for="proofResult">Describe the result in your own words</label><textarea id="proofResult" placeholder="Example: Finished the draft and shared the link; here’s the next step...">${esc(old.result||'')}</textarea></div>
+ <div class="field"><label for="proofLink">Supporting link (optional)</label><input id="proofLink" type="url" placeholder="https://..." value="${esc(old.link||'')}"></div>
+ <p class="small-hint">${count} of ${total} checklist steps marked. A note or link documents your result but is not independently verified. Keep private details out of links you share.</p></div>
+ <div class="section-box"><h3>Choose how to record completion</h3>
+ <div class="modal-actions"><button type="button" id="saveEvidence" class="primary-btn">✓ Save documented result</button><button type="button" id="selfReport" class="secondary-btn">✓ Mark complete (self-reported)</button><button type="button" id="proofBack" class="secondary-btn">← Back</button></div>
+ <p class="small-hint" style="margin-top:9px">Documented = you wrote down an outcome or attached a link. Self-reported = you confirm completion without proof. Neither is externally authenticated.</p></div>`,true);
+ function finish(level){
+  const result=$('#proofResult').value.trim(),link=$('#proofLink').value.trim();
+  if(link&&!/^https?:\/\//i.test(link)){toast('Use a full http:// or https:// URL, or leave the link blank.');$('#proofLink').focus();return;}
+  if(level==='documented'&&!result&&!link){toast('Write down what you finished or add a supporting link.');$('#proofResult').focus();return;}
+  week.complete[t.id]=true;week.proofs[t.id]={level,result:level==='documented'?result:'',link:level==='documented'?link:'',recordedAt:new Date().toISOString(),prompt:question};
+  if(level==='documented'&&result)week.notes[t.id]=[week.notes[t.id]||'',result].filter(Boolean).join('\n') .slice(0,12000);
+  save();draw();closeModal();toast(level==='documented'?'Outcome documented. Nice work following through!':'Task recorded as self-reported completion.');
+ }
+ $('#saveEvidence').onclick=()=>finish('documented');$('#selfReport').onclick=()=>finish('self');$('#proofBack').onclick=()=>openTask(t.id);
+}
+function openWeeklyReview(){
+ const week=weekRecord(),existing=week.review||{},all=state.tasks.length,finished=state.tasks.filter(t=>week.complete[t.id]).length,documented=state.tasks.filter(t=>week.complete[t.id]&&week.proofs[t.id]?.level==='documented').length;
+ const rate=all?finished/all:0;
+ const suggestion=rate<.35?'Consider reducing next week to two or three essential blocks per day. Consistency starts with a realistic plan.':rate<.75?'You made progress. Choose one frequent obstacle to address and leave buffer time between tasks.':'Your follow-through was strong. Keep a realistic pace and review the quality of outcomes, not just checkmarks.';
+ openModal(head('Weekly Reality Check','An honest review helps you make next week easier.')+`
+ <div class="review-summary"><div><strong>${finished}/${all}</strong><small>blocks completed</small></div><div><strong>${documented}</strong><small>documented outcomes</small></div><div><strong>${all?Math.round(rate*100):0}%</strong><small>completion rate</small></div></div>
+ <div class="field"><label for="reviewWins">What actually went well this week?</label><textarea id="reviewWins" placeholder="A win, finished project, or step forward...">${esc(existing.wins||'')}</textarea></div>
+ <div class="field"><label for="reviewBarrier">What got in the way?</label><select id="reviewBarrier"><option value="none">Nothing major</option><option value="overwhelm">Too much on my calendar</option><option value="focus">Distractions</option><option value="energy">Low energy</option><option value="starting">I struggled to begin</option><option value="other">Something else</option></select></div>
+ <div class="field"><label for="reviewChange">What's one thing you'll change next week?</label><textarea id="reviewChange" placeholder="Example: Shorter morning focus blocks...">${esc(existing.change||'')}</textarea></div>
+ <div class="section-box"><h3>✦ Your suggested adjustment</h3><p>${esc(suggestion)}</p><p class="small-hint">A rule-based suggestion, not an AI assessment. It does not change your calendar without permission.</p></div>
+ <div class="modal-actions"><button id="saveReview" class="primary-btn">Save my review</button><button id="cancelReview" class="secondary-btn">Close</button></div>`,true);
+ $('#reviewBarrier').value=existing.barrier||'none';
+ $('#saveReview').onclick=()=>{week.review={wins:$('#reviewWins').value.trim(),barrier:$('#reviewBarrier').value,change:$('#reviewChange').value.trim(),savedAt:new Date().toISOString()};save();closeModal();toast('Weekly review saved. Your plan remains unchanged.')};
+ $('#cancelReview').onclick=closeModal;
+}
 function slotEnd(index){return state.slots[index+1]?.time||((Number(state.slots[index].time.slice(0,2))+1)%24).toString().padStart(2,'0')+state.slots[index].time.slice(2)}
 function openLog(taskId){const t=state.tasks.find(x=>x.id===taskId);const opts=state.metrics.filter(m=>m.id!=='tasks').map(m=>`<option value="${esc(m.id)}" ${t?.metricId===m.id?'selected':''}>${esc(m.name)}</option>`).join('');if(!opts){closeModal();toast('Add a scoreboard metric in Setup first');return}openModal(head('Log actual progress','Only recorded results count toward your scoreboard.')+`<div class="field"><label for="metricToLog">What did you accomplish?</label><select id="metricToLog">${opts}</select></div><div class="field"><label for="resultNumber">How much?</label><input id="resultNumber" type="number" min="0" max="1000000" step="0.25" value="1" /></div><div class="modal-actions"><button id="addResult" class="primary-btn">Add to scoreboard</button><button id="skipResult" class="secondary-btn">Not now</button></div>`);$('#skipResult').onclick=closeModal;$('#addResult').onclick=()=>{let key=$('#metricToLog').value,v=Number($('#resultNumber').value);if(!Number.isFinite(v)||v<0||v>1e6){toast('Enter a valid positive number');return}const week=weekRecord();week.metrics[key]=(Number(week.metrics[key])||0)+v;save();closeModal();draw();toast('Scoreboard updated')}}
 function field(name,id,value='',opts={}){const type=opts.type||'text';if(type==='textarea')return `<div class="field"><label for="${id}">${esc(name)}</label><textarea id="${id}" placeholder="${esc(opts.placeholder||'')}">${esc(value)}</textarea></div>`;return `<div class="field"><label for="${id}">${esc(name)}</label><input id="${id}" type="${type}" value="${esc(value)}" ${opts.min!==undefined?'min="'+opts.min+'"':''}/></div>`}
@@ -414,7 +535,7 @@ function openWelcome(rebuild=false){
  }
  drawWizard();
 }
-$('#calendar').addEventListener('click',()=>{});$('#prevWeek').onclick=()=>{selectedWeek=localDateKey(addDays(fromKey(selectedWeek),-7));draw()};$('#nextWeek').onclick=()=>{selectedWeek=localDateKey(addDays(fromKey(selectedWeek),7));draw()};$('#jumpToday').onclick=()=>{selectedWeek=localDateKey(beginningOfWeek());draw()};$('#newTask').onclick=()=>openEditor();$('#settingsButton').onclick=()=>openSettings('appearance');$('#openSetup').onclick=()=>openSettings('schedule');$('#editScoreboard').onclick=()=>openSettings('goals');$('#editNonneg').onclick=()=>openSettings('essentials');$('#nonnegPanel').onchange=e=>{if(e.target.matches('[data-nonneg]'))setNonneg(e.target.dataset.nonneg,e.target.checked)};$('#nonnegStrip').onclick=e=>{const btn=e.target.closest('[data-nonneg-btn]');if(btn){const key=btn.dataset.nonnegBtn;setNonneg(key,!weekRecord().nonneg[key])}};$('#overlay').addEventListener('click',e=>{if(e.target===$('#overlay'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#overlay').classList.contains('hidden'))closeModal()});
+$('#calendar').addEventListener('click',()=>{});$('#prevWeek').onclick=()=>{selectedWeek=localDateKey(addDays(fromKey(selectedWeek),-7));draw()};$('#nextWeek').onclick=()=>{selectedWeek=localDateKey(addDays(fromKey(selectedWeek),7));draw()};$('#jumpToday').onclick=()=>{selectedWeek=localDateKey(beginningOfWeek());draw()};$('#newTask').onclick=()=>openEditor();$('#settingsButton').onclick=()=>openSettings('appearance');$('#openSetup').onclick=()=>openSettings('schedule');$('#editScoreboard').onclick=()=>openSettings('goals');$('#weeklyReview').onclick=openWeeklyReview;$('#editNonneg').onclick=()=>openSettings('essentials');$('#nonnegPanel').onchange=e=>{if(e.target.matches('[data-nonneg]'))setNonneg(e.target.dataset.nonneg,e.target.checked)};$('#nonnegStrip').onclick=e=>{const btn=e.target.closest('[data-nonneg-btn]');if(btn){const key=btn.dataset.nonnegBtn;setNonneg(key,!weekRecord().nonneg[key])}};$('#overlay').addEventListener('click',e=>{if(e.target===$('#overlay'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#overlay').classList.contains('hidden'))closeModal()});
 state=load();
 const previousGuidesImproved=state.tasks.reduce((n,t)=>n+(improveGuideIfGeneric(t)?1:0),0);
 if(previousGuidesImproved||!localStorage.getItem(KEY))save();
