@@ -6,16 +6,16 @@ This is a **working, independent, static prototype** of the new weekly calendar�
 
 **Fixed local-opening build:** `index.html` is now self-contained with its styling and JavaScript embedded. Download/open that single file directly in Edge or Chrome; you do not need any other files beside it. The separate `app.js` and `styles.css` are retained as editable source files. There are no dependencies, installs, API keys, paid services, accounts, builds, or backend calls. Optionally, serve it locally with `python -m http.server 8000` and open `http://localhost:8000/`. The previous unstyled-screen issue happened when `index.html` was opened without its referenced assets.
 
-On first launch, choose an Everyday, Business, Student, Creator, or Blank template. All templates have **generic user tasks**, never HireBerna's personal to-do list. Customize them after setup.
+On first launch, use the **five-step guided wizard**: choose a life/work category, the goal that matters most, your biggest planning obstacle, and how many work blocks to schedule. Review a real example before creating your playbook. Common blocks use curated, specific beginner-friendly instructions (not a paid AI service); unfamiliar custom titles receive editable starter guidance. No HireBerna-specific business task list is imposed.
 
 ## Implemented
 - Seven-day Monday–Sunday calendar, editable time rows, previous/next week
-- Task blocks; click for objective, instructions, tips, checklists, notes
+- Task blocks; click for unique objectives, guided instructions, realistic examples, professional planning tips, a next-action coach, checklists, notes
 - Create, edit, delete, mark completed; user-specific tasks
 - Weekly completion tracking, configurable scoreboard, editable result logging, non-negotiables
 - Free color and logo customization (stored locally)
-- Editable starter templates and onboarding flow
-- Offline localStorage persistence, JSON export/import
+- Five-step interactive setup wizard with user-driven task selection, selectable goals/obstacles/pace, and preview
+- Safe upgrade of unmodified older generic task instructions while preserving customized task text and notes\n- Offline localStorage persistence, JSON export/import
 - Meeting/deadline/reminder: explicit one-time `.ics` calendar export (not live sync)
 - Responsive browser layout; desktop board fits the screen at standard viewport sizes, grid can scroll horizontally when space is limited
 
@@ -34,3 +34,6 @@ On first launch, choose an Everyday, Business, Student, Creator, or Blank templa
 
 ## Next phase
 Audit the original Windows release's *editable source*, then integrate this calendar without breaking the current native/desktop experience. Add selective authenticated calendar sync and Android/iPhone surfaces only after testing a sustainable $0 operational path.
+## Existing prototype users
+
+The new build uses the same localStorage key, but browser files opened from different local paths can have separate storage contexts. Export a JSON backup from the older prototype before switching if your work matters. If you choose **Build a guided weekly plan** again under **Customize → My schedule**, it replaces the task layout **only after a confirmation**; export a backup first. Custom instructions are not silently overwritten by the automatic generic-template guidance upgrade.
