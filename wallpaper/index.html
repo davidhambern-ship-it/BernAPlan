@@ -337,6 +337,28 @@ html.lively-larger-text .card-footer{font-size:clamp(9px,.7vw,12px)!important}
 @media(max-width:1250px){.wall-clock{font-size:11px;padding:5px}.app-title small{display:none}}
 @media(max-width:850px){.wall-clock{display:none}}
 
+
+/* Desktop polish: non-destructive custom typography + daypart illustrations. */
+:root{--bp-title-font:Inter,"Segoe UI",Arial,sans-serif;--bp-body-font:Inter,"Segoe UI",Arial,sans-serif}
+body{font-family:var(--bp-body-font)}
+.brand-name,.app-title strong,h1,.card-title,.col-header,.time-label strong,.modal-header h2,.section-box h3{font-family:var(--bp-title-font)}
+.time-label{gap:4px;padding:5px 3px}
+.time-label .daypart-icon{display:inline-flex;align-items:center;justify-content:center;flex:none;color:var(--accent);width:22px;height:22px;opacity:.92}
+.time-label .daypart-icon svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
+.time-label small{line-height:1.12}
+html[data-bp-text-size="large"] .card-title{font-size:clamp(12px,1.02vw,16px)}
+html[data-bp-text-size="large"] .card-desc{font-size:clamp(11px,.92vw,14px)}
+html[data-bp-text-size="large"] .card-target{font-size:clamp(10px,.84vw,12px)}
+html[data-bp-text-size="small"] .card-title{font-size:clamp(10px,.78vw,13px)}
+html[data-bp-text-size="small"] .card-desc{font-size:clamp(9px,.68vw,11px)}
+html[data-bp-text-size="small"] .card-target{font-size:clamp(9px,.69vw,10px)}
+.font-preview{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0}
+.font-preview > div{background:#111214;border:1px solid #49413a;border-radius:8px;padding:12px;min-width:0}
+.font-preview strong,.font-preview span{display:block;margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.font-preview strong{color:var(--accent);font-family:var(--bp-title-font);font-size:19px}
+.font-preview span{font-family:var(--bp-body-font);font-size:14px;color:#eee}
+@media(max-width:600px){.font-preview{grid-template-columns:1fr}}
+
 </style>
 
 </head>
@@ -350,7 +372,7 @@ html.lively-larger-text .card-footer{font-size:clamp(9px,.7vw,12px)!important}
       <div class="app-title"><strong>DESKTOP <span>COMMAND CENTER</span></strong><small>YOUR WEEK. YOUR GOALS. YOUR PLAYBOOK.</small></div>
       <div class="toolbar">
         <button class="quiet" id="jumpToday" type="button">Today</button>
-      <button class="display-btn" id="fullScreenDisplay" type="button" title="Use more of your screen to read the weekly calendar" aria-label="Toggle full screen desktop display">⛶ Full screen</button>
+
         <button class="mission-btn" id="missionOpen" type="button" title="Build or review a guided Mission">★ Missions</button>
         <button class="quiet" id="settingsButton" type="button">⚙ Customize</button>
         <button class="orange-button" id="newTask" type="button">+ New Block</button>
@@ -764,19 +786,121 @@ function applyTemplate(template,overwrite=true,preferences={}){
  state.profile.guidance={goal:preferences.goal||'',obstacle:preferences.obstacle||'',pace};
 }
 
-function applyTheme(){document.documentElement.style.setProperty('--accent',safeColor(state.profile.accent));document.body.style.backgroundColor=state.profile.background==='paper'?'#171717':'#08090a';let p=$('#brandPicture');if(p){p.innerHTML='';const image=sanitizeImage(state.profile.logo);if(image){const img=document.createElement('img');img.src=image;img.alt='Custom logo';img.style.cssText='max-width:49px;max-height:46px;object-fit:contain';p.appendChild(img)}else{p.textContent='HB'}}}
+
+/* Font personalization: import owned TrueType/OpenType fonts inside Customize; no font file is distributed. */
+const BP_FONTS_DB='bernaplan-user-fonts-v1',BP_FONT_STORE='fonts';
+const BP_BUILTIN_FONTS=[
+ {id:'system:default',name:'Default / Clean',family:'Inter,"Segoe UI",Arial,sans-serif'},
+ {id:'system:classic',name:'Classic / Editorial',family:'Georgia,"Times New Roman",serif'},
+ {id:'system:modern',name:'Modern / Geometric',family:'"Trebuchet MS",Verdana,sans-serif'},
+ {id:'system:bold',name:'Bold / Poster',family:'Impact,"Arial Narrow",Arial,sans-serif'},
+ {id:'system:digital',name:'Digital / Technical',family:'Consolas,"Courier New",monospace'}
+];
+const bpInstalledFonts=new Map();
+let bpFontsDb=null;
+function bpOpenFontDb(){return new Promise((resolve,reject)=>{
+ if(!window.indexedDB){reject(new Error('IndexedDB unavailable'));return;}
+ const request=indexedDB.open(BP_FONTS_DB,1);
+ request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains(BP_FONT_STORE))request.result.createObjectStore(BP_FONT_STORE,{keyPath:'id'})};
+ request.onsuccess=()=>{bpFontsDb=request.result;resolve(bpFontsDb)};
+ request.onerror=()=>reject(request.error||new Error('Font storage unavailable'));
+})}
+function bpFontTransaction(mode,cb){return new Promise((resolve,reject)=>{
+ if(!bpFontsDb){reject(new Error('Font storage is not ready'));return}
+ const tx=bpFontsDb.transaction(BP_FONT_STORE,mode), store=tx.objectStore(BP_FONT_STORE);
+ const req=cb(store);req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error||new Error('Font operation failed'));
+})}
+async function bpActivateFont(record){
+ if(!record||!record.id||!record.data)return;
+ const family='BPUserFont_'+record.id.replace(/[^a-zA-Z0-9_]/g,'');
+ const face=new FontFace(family,record.data);
+ await face.load();document.fonts.add(face);
+ bpInstalledFonts.set(record.id,{name:record.name,family});
+}
+async function bpRestoreFonts(){
+ try{
+  await bpOpenFontDb();
+  const all=await bpFontTransaction('readonly',s=>s.getAll());
+  for(const item of all){try{await bpActivateFont(item)}catch(e){console.warn('Could not load local font',item.name,e)}}
+  bpApplyFonts();
+ }catch(e){console.warn('Local font storage unavailable:',e)}
+}
+function bpFontFamily(id){
+ const builtin=BP_BUILTIN_FONTS.find(f=>f.id===id);
+ return builtin?.family||(bpInstalledFonts.get(id)?.family?`"${bpInstalledFonts.get(id).family}","Segoe UI",Arial,sans-serif`:'Inter,"Segoe UI",Arial,sans-serif');
+}
+function bpApplyFonts(){
+ if(!state?.profile)return;
+ document.documentElement.style.setProperty('--bp-title-font',bpFontFamily(state.profile.titleFont||'system:default'));
+ document.documentElement.style.setProperty('--bp-body-font',bpFontFamily(state.profile.bodyFont||'system:default'));
+ document.documentElement.setAttribute('data-bp-text-size',state.profile.textSize||'normal');
+}
+function bpFontOptions(selected){
+ return BP_BUILTIN_FONTS.map(f=>`<option value="${f.id}" ${f.id===selected?'selected':''}>${esc(f.name)}</option>`).join('')+
+ [...bpInstalledFonts].map(([id,f])=>`<option value="${esc(id)}" ${id===selected?'selected':''}>★ ${esc(f.name)}</option>`).join('');
+}
+function bpPreviewFontSettings(titleId,bodyId,size){
+ document.documentElement.style.setProperty('--bp-title-font',bpFontFamily(titleId));
+ document.documentElement.style.setProperty('--bp-body-font',bpFontFamily(bodyId));
+ document.documentElement.setAttribute('data-bp-text-size',size||'normal');
+}
+async function bpImportFonts(files){
+ if(!bpFontsDb){toast('This wallpaper cannot store custom fonts here. Try Lively’s installed wallpaper context.');return}
+ let success=0,failed=0,first=null;
+ for(const file of files){
+  if(!/\.(ttf|otf|woff2?|TTF|OTF)$/i.test(file.name)||file.size>1500000){failed++;continue}
+  const record={id:'custom:'+id().replace(/[^a-zA-Z0-9_]/g,''),name:file.name,data:await file.arrayBuffer()};
+  try{await bpActivateFont(record);await bpFontTransaction('readwrite',s=>s.put(record));success++;first??=record.id}
+  catch(e){failed++;console.warn('Import font failed:',file.name,e)}
+ }
+ const titleEl=$('#bpTitleFont'),bodyEl=$('#bpBodyFont');
+ if(titleEl&&bodyEl){
+  const oldT=titleEl.value,oldB=bodyEl.value;
+  titleEl.innerHTML=bpFontOptions(first||oldT);bodyEl.innerHTML=bpFontOptions(oldB);
+  titleEl.value=first||oldT;bodyEl.value=oldB;
+  bpPreviewFontSettings(titleEl.value,bodyEl.value,$('#bpTextSize')?.value);
+ }
+ toast(`${success} font${success===1?'':'s'} imported${failed?'; '+failed+' skipped (unsupported or invalid)':''}. Click Apply appearance to choose it.`);
+}
+async function bpRemoveFont(idToRemove){
+ if(!idToRemove?.startsWith('custom:')||!bpFontsDb)return;
+ await bpFontTransaction('readwrite',s=>s.delete(idToRemove));
+ bpInstalledFonts.delete(idToRemove);
+ if(state.profile.titleFont===idToRemove)state.profile.titleFont='system:default';
+ if(state.profile.bodyFont===idToRemove)state.profile.bodyFont='system:default';
+ save();bpApplyFonts();openSettings('appearance');toast('Imported font removed from this wallpaper.');
+}
+
+function applyTheme(){bpApplyFonts();document.documentElement.style.setProperty('--accent',safeColor(state.profile.accent));document.body.style.backgroundColor=state.profile.background==='paper'?'#171717':'#08090a';let p=$('#brandPicture');if(p){p.innerHTML='';const image=sanitizeImage(state.profile.logo);if(image){const img=document.createElement('img');img.src=image;img.alt='Custom logo';img.style.cssText='max-width:49px;max-height:46px;object-fit:contain';p.appendChild(img)}else{p.textContent='HB'}}}
 function toast(message){const el=$('#toast');el.textContent=message;el.style.display='block';clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>el.style.display='none',3500)}
 const dateTitle=()=>{const d=fromKey(selectedWeek),e=addDays(d,6);const a=d.toLocaleDateString(undefined,{month:'short',day:'numeric'});const b=e.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});return `${a} – ${b}`};
 function draw(){applyTheme();applyWallpaperPrefs();renderMissionUi();$('.eyebrow').textContent=state.profile.name.toUpperCase()+' · LIVE WEEKLY CALENDAR';$('#weekLabel').textContent=dateTitle();renderCalendar();renderScoreboard();renderEssentials();refreshWallpaperClock()}
+
+function slotDaypart(time){
+ const hour=Number(String(time||'09:00').slice(0,2));
+ if(hour>=5&&hour<10)return 'sunrise';
+ if(hour>=10&&hour<16)return 'daytime';
+ if(hour>=16&&hour<20)return 'sunset';
+ return 'night';
+}
+function slotIcon(time){
+ const part=slotDaypart(time), paths={
+ sunrise:'<path d="M3 17h18 M5 20h14 M8 14a4 4 0 0 1 8 0"/><path d="M12 2v4 M3.6 7.6l2.3 2.3 M20.4 7.6l-2.3 2.3 M12 10v4"/>',
+ daytime:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2 M12 20v2 M4.93 4.93l1.42 1.42 M17.65 17.65l1.42 1.42 M2 12h2 M20 12h2 M4.93 19.07l1.42-1.42 M17.65 6.35l1.42-1.42"/>',
+ sunset:'<path d="M2 17h20 M4 20h16 M7 14a5 5 0 0 1 10 0"/><path d="M12 3v4 M4 8l2.2 2 M20 8l-2.2 2 M12 10v4"/>',
+ night:'<path d="M20.5 14.4A8.5 8.5 0 0 1 9.6 3.5 8.5 8.5 0 1 0 20.5 14.4z"/><path d="M18 3v3 M16.5 4.5h3 M20 7v2 M19 8h2"/>'
+ };
+ return `<span class="daypart-icon" title="${part}" aria-hidden="true"><svg viewBox="0 0 24 24">${paths[part]}</svg></span>`;
+}
 function renderCalendar(){const week=weekRecord();const visible=missionVisibleTasks();const calendar=$('#calendar');calendar.style.setProperty('--slot-count',String(state.slots.length));calendar.innerHTML='';let top=document.createElement('div');top.className='col-header';top.style.color='var(--accent)';top.textContent='TIME / FOCUS';calendar.append(top);
 for(let day=0;day<7;day++){const d=addDays(fromKey(selectedWeek),day),h=document.createElement('div');h.className='col-header'+(localDateKey(d)===localDateKey(new Date())?' today':'');h.innerHTML=`${DAY_NAMES[day].toUpperCase()}<br><small style="font-weight:400;color:#999;margin-left:4px">${esc(d.toLocaleDateString(undefined,{month:'short',day:'numeric'}))}</small>`;calendar.append(h)}
-state.slots.forEach((slot,row)=>{const label=document.createElement('div');label.className='time-label';label.innerHTML=`<strong>${esc(timeLabel(slot.time))}</strong><small>${esc(slot.label)}</small>`;calendar.append(label);for(let day=0;day<7;day++){const cell=document.createElement('div');cell.className='calendar-cell'+(localDateKey(addDays(fromKey(selectedWeek),day))===localDateKey(new Date())?' is-today':'');const tasks=visible.filter(t=>t.day===day&&t.slot===row);if(!tasks.length){const empty=document.createElement('button');empty.className='empty-card';empty.textContent='+ Add block';empty.title='Add a block';empty.onclick=()=>openEditor(null,day,row);cell.append(empty)}else{tasks.forEach(t=>{const b=document.createElement('button');b.className='task-card'+(week.complete[t.id]?' done':'')+(t.missionOptional?' mission-optional':'')+(t.missionCore?' mission-core':'');b.innerHTML=`<span class="card-title">${esc(t.title)}</span><span class="card-desc">${esc(t.description||t.objective)}</span><span class="card-target">${t.target?'TARGET: '+esc(t.target):'ADD A CLEAR TARGET'}</span><span class="card-cardcheck" aria-hidden="true">${week.complete[t.id]?'✓':'○'}</span>`;b.setAttribute('aria-label',`${t.title}. ${t.description||t.objective}. Target: ${t.target||'not set'}. Open instructions and checklist.`);b.title=`${t.title} — ${t.description||t.objective} — Target: ${t.target||'not set'}`;b.onclick=()=>openTask(t.id);cell.append(b)});if(tasks.length>1)cell.style.overflowY='auto'}calendar.append(cell)}});
+state.slots.forEach((slot,row)=>{const label=document.createElement('div');label.className='time-label';label.innerHTML=`${slotIcon(slot.time)}<strong>${esc(timeLabel(slot.time))}</strong><small>${esc(slot.label)}</small>`;calendar.append(label);for(let day=0;day<7;day++){const cell=document.createElement('div');cell.className='calendar-cell'+(localDateKey(addDays(fromKey(selectedWeek),day))===localDateKey(new Date())?' is-today':'');const tasks=visible.filter(t=>t.day===day&&t.slot===row);if(!tasks.length){const empty=document.createElement('button');empty.className='empty-card';empty.textContent='+ Add block';empty.title='Add a block';empty.onclick=()=>openEditor(null,day,row);cell.append(empty)}else{tasks.forEach(t=>{const b=document.createElement('button');b.className='task-card'+(week.complete[t.id]?' done':'')+(t.missionOptional?' mission-optional':'')+(t.missionCore?' mission-core':'');b.innerHTML=`<span class="card-title">${esc(t.title)}</span><span class="card-desc">${esc(t.description||t.objective)}</span><span class="card-target">${t.target?'TARGET: '+esc(t.target):'ADD A CLEAR TARGET'}</span><span class="card-cardcheck" aria-hidden="true">${week.complete[t.id]?'✓':'○'}</span>`;b.setAttribute('aria-label',`${t.title}. ${t.description||t.objective}. Target: ${t.target||'not set'}. Open instructions and checklist.`);b.title=`${t.title} — ${t.description||t.objective} — Target: ${t.target||'not set'}`;b.onclick=()=>openTask(t.id);cell.append(b)});if(tasks.length>1)cell.style.overflowY='auto'}calendar.append(cell)}});
 const countable=missionCountable(),total=countable.length,done=countable.filter(t=>week.complete[t.id]).length;$('#doneBlocks').textContent=done;$('#totalBlocks').textContent=total;$('#openBlocks').textContent=total-done;const p=total?Math.round(done/total*100):0;$('#progressLabel').textContent=p+'%';$('#progressBar').style.width=p+'%';$('#actionProofStats').textContent=countable.filter(t=>week.complete[t.id]&&week.proofs?.[t.id]?.level==='documented').length+' documented outcomes · '+done+' completed';}
 function renderScoreboard(){const week=weekRecord();if(state.mission){const totals=missionSummary();$('#metricCount').textContent='MISSION · REAL RESULTS';const lines=[['Prospects',totals.prospects,10,''],['Offers sent',totals.offers,5,''],['Money received',totals.paid,20,'$']];$('#scoreboard').innerHTML=lines.map(([label,val,target,prefix])=>`<div class="score-line"><span class="score-label">${esc(label)}</span><div class="score-track"><div class="score-fill" style="width:${Math.min(100,100*val/target)}%"></div></div><span class="score-value">${prefix}${esc(String(val))}/${prefix}${target}</span></div>`).join('');return;}$('#metricCount').textContent=state.metrics.length+' TRACKED';$('#scoreboard').innerHTML=state.metrics.map(m=>{const value=m.id==='tasks'?state.tasks.filter(t=>week.complete[t.id]).length:(Number(week.metrics[m.id])||0),target=Number(m.target)||0,percent=target?Math.min(100,Math.max(0,value/target*100)):0;return `<div class="score-line"><span class="score-label" title="${esc(m.name)}">${esc(m.name)}</span><div class="score-track"><div class="score-fill" style="width:${percent}%"></div></div><span class="score-value">${esc(String(value))}/${esc(String(target))}</span></div>`}).join('')||'<p class="small-hint">Add a metric to begin tracking your wins.</p>'}
 function renderEssentials(){const week=weekRecord();const count=state.essentials.filter(e=>week.nonneg[e.id]).length;$('#nonnegCount').textContent=`${count}/${state.essentials.length}`;$('#nonnegPanel').innerHTML=state.essentials.map(e=>`<label><input type="checkbox" data-nonneg="${esc(e.id)}" ${week.nonneg[e.id]?'checked':''}/><span>${esc(e.name)}</span></label>`).join('')||'<p class="small-hint">Add essentials in Setup.</p>';$('#nonnegStrip').innerHTML=state.essentials.map(e=>`<button class="nonneg-chip ${week.nonneg[e.id]?'hit':''}" data-nonneg-btn="${esc(e.id)}">${week.nonneg[e.id]?'✓':'○'} ${esc(e.name)}</button>`).join('')}
 function setNonneg(item,value){weekRecord().nonneg[item]=value;save();draw()}
 const openModal=(html,wide=false)=>{const ov=$('#overlay');ov.classList.remove('hidden');ov.setAttribute('aria-hidden','false');ov.innerHTML=`<div class="modal ${wide?'wide':''}" role="dialog" aria-modal="true" aria-label="BernAPlan dialog">${html}</div>`;ov.querySelector('.close-btn')?.addEventListener('click',closeModal);ov.querySelector('input,button,textarea,select')?.focus()};
-function closeModal(){if(focusTick){clearInterval(focusTick);focusTick=null;}const ov=$('#overlay');ov.classList.add('hidden');ov.setAttribute('aria-hidden','true');ov.innerHTML='';activeTask=null;editingTask=false}
+function closeModal(){if(typeof bpApplyFonts==='function')bpApplyFonts();if(focusTick){clearInterval(focusTick);focusTick=null;}const ov=$('#overlay');ov.classList.add('hidden');ov.setAttribute('aria-hidden','true');ov.innerHTML='';activeTask=null;editingTask=false}
 function head(title,subtitle=''){return `<div class="modal-header"><div><h2>${esc(title)}</h2><p>${esc(subtitle)}</p></div><button type="button" class="close-btn" aria-label="Close">×</button></div>`}
 function bullets(lines,ordered=false){const tag=ordered?'ol':'ul';return `<${tag}>${(lines||[]).map(t=>`<li>${esc(t)}</li>`).join('')}</${tag}>`}
 const lines=text=>String(text||'').split(/\r?\n/).map(t=>t.trim()).filter(Boolean);
@@ -936,7 +1060,12 @@ function renderSettingsBody(){const container=$('#settingsBody');if(!container)r
 if(settingsTab==='schedule'){container.innerHTML=`<div class="section-box"><h3>Not sure what to put in your calendar?</h3><p>Answer four quick multiple-choice questions. We’ll build a weekly playbook with guided instructions based on your goals—no long forms or paid AI.</p><button class="primary-btn" type="button" id="restartWizard">✦ Build a guided weekly plan →</button><p class="small-hint">Rebuilding will replace the current task layout after confirmation. Export a backup first if you need to preserve it.</p></div><p class="small-hint">Your calendar always shows Monday–Sunday. Edit the time rows without changing the seven-day layout.</p><div id="slotFields">${state.slots.map((s,i)=>`<div class="form-grid"><div class="field"><label>Row ${i+1} time</label><input type="time" data-time="${i}" value="${esc(s.time)}" /></div><div class="field"><label>Focus label</label><input data-slot-label="${i}" value="${esc(s.label)}" /></div></div>`).join('')}</div><div class="modal-actions"><button class="primary-btn" id="saveSlots">Save times</button><button class="secondary-btn" id="addSlot">+ Add row</button>${state.slots.length>1?'<button class="secondary-btn" id="removeSlot">Remove last row</button>':''}</div><div class="section-box"><h3>Starting templates</h3><p>Choose a user-focused example, or start blank. Changing templates replaces the current weekly block definitions, so export a backup first if needed.</p><div class="template-options">${Object.entries(CATALOG).map(([key,val])=>`<button class="template-btn" data-template="${key}"><b>${esc(val.label)}</b><small>${esc(val.description)}</small></button>`).join('')}</div></div>`;
 $('#restartWizard').onclick=()=>openWelcome(true);
 $('#saveSlots').onclick=()=>{const inputs=[...container.querySelectorAll('[data-time]')];const slots=inputs.map((el,i)=>({id:state.slots[i].id,time:el.value,label:container.querySelector(`[data-slot-label="${i}"]`).value.trim()||'FOCUS'}));if(slots.some(x=>!/^\d\d:\d\d$/.test(x.time))){toast('Every time row needs a valid time');return}if(new Set(slots.map(x=>x.time)).size!==slots.length){toast('Each row needs a different time');return}state.slots=slots;save();draw();toast('Time rows updated')};$('#addSlot').onclick=()=>{if(state.slots.length>=9){toast('Maximum 9 rows to keep the calendar readable');return}state.slots.push({id:id(),time:'12:00',label:'NEW ROW'});save();draw();openSettings('schedule')};const rm=$('#removeSlot');if(rm)rm.onclick=()=>{const i=state.slots.length-1;if(state.tasks.some(t=>t.slot===i)&&!confirm('Remove the last row and all blocks in it?'))return;state.tasks=state.tasks.filter(t=>t.slot!==i);state.slots.pop();save();draw();openSettings('schedule')};container.querySelectorAll('[data-template]').forEach(btn=>btn.onclick=()=>{if(state.tasks.length&&!confirm('Replace your current calendar blocks with this template? Export a backup first if needed.'))return;applyTemplate(btn.dataset.template);save();draw();openSettings('schedule');toast('Calendar template loaded')});}
-if(settingsTab==='appearance'){container.innerHTML=`<div class="form-grid">${field('Name your command center','customName',state.profile.name)}${field('Accent color','customAccent',safeColor(state.profile.accent),{type:'color'})}</div><div class="field"><label>Header logo (PNG, JPEG, WebP under 200 KB)</label><input type="file" id="customLogo" accept="image/png,image/jpeg,image/webp"/></div><p class="small-hint">Leave the logo picker untouched to keep the current mark. Uploading your own logo is free. HireBerna product attribution remains in the header/footer.</p><div class="modal-actions"><button class="primary-btn" id="saveAppearance">Apply appearance</button><button class="secondary-btn" id="resetLogo">Remove custom logo</button></div>`;let newLogo=state.profile.logo;$('#customLogo').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>200000||!['image/png','image/jpeg','image/webp'].includes(f.type)){toast('Choose a PNG, JPEG, or WebP smaller than 200 KB');e.target.value='';return}newLogo=await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(f)});toast('Logo ready — click Apply appearance')};$('#saveAppearance').onclick=()=>{state.profile.name=$('#customName').value.trim()||'My Command Center';state.profile.accent=safeColor($('#customAccent').value);state.profile.logo=sanitizeImage(newLogo);save();draw();closeModal();toast('Appearance updated')};$('#resetLogo').onclick=()=>{state.profile.logo=null;save();draw();openSettings('appearance');toast('Custom logo removed')}}
+if(settingsTab==='appearance'){container.innerHTML=`<div class="form-grid">${field('Name your command center','customName',state.profile.name)}${field('Accent color','customAccent',safeColor(state.profile.accent),{type:'color'})}</div><div class="field"><label>Header logo (PNG, JPEG, WebP under 200 KB)</label><input type="file" id="customLogo" accept="image/png,image/jpeg,image/webp"/></div><p class="small-hint">Leave the logo picker untouched to keep the current mark. Uploading your own logo is free. HireBerna product attribution remains in the header/footer.</p><div class="section-box" style="margin-top:12px"><h3>✦ Customize your fonts — FREE</h3><p class="small-hint">Use a built-in typeface or import your own .TTF, .OTF, .WOFF or .WOFF2 font files. Display fonts work best for titles; readable fonts work best for instructions. Your font files stay on this device.</p><div class="form-grid"><div class="field"><label for="bpTitleFont">Headings & task titles</label><select id="bpTitleFont">${bpFontOptions(state.profile.titleFont||'system:default')}</select></div><div class="field"><label for="bpBodyFont">Tasks & instructions</label><select id="bpBodyFont">${bpFontOptions(state.profile.bodyFont||'system:default')}</select></div></div><div class="field"><label for="bpTextSize">Calendar text size</label><select id="bpTextSize"><option value="small" ${state.profile.textSize==='small'?'selected':''}>Compact</option><option value="normal" ${!state.profile.textSize||state.profile.textSize==='normal'?'selected':''}>Standard</option><option value="large" ${state.profile.textSize==='large'?'selected':''}>Large</option></select></div><div class="font-preview"><div><small>HEADINGS</small><strong>Weekly Action Playbook</strong></div><div><small>INSTRUCTIONS</small><span>Choose a clear task and take your next step.</span></div></div><div class="field"><label>Import your own font files</label><input id="bpFontFiles" type="file" accept=".ttf,.otf,.woff,.woff2" multiple /></div><p class="small-hint">Legacy .PFM and .FON fonts are not supported. Font files are saved separately in this wallpaper's local browser storage and are not part of JSON task backups. Re-import after moving to another device or reinstalling the wallpaper.</p><button class="secondary-btn" type="button" id="bpRemoveFont">Remove selected imported font</button></div><div class="modal-actions"><button class="primary-btn" id="saveAppearance">Apply appearance</button><button class="secondary-btn" id="resetLogo">Remove custom logo</button></div>`;let newLogo=state.profile.logo;
+const previewBPFonts=()=>bpPreviewFontSettings($('#bpTitleFont').value,$('#bpBodyFont').value,$('#bpTextSize').value);
+['bpTitleFont','bpBodyFont','bpTextSize'].forEach(k=>$('#'+k).onchange=previewBPFonts);
+$('#bpFontFiles').onchange=async e=>{const files=[...e.target.files];if(files.length)await bpImportFonts(files)};
+$('#bpRemoveFont').onclick=async()=>{const chosen=$('#bpTitleFont').value.startsWith('custom:')?$('#bpTitleFont').value:$('#bpBodyFont').value; if(!chosen.startsWith('custom:')){toast('Choose an imported font first');return}if(confirm('Remove this imported font from the wallpaper?'))await bpRemoveFont(chosen)};
+$('#customLogo').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>200000||!['image/png','image/jpeg','image/webp'].includes(f.type)){toast('Choose a PNG, JPEG, or WebP smaller than 200 KB');e.target.value='';return}newLogo=await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(f)});toast('Logo ready — click Apply appearance')};$('#saveAppearance').onclick=()=>{state.profile.name=$('#customName').value.trim()||'My Command Center';state.profile.accent=safeColor($('#customAccent').value);state.profile.logo=sanitizeImage(newLogo);state.profile.titleFont=$('#bpTitleFont').value;state.profile.bodyFont=$('#bpBodyFont').value;state.profile.textSize=$('#bpTextSize').value;save();draw();closeModal();toast('Appearance updated')};$('#resetLogo').onclick=()=>{state.profile.logo=null;save();draw();openSettings('appearance');toast('Custom logo removed')}}
 if(settingsTab==='goals'){const week=weekRecord();container.innerHTML=`<p class="small-hint">Choose the exact numbers that matter to you. Metrics are only increased when you log real results.</p><div id="metricEditors">${state.metrics.map((m,i)=>`<div class="metric-editor"><div class="field"><label>Metric ${i+1}</label><input data-metric-name="${i}" value="${esc(m.name)}"/></div><div class="field"><label>Weekly goal</label><input type="number" min="0" data-metric-target="${i}" value="${esc(m.target)}"/></div><button class="secondary-btn" data-remove-metric="${i}" aria-label="Remove metric">×</button></div>`).join('')}</div><div class="modal-actions"><button id="saveMetrics" class="primary-btn">Save metrics</button><button id="addMetric" class="secondary-btn">+ Add metric</button><button id="adjustMetrics" class="secondary-btn">Log / correct progress</button></div>`;$('#saveMetrics').onclick=()=>{state.metrics=state.metrics.map((m,i)=>({...m,name:container.querySelector(`[data-metric-name="${i}"]`).value.trim()||m.name,target:Math.max(0,Number(container.querySelector(`[data-metric-target="${i}"]`).value)||0)}));save();draw();openSettings('goals');toast('Weekly goals saved')};$('#addMetric').onclick=()=>{if(state.metrics.length>=12){toast('Limit 12 metrics to keep the board readable');return}state.metrics.push({id:id(),name:'New metric',target:5,unit:'count'});save();draw();openSettings('goals')};container.querySelectorAll('[data-remove-metric]').forEach(btn=>btn.onclick=()=>{if(!confirm('Remove this metric from the scoreboard?'))return;state.metrics.splice(Number(btn.dataset.removeMetric),1);save();draw();openSettings('goals')});$('#adjustMetrics').onclick=()=>openAdjustMetrics();}
 if(settingsTab==='essentials'){container.innerHTML=`<p class="small-hint">Choose the must-do habits or commitments for this week. Check them off in the board's bottom strip.</p><div id="essentialFields">${state.essentials.map((e,i)=>`<div class="field"><label>Essential ${i+1}</label><input data-essential="${i}" value="${esc(e.name)}"/></div>`).join('')}</div><div class="modal-actions"><button id="saveEssentials" class="primary-btn">Save essentials</button><button id="addEssential" class="secondary-btn">+ Add essential</button><button id="removeEssential" class="secondary-btn">Remove last</button></div>`;$('#saveEssentials').onclick=()=>{state.essentials=state.essentials.map((e,i)=>({...e,name:container.querySelector(`[data-essential="${i}"]`).value.trim()||e.name}));save();draw();openSettings('essentials');toast('Essentials saved')};$('#addEssential').onclick=()=>{if(state.essentials.length>=15){toast('Maximum 15 essentials');return}state.essentials.push({id:id(),name:'New essential'});save();draw();openSettings('essentials')};$('#removeEssential').onclick=()=>{state.essentials.pop();save();draw();openSettings('essentials')};}
 if(settingsTab==='data'){container.innerHTML=`<div class="section-box"><h3>Your data stays on this device</h3><p>BernAPlan currently uses browser local storage. It does NOT have cloud backup, direct Google/Outlook calendar synchronization, or automatic device syncing yet. Export your data regularly, especially before clearing browser data or changing computers.</p></div><div class="modal-actions"><button id="exportBackup" class="primary-btn">↓ Export JSON backup</button><button id="importBackup" class="secondary-btn">↑ Import backup</button><input id="backupFile" type="file" accept="application/json,.json" class="hidden"/></div><p class="small-hint">This is an early prototype developed independently of the existing v0.4.2 desktop release. Import only backups exported by this prototype.</p>`;$('#exportBackup').onclick=()=>downloadFile('BernAPlan-backup-'+localDateKey(new Date())+'.json',JSON.stringify(state,null,2),'application/json');$('#importBackup').onclick=()=>$('#backupFile').click();$('#backupFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;if(file.size>1e6){toast('Backup is too large');return}let candidate;try{candidate=JSON.parse(await file.text());if(candidate.version!==1||!Array.isArray(candidate.tasks)||!Array.isArray(candidate.slots)||!Array.isArray(candidate.metrics)||!Array.isArray(candidate.essentials)||typeof candidate.weeks!=='object')throw Error('Invalid format')}catch(err){toast('Invalid BernAPlan prototype backup');return}if(!confirm('Import this backup and replace the current local board?'))return;state=candidate;save();draw();closeModal();toast('Backup imported')};}
@@ -1097,7 +1226,7 @@ function openWelcome(rebuild=false){
  drawWizard();
 }
 $('#missionOpen').onclick=openMissionHub;$('#calendar').addEventListener('click',()=>{});$('#prevWeek').onclick=()=>{selectedWeek=localDateKey(addDays(fromKey(selectedWeek),-7));draw()};$('#nextWeek').onclick=()=>{selectedWeek=localDateKey(addDays(fromKey(selectedWeek),7));draw()};$('#jumpToday').onclick=()=>{selectedWeek=localDateKey(beginningOfWeek());draw()};
-const fullscreenButton=$('#fullScreenDisplay');if(fullscreenButton){fullscreenButton.onclick=async()=>{try{if(document.fullscreenElement){await document.exitFullscreen()}else{await document.documentElement.requestFullscreen()}}catch(e){toast('Full screen is unavailable here. Try F11 in your browser.')}};document.addEventListener('fullscreenchange',()=>{fullscreenButton.textContent=document.fullscreenElement?'⛶ Exit full screen':'⛶ Full screen'})}$('#newTask').onclick=()=>openEditor();$('#settingsButton').onclick=()=>openSettings('appearance');$('#openSetup').onclick=()=>openSettings('schedule');$('#editScoreboard').onclick=()=>state.mission?openMissionLog():openSettings('goals');$('#weeklyReview').onclick=openWeeklyReview;$('#editNonneg').onclick=()=>openSettings('essentials');$('#nonnegPanel').onchange=e=>{if(e.target.matches('[data-nonneg]'))setNonneg(e.target.dataset.nonneg,e.target.checked)};$('#nonnegStrip').onclick=e=>{const btn=e.target.closest('[data-nonneg-btn]');if(btn){const key=btn.dataset.nonnegBtn;setNonneg(key,!weekRecord().nonneg[key])}};$('#overlay').addEventListener('click',e=>{if(e.target===$('#overlay'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#overlay').classList.contains('hidden'))closeModal()});
+$('#newTask').onclick=()=>openEditor();$('#settingsButton').onclick=()=>openSettings('appearance');$('#openSetup').onclick=()=>openSettings('schedule');$('#editScoreboard').onclick=()=>state.mission?openMissionLog():openSettings('goals');$('#weeklyReview').onclick=openWeeklyReview;$('#editNonneg').onclick=()=>openSettings('essentials');$('#nonnegPanel').onchange=e=>{if(e.target.matches('[data-nonneg]'))setNonneg(e.target.dataset.nonneg,e.target.checked)};$('#nonnegStrip').onclick=e=>{const btn=e.target.closest('[data-nonneg-btn]');if(btn){const key=btn.dataset.nonnegBtn;setNonneg(key,!weekRecord().nonneg[key])}};$('#overlay').addEventListener('click',e=>{if(e.target===$('#overlay'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#overlay').classList.contains('hidden'))closeModal()});
 
 /* Lively Wallpaper adapter, intentionally separate from personal task persistence. */
 const wallpaperPrefs={accent:null,showClock:true,highlightCurrent:true,largerText:false};
@@ -1149,7 +1278,7 @@ state=load();
 const previousGuidesImproved=state.tasks.reduce((n,t)=>n+(!t.missionId&&improveGuideIfGeneric(t)?1:0),0);
 const agendaImproved=upgradeGeneratedCalendar();
 if(previousGuidesImproved||agendaImproved||!localStorage.getItem(KEY))save();
-draw();if(!state.configured)openWelcome();
+draw();bpRestoreFonts();if(!state.configured)openWelcome();
 })();
 
 </script>
