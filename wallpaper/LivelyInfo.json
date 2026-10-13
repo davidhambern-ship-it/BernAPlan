@@ -1,10 +1,10 @@
 {
-  "AppVersion": "2.0.0.0",
+  "AppVersion": "2.0.1.0",
   "Version": 0,
-  "Title": "BernAPlan — Desktop Command Center",
+  "Title": "BernAPlan — Desktop Polish (Font Beta)",
   "Thumbnail": null,
   "Preview": null,
-  "Desc": "Offline interactive seven-day command center with task guidance and Missions. No native notifier is installed.",
+  "Desc": "Interactive seven-day Desktop Command Center with time-of-day illustrations, free font customization, guided ACTION and Missions.",
   "Author": "HireBerna",
   "License": "Proprietary preview; free beta use",
   "Contact": null,
