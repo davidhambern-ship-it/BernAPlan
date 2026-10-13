@@ -1,10 +1,10 @@
 {
-  "AppVersion": "2.0.3.0",
+  "AppVersion": "2.0.4.0",
   "Version": 0,
-  "Title": "BernAPlan — Font Loading Fix (Beta)",
+  "Title": "BernAPlan — Clickable Font Picker (Beta)",
   "Thumbnail": null,
   "Preview": null,
-  "Desc": "Offline Desktop Command Center with working user-owned font importing, live loaded status, guided Missions and weekly calendar.",
+  "Desc": "Lively-safe in-page font buttons, no native dropdown focus bug; interactive Desktop Command Center, Missions and ACTION coaching.",
   "Author": "HireBerna",
   "License": "Proprietary preview; free beta use",
   "Contact": null,
