@@ -796,6 +796,31 @@ const BP_BUILTIN_FONTS=[
  {id:'system:bold',name:'Bold / Poster',family:'Impact,"Arial Narrow",Arial,sans-serif'},
  {id:'system:digital',name:'Digital / Technical',family:'Consolas,"Courier New",monospace'}
 ];
+const BP_PERSONAL_FONTS=[
+ {id:'personal:alpha-male',name:'Alpha Male Modern',family:'AlphaMaleModern'},
+ {id:'personal:boxpot',name:'Boxpot',family:'Boxpot'},
+ {id:'personal:computer',name:'Computerfont',family:'Computerfont'},
+ {id:'personal:digital-arcade',name:'Digital Arcade',family:'Digital Arcade'},
+ {id:'personal:digital-dare',name:'Digital Dare',family:'Digital Dare'},
+ {id:'personal:digital-glitch',name:'Digital Glitch Demo',family:'Digital Glitch Demo'},
+ {id:'personal:gabrielle',name:'Gabrielle',family:'Gabrielle'},
+ {id:'personal:game-music',name:'Game Music Love',family:'Game Music Love'},
+ {id:'personal:modern-conformist',name:'Modern Conformist',family:'Modern Conformist'},
+ {id:'personal:modern-settlement',name:'Modern Settlement',family:'Modern Settlement'},
+ {id:'personal:modern-vision',name:'Modern Vision',family:'Modern Vision'},
+ {id:'personal:music-television',name:'Music Television Selector',family:'music television selector'},
+ {id:'personal:robot-font',name:'Robot Font',family:'Robot_Font'},
+ {id:'personal:robotica',name:'Robotica',family:'Robotica'},
+ {id:'personal:scriptina',name:'Scriptina Pro',family:'Scriptina Pro'},
+ {id:'personal:selfish',name:'Selfish',family:'Selfish'},
+ {id:'personal:2k12',name:'The 2K12',family:'The 2K12'}
+];
+const bpCleanFontName=s=>String(s||'').replace(/\.(ttf|otf|woff2?|TTF|OTF)$/i,'').replace(/[^a-z0-9]/gi,'').toLowerCase();
+function bpMatchingImportedFont(displayName){
+ const search=bpCleanFontName(displayName);
+ for(const font of bpInstalledFonts.values())if(bpCleanFontName(font.name)===search)return font.family;
+ return null;
+}
 const bpInstalledFonts=new Map();
 let bpFontsDb=null;
 function bpOpenFontDb(){return new Promise((resolve,reject)=>{
@@ -827,7 +852,15 @@ async function bpRestoreFonts(){
 }
 function bpFontFamily(id){
  const builtin=BP_BUILTIN_FONTS.find(f=>f.id===id);
- return builtin?.family||(bpInstalledFonts.get(id)?.family?`"${bpInstalledFonts.get(id).family}","Segoe UI",Arial,sans-serif`:'Inter,"Segoe UI",Arial,sans-serif');
+ if(builtin)return builtin.family;
+ const personal=BP_PERSONAL_FONTS.find(f=>f.id===id);
+ if(personal){
+  const imported=bpMatchingImportedFont(personal.name);
+  // Use an installed PC font or font the user independently imported, not bundled binaries.
+  return `"${imported||personal.family}","Segoe UI",Arial,sans-serif`;
+ }
+ const importedFont=bpInstalledFonts.get(id);
+ return importedFont?`"${importedFont.family}","Segoe UI",Arial,sans-serif`:'Inter,"Segoe UI",Arial,sans-serif';
 }
 function bpApplyFonts(){
  if(!state?.profile)return;
@@ -836,8 +869,10 @@ function bpApplyFonts(){
  document.documentElement.setAttribute('data-bp-text-size',state.profile.textSize||'normal');
 }
 function bpFontOptions(selected){
- return BP_BUILTIN_FONTS.map(f=>`<option value="${f.id}" ${f.id===selected?'selected':''}>${esc(f.name)}</option>`).join('')+
- [...bpInstalledFonts].map(([id,f])=>`<option value="${esc(id)}" ${id===selected?'selected':''}>★ ${esc(f.name)}</option>`).join('');
+ const opts=fonts=>fonts.map(f=>`<option value="${esc(f.id)}" ${f.id===selected?'selected':''}>${esc(f.name)}</option>`).join('');
+ return `<optgroup label="Easy-to-read & built-in">${opts(BP_BUILTIN_FONTS)}</optgroup>`+
+ `<optgroup label="Your 17 named font styles (install once)">${opts(BP_PERSONAL_FONTS)}</optgroup>`+
+ ([...bpInstalledFonts].length?`<optgroup label="Imported into this wallpaper">${[...bpInstalledFonts].map(([id,f])=>`<option value="${esc(id)}" ${id===selected?'selected':''}>★ ${esc(f.name)}</option>`).join('')}</optgroup>`:'');
 }
 function bpPreviewFontSettings(titleId,bodyId,size){
  document.documentElement.style.setProperty('--bp-title-font',bpFontFamily(titleId));
@@ -860,7 +895,7 @@ async function bpImportFonts(files){
   titleEl.value=first||oldT;bodyEl.value=oldB;
   bpPreviewFontSettings(titleEl.value,bodyEl.value,$('#bpTextSize')?.value);
  }
- toast(`${success} font${success===1?'':'s'} imported${failed?'; '+failed+' skipped (unsupported or invalid)':''}. Click Apply appearance to choose it.`);
+ toast(`${success} font${success===1?'':'s'} imported${failed?'; '+failed+' skipped (unsupported or invalid)':''}. Choose a style in the dropdown and click Apply appearance.`);
 }
 async function bpRemoveFont(idToRemove){
  if(!idToRemove?.startsWith('custom:')||!bpFontsDb)return;
@@ -1060,7 +1095,7 @@ function renderSettingsBody(){const container=$('#settingsBody');if(!container)r
 if(settingsTab==='schedule'){container.innerHTML=`<div class="section-box"><h3>Not sure what to put in your calendar?</h3><p>Answer four quick multiple-choice questions. We’ll build a weekly playbook with guided instructions based on your goals—no long forms or paid AI.</p><button class="primary-btn" type="button" id="restartWizard">✦ Build a guided weekly plan →</button><p class="small-hint">Rebuilding will replace the current task layout after confirmation. Export a backup first if you need to preserve it.</p></div><p class="small-hint">Your calendar always shows Monday–Sunday. Edit the time rows without changing the seven-day layout.</p><div id="slotFields">${state.slots.map((s,i)=>`<div class="form-grid"><div class="field"><label>Row ${i+1} time</label><input type="time" data-time="${i}" value="${esc(s.time)}" /></div><div class="field"><label>Focus label</label><input data-slot-label="${i}" value="${esc(s.label)}" /></div></div>`).join('')}</div><div class="modal-actions"><button class="primary-btn" id="saveSlots">Save times</button><button class="secondary-btn" id="addSlot">+ Add row</button>${state.slots.length>1?'<button class="secondary-btn" id="removeSlot">Remove last row</button>':''}</div><div class="section-box"><h3>Starting templates</h3><p>Choose a user-focused example, or start blank. Changing templates replaces the current weekly block definitions, so export a backup first if needed.</p><div class="template-options">${Object.entries(CATALOG).map(([key,val])=>`<button class="template-btn" data-template="${key}"><b>${esc(val.label)}</b><small>${esc(val.description)}</small></button>`).join('')}</div></div>`;
 $('#restartWizard').onclick=()=>openWelcome(true);
 $('#saveSlots').onclick=()=>{const inputs=[...container.querySelectorAll('[data-time]')];const slots=inputs.map((el,i)=>({id:state.slots[i].id,time:el.value,label:container.querySelector(`[data-slot-label="${i}"]`).value.trim()||'FOCUS'}));if(slots.some(x=>!/^\d\d:\d\d$/.test(x.time))){toast('Every time row needs a valid time');return}if(new Set(slots.map(x=>x.time)).size!==slots.length){toast('Each row needs a different time');return}state.slots=slots;save();draw();toast('Time rows updated')};$('#addSlot').onclick=()=>{if(state.slots.length>=9){toast('Maximum 9 rows to keep the calendar readable');return}state.slots.push({id:id(),time:'12:00',label:'NEW ROW'});save();draw();openSettings('schedule')};const rm=$('#removeSlot');if(rm)rm.onclick=()=>{const i=state.slots.length-1;if(state.tasks.some(t=>t.slot===i)&&!confirm('Remove the last row and all blocks in it?'))return;state.tasks=state.tasks.filter(t=>t.slot!==i);state.slots.pop();save();draw();openSettings('schedule')};container.querySelectorAll('[data-template]').forEach(btn=>btn.onclick=()=>{if(state.tasks.length&&!confirm('Replace your current calendar blocks with this template? Export a backup first if needed.'))return;applyTemplate(btn.dataset.template);save();draw();openSettings('schedule');toast('Calendar template loaded')});}
-if(settingsTab==='appearance'){container.innerHTML=`<div class="form-grid">${field('Name your command center','customName',state.profile.name)}${field('Accent color','customAccent',safeColor(state.profile.accent),{type:'color'})}</div><div class="field"><label>Header logo (PNG, JPEG, WebP under 200 KB)</label><input type="file" id="customLogo" accept="image/png,image/jpeg,image/webp"/></div><p class="small-hint">Leave the logo picker untouched to keep the current mark. Uploading your own logo is free. HireBerna product attribution remains in the header/footer.</p><div class="section-box" style="margin-top:12px"><h3>✦ Customize your fonts — FREE</h3><p class="small-hint">Use a built-in typeface or import your own .TTF, .OTF, .WOFF or .WOFF2 font files. Display fonts work best for titles; readable fonts work best for instructions. Your font files stay on this device.</p><div class="form-grid"><div class="field"><label for="bpTitleFont">Headings & task titles</label><select id="bpTitleFont">${bpFontOptions(state.profile.titleFont||'system:default')}</select></div><div class="field"><label for="bpBodyFont">Tasks & instructions</label><select id="bpBodyFont">${bpFontOptions(state.profile.bodyFont||'system:default')}</select></div></div><div class="field"><label for="bpTextSize">Calendar text size</label><select id="bpTextSize"><option value="small" ${state.profile.textSize==='small'?'selected':''}>Compact</option><option value="normal" ${!state.profile.textSize||state.profile.textSize==='normal'?'selected':''}>Standard</option><option value="large" ${state.profile.textSize==='large'?'selected':''}>Large</option></select></div><div class="font-preview"><div><small>HEADINGS</small><strong>Weekly Action Playbook</strong></div><div><small>INSTRUCTIONS</small><span>Choose a clear task and take your next step.</span></div></div><div class="field"><label>Import your own font files</label><input id="bpFontFiles" type="file" accept=".ttf,.otf,.woff,.woff2" multiple /></div><p class="small-hint">Legacy .PFM and .FON fonts are not supported. Font files are saved separately in this wallpaper's local browser storage and are not part of JSON task backups. Re-import after moving to another device or reinstalling the wallpaper.</p><button class="secondary-btn" type="button" id="bpRemoveFont">Remove selected imported font</button></div><div class="modal-actions"><button class="primary-btn" id="saveAppearance">Apply appearance</button><button class="secondary-btn" id="resetLogo">Remove custom logo</button></div>`;let newLogo=state.profile.logo;
+if(settingsTab==='appearance'){container.innerHTML=`<div class="form-grid">${field('Name your command center','customName',state.profile.name)}${field('Accent color','customAccent',safeColor(state.profile.accent),{type:'color'})}</div><div class="field"><label>Header logo (PNG, JPEG, WebP under 200 KB)</label><input type="file" id="customLogo" accept="image/png,image/jpeg,image/webp"/></div><p class="small-hint">Leave the logo picker untouched to keep the current mark. Uploading your own logo is free. HireBerna product attribution remains in the header/footer.</p><div class="section-box" style="margin-top:12px"><h3>✦ Customize your fonts — FREE</h3><p class="small-hint">Choose from our easy-to-read options or the names in your personal font collection below. Fonts already installed in Windows work right away; otherwise install the font on this PC or use Import once. Pick a decorative font for titles and a readable font for instructions.</p><div class="form-grid"><div class="field"><label for="bpTitleFont">Headings & task titles</label><select id="bpTitleFont">${bpFontOptions(state.profile.titleFont||'system:default')}</select></div><div class="field"><label for="bpBodyFont">Tasks & instructions</label><select id="bpBodyFont">${bpFontOptions(state.profile.bodyFont||'system:default')}</select></div></div><div class="field"><label for="bpTextSize">Calendar text size</label><select id="bpTextSize"><option value="small" ${state.profile.textSize==='small'?'selected':''}>Compact</option><option value="normal" ${!state.profile.textSize||state.profile.textSize==='normal'?'selected':''}>Standard</option><option value="large" ${state.profile.textSize==='large'?'selected':''}>Large</option></select></div><div class="font-preview"><div><small>HEADINGS</small><strong>Weekly Action Playbook</strong></div><div><small>INSTRUCTIONS</small><span>Choose a clear task and take your next step.</span></div></div><div class="field"><label>Add a font that is not installed on this PC (optional)</label><input id="bpFontFiles" type="file" accept=".ttf,.otf,.woff,.woff2" multiple /></div><p class="small-hint">All 17 of your unique font names are listed above. Unavailable system fonts use a readable fallback until installed or imported. .PFM and .FON are not supported. Imported fonts stay on this device and are not part of JSON task backups.</p><button class="secondary-btn" type="button" id="bpRemoveFont">Remove selected imported font</button></div><div class="modal-actions"><button class="primary-btn" id="saveAppearance">Apply appearance</button><button class="secondary-btn" id="resetLogo">Remove custom logo</button></div>`;let newLogo=state.profile.logo;
 const previewBPFonts=()=>bpPreviewFontSettings($('#bpTitleFont').value,$('#bpBodyFont').value,$('#bpTextSize').value);
 ['bpTitleFont','bpBodyFont','bpTextSize'].forEach(k=>$('#'+k).onchange=previewBPFonts);
 $('#bpFontFiles').onchange=async e=>{const files=[...e.target.files];if(files.length)await bpImportFonts(files)};
