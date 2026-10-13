@@ -1,10 +1,10 @@
 {
-  "AppVersion": "2.0.1.0",
+  "AppVersion": "2.0.2.0",
   "Version": 0,
-  "Title": "BernAPlan — Desktop Polish (Font Beta)",
+  "Title": "BernAPlan — Desktop Font Menu (Beta)",
   "Thumbnail": null,
   "Preview": null,
-  "Desc": "Interactive seven-day Desktop Command Center with time-of-day illustrations, free font customization, guided ACTION and Missions.",
+  "Desc": "Interactive Desktop Command Center with built-in named font selectors and local custom font importing.",
   "Author": "HireBerna",
   "License": "Proprietary preview; free beta use",
   "Contact": null,
