@@ -47,3 +47,12 @@ The new build uses the same localStorage key, but browser files opened from diff
 - The HTML is standalone (all scripts and styles inlined) and has zero paid dependencies.
 - Existing browser saves use the same storage key and support the new optional proof/session/review fields. Back up data before opening the HTML from a new file location.
 - **Not yet delivered:** native Windows wallpaper integration, Android launcher, native iOS widgets, live calendar APIs, independent proof verification, cross-device sync.
+
+## Clear agenda correction (October 13, 2026)
+- **Original playbook restored:** seven days across and five populated time rows by default; lighter setup modes show focused blocks plus explicitly labeled lighter/catch-up/rest activities rather than blank cells.
+- **Action + target on every starter card:** 126 curated task recipes spanning everyday, business, school and creator playbooks. E.g. “Find opportunities” points to Upwork/Contra/LinkedIn and specifies a target of 10 viable opportunities.
+- **Full-width calendar:** weekly scoreboard moved below the grid to preserve readable card width. The full five-row board was tested at 1366×768, 1440×810, 1700×900 and 1920×1080 without calendar scrolling.
+- **Saved data respected:** auto-migrate old 14/21-task generated light/balanced plans only when they retain the original generated layout. Keep prior task IDs, progress, notes, and user-entered evidence. Only replace recognizably generic auto-generated card descriptions; preserve custom edits.
+- **Task editor:** editable action and outcome/target fields; ACTION coach, motivation, checklist, completion evidence and weekly review still present.
+
+Open **`prototype/index.html`** (standalone; CSS and JS bundled inline). The extracted `app.js` and `styles.css` files are editable source copies. No backend, paid service, or user account is required. This is still a browser prototype and does not replace the existing Windows v0.4.2 beta.
