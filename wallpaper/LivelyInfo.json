@@ -1,10 +1,10 @@
 {
-  "AppVersion": "2.0.5.0",
+  "AppVersion": "2.0.6.0",
   "Version": 0,
-  "Title": "BernAPlan — My Font Library (Beta)",
+  "Title": "BernAPlan — Verified Font Library (Beta)",
   "Thumbnail": null,
   "Preview": null,
-  "Desc": "Lively Desktop Command Center with locally managed fonts, automatic restoration, private font-library backups, Missions and ACTION coaching.",
+  "Desc": "Offline Desktop Command Center with 16 verified personal font styles, local font library, guided Missions and ACTION coaching.",
   "Author": "HireBerna",
   "License": "Proprietary preview; free beta use",
   "Contact": null,
