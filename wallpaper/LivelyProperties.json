@@ -1,0 +1,22 @@
+{
+  "accentColor": {
+    "text": "Calendar accent color",
+    "type": "color",
+    "value": "#F77513"
+  },
+  "showClock": {
+    "text": "Show local clock",
+    "type": "checkbox",
+    "value": true
+  },
+  "highlightCurrent": {
+    "text": "Highlight current time block",
+    "type": "checkbox",
+    "value": true
+  },
+  "largerText": {
+    "text": "Larger card text (best at 1080p+)",
+    "type": "checkbox",
+    "value": false
+  }
+}
