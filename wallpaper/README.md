@@ -24,3 +24,7 @@ This folder provides a **standalone offline HTML wallpaper** compatible with Liv
 - Never bundle font binaries with the repository, beta ZIP, or downloaded materials. Users choose their own locally held files; PFM/FON are not supported.
 - For commercial use, verify font licenses. Some fonts marked Demo may have restrictions.
 - Browser smoke checks confirmed the time icons, appearance selectors, save/reopen, and parsing of two supplied test fonts. Actual Lively file picker and IndexedDB persistence still require hands-on Windows verification.
+
+## Personal font menu
+
+The Appearance settings offer a built-in dropdown listing 17 distinct font names from the user's submitted collection (plus five standard typefaces). These are **font name references only**: no third-party font binaries are embedded or redistributed. To display one of these typefaces, it must already be installed in Windows, or the user may import their own TTF/OTF in the application. When missing, the UI falls back to readable standard typefaces. Two legacy source files (PFM/FON) are excluded. Both headings and body text can use independent selections. This remains free and offline. Font license responsibility stays with whoever provides/installs the fonts.
