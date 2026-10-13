@@ -1,10 +1,10 @@
 {
-  "AppVersion": "2.0.2.0",
+  "AppVersion": "2.0.3.0",
   "Version": 0,
-  "Title": "BernAPlan — Desktop Font Menu (Beta)",
+  "Title": "BernAPlan — Font Loading Fix (Beta)",
   "Thumbnail": null,
   "Preview": null,
-  "Desc": "Interactive Desktop Command Center with built-in named font selectors and local custom font importing.",
+  "Desc": "Offline Desktop Command Center with working user-owned font importing, live loaded status, guided Missions and weekly calendar.",
   "Author": "HireBerna",
   "License": "Proprietary preview; free beta use",
   "Contact": null,
