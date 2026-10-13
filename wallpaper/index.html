@@ -359,6 +359,25 @@ html[data-bp-text-size="small"] .card-target{font-size:clamp(9px,.69vw,10px)}
 .font-preview span{font-family:var(--bp-body-font);font-size:14px;color:#eee}
 @media(max-width:600px){.font-preview{grid-template-columns:1fr}}
 
+
+/* Font controls deliberately avoid native <select> menus: Lively/CEF can lose focus
+   to the desktop icon layer when a platform select popup is opened. */
+.bp-font-picker{border:1px solid #403328;border-radius:9px;background:#101114;padding:10px;max-height:232px;overflow-y:auto;overscroll-behavior:contain;user-select:none;-webkit-user-select:none}
+.bp-font-group{margin-bottom:10px}
+.bp-font-group:last-child{margin-bottom:0}
+.bp-font-group-name{font-family:Arial,sans-serif;font-size:10px;font-weight:800;letter-spacing:.6px;color:#a8a3a0;margin:2px 1px 8px}
+.bp-font-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(144px,1fr));gap:7px}
+.bp-font-tile{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:left;min-height:56px;border:1px solid #534137;border-radius:7px;padding:8px 9px;background:#1a1b1c;color:#fff;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation;box-sizing:border-box}
+.bp-font-tile:hover,.bp-font-tile:focus-visible{border-color:var(--accent);background:#262018;outline:none}
+.bp-font-tile.selected{border:2px solid var(--accent);background:#3c250f;padding:7px 8px}
+.bp-font-tile.pending{opacity:.7}
+.bp-font-tile-name{display:block;max-width:100%;font-size:15px;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;pointer-events:none}
+.bp-font-tile-state{display:block;font:10px Arial,sans-serif!important;margin-top:5px;letter-spacing:.2px;color:#c9baa9;pointer-events:none}
+.bp-font-tile.selected .bp-font-tile-state{color:#ffc18d}
+.bp-font-size-row{display:flex;gap:8px;user-select:none;-webkit-user-select:none}
+.bp-font-size-tile{background:#191a1b;color:white;border:1px solid #534137;border-radius:7px;padding:10px 14px;flex:1;cursor:pointer;font-weight:750}
+.bp-font-size-tile.selected{background:#3c250f;border:2px solid var(--accent);color:#fff}
+@media(max-width:600px){.bp-font-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.bp-font-picker{max-height:190px}}
 </style>
 
 </head>
@@ -890,6 +909,52 @@ function bpFontOptions(selected){
  `<optgroup label="Your custom fonts (import files to activate)">${opts(BP_PERSONAL_FONTS)}</optgroup>`+
  ([...bpInstalledFonts].length?`<optgroup label="Imported into this wallpaper">${[...bpInstalledFonts].map(([id,f])=>`<option value="${esc(id)}" ${id===selected?'selected':''}>★ ${esc(f.name)}</option>`).join('')}</optgroup>`:'');
 }
+function bpFontTiles(selected,kind){
+ const groups=[['BUILT-IN — WORKS IMMEDIATELY',BP_BUILTIN_FONTS],['YOUR FONT COLLECTION — IMPORT FILES TO ACTIVATE',BP_PERSONAL_FONTS]];
+ const imported=[...bpInstalledFonts].filter(([id])=>id.startsWith('custom:')).map(([id,f])=>({id,name:f.name}));
+ if(imported.length)groups.push(['OTHER IMPORTED FONTS',imported]);
+ return groups.map(([heading,fonts])=>`<div class="bp-font-group"><div class="bp-font-group-name">${esc(heading)}</div><div class="bp-font-grid">${fonts.map(f=>{
+  const active=selected===f.id;
+  const ready=f.id.startsWith('system:')||bpInstalledFonts.has(f.id)||!!bpMatchingImportedFont(f.name);
+  const label=f.id.startsWith('system:')?'Built in':ready?'✓ Ready':'Import required';
+  return `<button type="button" class="bp-font-tile${active?' selected':''}${!ready?' pending':''}" data-pick-font="${esc(f.id)}" data-font-kind="${kind}" aria-pressed="${active?'true':'false'}" title="${esc(f.name)}"><span class="bp-font-tile-name" style="font-family:${esc(bpFontFamily(f.id))}">${esc(f.name)}</span><span class="bp-font-tile-state">${esc(label)}</span></button>`;
+ }).join('')}</div></div>`).join('');
+}
+function bpFontPickerRefresh(){
+ for(const [kind,id] of [['title','bpTitleFont'],['body','bpBodyFont']]){
+  const hidden=document.getElementById(id),place=document.getElementById(id+'Picker');
+  if(hidden&&place)place.innerHTML=bpFontTiles(hidden.value,kind);
+ }
+}
+function bpWireFontPickers(){
+ for(const [kind,id] of [['title','bpTitleFont'],['body','bpBodyFont']]){
+  const place=document.getElementById(id+'Picker');
+  if(!place)continue;
+  place.addEventListener('click',e=>{
+   const option=e.target.closest('[data-pick-font]');
+   if(!option||!place.contains(option))return;
+   e.preventDefault();
+   const selection=option.dataset.pickFont;
+   const input=document.getElementById(id);
+   input.value=selection;
+   bpFontPickerRefresh();
+   bpPreviewFontSettings(document.getElementById('bpTitleFont').value,document.getElementById('bpBodyFont').value,document.getElementById('bpTextSize').value);
+  });
+ }
+ const sizes=document.getElementById('bpTextSizeButtons');
+ sizes?.addEventListener('click',e=>{
+  const option=e.target.closest('[data-text-size]');
+  if(!option)return;
+  e.preventDefault();
+  const sz=option.dataset.textSize;
+  document.getElementById('bpTextSize').value=sz;
+  for(const button of sizes.querySelectorAll('[data-text-size]')){
+   button.classList.toggle('selected',button.dataset.textSize===sz);
+   button.setAttribute('aria-pressed',String(button.dataset.textSize===sz));
+  }
+  bpPreviewFontSettings(document.getElementById('bpTitleFont').value,document.getElementById('bpBodyFont').value,sz);
+ });
+}
 function bpFontStatusText(titleId,bodyId){
  const describe=(id,label)=>{
   const p=BP_PERSONAL_FONTS.find(f=>f.id===id);
@@ -927,11 +992,8 @@ async function bpImportFonts(files){
  }
  const titleEl=$('#bpTitleFont'),bodyEl=$('#bpBodyFont');
  if(titleEl&&bodyEl){
-  const oldT=titleEl.value,oldB=bodyEl.value;
-  // Rebuild the option labels after imports; selections keep their exact IDs.
-  titleEl.innerHTML=bpFontOptions(oldT);bodyEl.innerHTML=bpFontOptions(oldB);
-  titleEl.value=oldT;bodyEl.value=oldB;
-  if(success&&oldT==='system:default')titleEl.value=first;
+  if(success&&titleEl.value==='system:default')titleEl.value=first;
+  bpFontPickerRefresh();
   bpPreviewFontSettings(titleEl.value,bodyEl.value,$('#bpTextSize')?.value);
  }
  toast(`${success} font${success===1?'':'s'} activated${failed?'; '+failed+' skipped or invalid':''}.${success&&!bpFontStorageReady?' Re-import after restarting wallpaper (storage unavailable).':''}`);
@@ -1134,9 +1196,9 @@ function renderSettingsBody(){const container=$('#settingsBody');if(!container)r
 if(settingsTab==='schedule'){container.innerHTML=`<div class="section-box"><h3>Not sure what to put in your calendar?</h3><p>Answer four quick multiple-choice questions. We’ll build a weekly playbook with guided instructions based on your goals—no long forms or paid AI.</p><button class="primary-btn" type="button" id="restartWizard">✦ Build a guided weekly plan →</button><p class="small-hint">Rebuilding will replace the current task layout after confirmation. Export a backup first if you need to preserve it.</p></div><p class="small-hint">Your calendar always shows Monday–Sunday. Edit the time rows without changing the seven-day layout.</p><div id="slotFields">${state.slots.map((s,i)=>`<div class="form-grid"><div class="field"><label>Row ${i+1} time</label><input type="time" data-time="${i}" value="${esc(s.time)}" /></div><div class="field"><label>Focus label</label><input data-slot-label="${i}" value="${esc(s.label)}" /></div></div>`).join('')}</div><div class="modal-actions"><button class="primary-btn" id="saveSlots">Save times</button><button class="secondary-btn" id="addSlot">+ Add row</button>${state.slots.length>1?'<button class="secondary-btn" id="removeSlot">Remove last row</button>':''}</div><div class="section-box"><h3>Starting templates</h3><p>Choose a user-focused example, or start blank. Changing templates replaces the current weekly block definitions, so export a backup first if needed.</p><div class="template-options">${Object.entries(CATALOG).map(([key,val])=>`<button class="template-btn" data-template="${key}"><b>${esc(val.label)}</b><small>${esc(val.description)}</small></button>`).join('')}</div></div>`;
 $('#restartWizard').onclick=()=>openWelcome(true);
 $('#saveSlots').onclick=()=>{const inputs=[...container.querySelectorAll('[data-time]')];const slots=inputs.map((el,i)=>({id:state.slots[i].id,time:el.value,label:container.querySelector(`[data-slot-label="${i}"]`).value.trim()||'FOCUS'}));if(slots.some(x=>!/^\d\d:\d\d$/.test(x.time))){toast('Every time row needs a valid time');return}if(new Set(slots.map(x=>x.time)).size!==slots.length){toast('Each row needs a different time');return}state.slots=slots;save();draw();toast('Time rows updated')};$('#addSlot').onclick=()=>{if(state.slots.length>=9){toast('Maximum 9 rows to keep the calendar readable');return}state.slots.push({id:id(),time:'12:00',label:'NEW ROW'});save();draw();openSettings('schedule')};const rm=$('#removeSlot');if(rm)rm.onclick=()=>{const i=state.slots.length-1;if(state.tasks.some(t=>t.slot===i)&&!confirm('Remove the last row and all blocks in it?'))return;state.tasks=state.tasks.filter(t=>t.slot!==i);state.slots.pop();save();draw();openSettings('schedule')};container.querySelectorAll('[data-template]').forEach(btn=>btn.onclick=()=>{if(state.tasks.length&&!confirm('Replace your current calendar blocks with this template? Export a backup first if needed.'))return;applyTemplate(btn.dataset.template);save();draw();openSettings('schedule');toast('Calendar template loaded')});}
-if(settingsTab==='appearance'){container.innerHTML=`<div class="form-grid">${field('Name your command center','customName',state.profile.name)}${field('Accent color','customAccent',safeColor(state.profile.accent),{type:'color'})}</div><div class="field"><label>Header logo (PNG, JPEG, WebP under 200 KB)</label><input type="file" id="customLogo" accept="image/png,image/jpeg,image/webp"/></div><p class="small-hint">Leave the logo picker untouched to keep the current mark. Uploading your own logo is free. HireBerna product attribution remains in the header/footer.</p><div class="section-box" style="margin-top:12px"><h3>✦ Customize your fonts — FREE</h3><p class="small-hint">Built-in styles change immediately. To make your custom fonts work reliably in Lively, import the actual .TTF or .OTF files once below (select many at once). A font name in the dropdown by itself does NOT load a font file. Use decorative fonts for titles and easy-to-read fonts for instructions.</p><div class="form-grid"><div class="field"><label for="bpTitleFont">Headings & task titles</label><select id="bpTitleFont">${bpFontOptions(state.profile.titleFont||'system:default')}</select></div><div class="field"><label for="bpBodyFont">Tasks & instructions</label><select id="bpBodyFont">${bpFontOptions(state.profile.bodyFont||'system:default')}</select></div></div><div class="field"><label for="bpTextSize">Calendar text size</label><select id="bpTextSize"><option value="small" ${state.profile.textSize==='small'?'selected':''}>Compact</option><option value="normal" ${!state.profile.textSize||state.profile.textSize==='normal'?'selected':''}>Standard</option><option value="large" ${state.profile.textSize==='large'?'selected':''}>Large</option></select></div><p class="small-hint" id="bpFontLoadingStatus" role="status" aria-live="polite">Select a font above to check availability.</p><div class="font-preview"><div><small>HEADINGS</small><strong>Weekly Action Playbook</strong></div><div><small>INSTRUCTIONS</small><span>Choose a clear task and take your next step.</span></div></div><div class="field"><label>Import your font collection here (select multiple TTF/OTF files at once)</label><input id="bpFontFiles" type="file" accept=".ttf,.otf,.woff,.woff2" multiple /></div><p class="small-hint">A ✓ Ready label means BernAPlan loaded that custom font. An unimported font name may display a fallback instead. .PFM and .FON are unsupported. If Lively blocks permanent font storage, imported fonts work for this session; re-import next time. Imported fonts are NOT included in JSON task backups.</p><button class="secondary-btn" type="button" id="bpRemoveFont">Remove selected imported font</button></div><div class="modal-actions"><button class="primary-btn" id="saveAppearance">Apply appearance</button><button class="secondary-btn" id="resetLogo">Remove custom logo</button></div>`;let newLogo=state.profile.logo;
+if(settingsTab==='appearance'){container.innerHTML=`<div class="form-grid">${field('Name your command center','customName',state.profile.name)}${field('Accent color','customAccent',safeColor(state.profile.accent),{type:'color'})}</div><div class="field"><label>Header logo (PNG, JPEG, WebP under 200 KB)</label><input type="file" id="customLogo" accept="image/png,image/jpeg,image/webp"/></div><p class="small-hint">Leave the logo picker untouched to keep the current mark. Uploading your own logo is free. HireBerna product attribution remains in the header/footer.</p><div class="section-box" style="margin-top:12px"><h3>✦ Customize your fonts — FREE</h3><p class="small-hint">Built-in styles change immediately. To make your custom fonts work reliably in Lively, import the actual .TTF or .OTF files once below (select many at once). A named custom font needs its TTF/OTF file imported before it displays; click the font tile to choose it. Use decorative fonts for titles and easy-to-read fonts for instructions.</p><p class="small-hint">Choose a font by clicking its tile below. No dropdown menus — designed for Lively Wallpaper.</p><div class="field"><label id="bpTitleFontLabel">Headings & task titles</label><input type="hidden" id="bpTitleFont" value="${esc(state.profile.titleFont||'system:default')}"/><div id="bpTitleFontPicker" class="bp-font-picker" role="group" aria-labelledby="bpTitleFontLabel">${bpFontTiles(state.profile.titleFont||'system:default','title')}</div></div><div class="field"><label id="bpBodyFontLabel">Tasks & instructions</label><input type="hidden" id="bpBodyFont" value="${esc(state.profile.bodyFont||'system:default')}"/><div id="bpBodyFontPicker" class="bp-font-picker" role="group" aria-labelledby="bpBodyFontLabel">${bpFontTiles(state.profile.bodyFont||'system:default','body')}</div></div><div class="field"><label>Calendar text size</label><input type="hidden" id="bpTextSize" value="${esc(state.profile.textSize||'normal')}"/><div id="bpTextSizeButtons" class="bp-font-size-row" role="group" aria-label="Calendar text size">${[['small','Compact'],['normal','Standard'],['large','Large']].map(([v,n])=>`<button type="button" class="bp-font-size-tile ${(state.profile.textSize||'normal')===v?'selected':''}" data-text-size="${v}" aria-pressed="${(state.profile.textSize||'normal')===v}">${n}</button>`).join('')}</div></div><p class="small-hint" id="bpFontLoadingStatus" role="status" aria-live="polite">Select a font above to check availability.</p><div class="font-preview"><div><small>HEADINGS</small><strong>Weekly Action Playbook</strong></div><div><small>INSTRUCTIONS</small><span>Choose a clear task and take your next step.</span></div></div><div class="field"><label>Import your font collection here (select multiple TTF/OTF files at once)</label><input id="bpFontFiles" type="file" accept=".ttf,.otf,.woff,.woff2" multiple /></div><p class="small-hint">A ✓ Ready label means BernAPlan loaded that custom font. An unimported font displays a standard fallback. .PFM and .FON are unsupported. If Lively blocks permanent font storage, imported fonts work for this session; re-import next time. Imported fonts are NOT included in JSON task backups.</p><button class="secondary-btn" type="button" id="bpRemoveFont">Remove selected imported font</button></div><div class="modal-actions"><button class="primary-btn" id="saveAppearance">Apply appearance</button><button class="secondary-btn" id="resetLogo">Remove custom logo</button></div>`;let newLogo=state.profile.logo;
 const previewBPFonts=()=>bpPreviewFontSettings($('#bpTitleFont').value,$('#bpBodyFont').value,$('#bpTextSize').value);
-['bpTitleFont','bpBodyFont','bpTextSize'].forEach(k=>$('#'+k).onchange=previewBPFonts);previewBPFonts();
+bpWireFontPickers();previewBPFonts();
 $('#bpFontFiles').onchange=async e=>{const files=[...e.target.files];if(files.length)await bpImportFonts(files)};
 $('#bpRemoveFont').onclick=async()=>{const chosen=$('#bpTitleFont').value.startsWith('custom:')?$('#bpTitleFont').value:$('#bpBodyFont').value; if(!chosen.startsWith('custom:')){toast('Choose an imported font first');return}if(confirm('Remove this imported font from the wallpaper?'))await bpRemoveFont(chosen)};
 $('#customLogo').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>200000||!['image/png','image/jpeg','image/webp'].includes(f.type)){toast('Choose a PNG, JPEG, or WebP smaller than 200 KB');e.target.value='';return}newLogo=await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(f)});toast('Logo ready — click Apply appearance')};$('#saveAppearance').onclick=()=>{state.profile.name=$('#customName').value.trim()||'My Command Center';state.profile.accent=safeColor($('#customAccent').value);state.profile.logo=sanitizeImage(newLogo);state.profile.titleFont=$('#bpTitleFont').value;state.profile.bodyFont=$('#bpBodyFont').value;state.profile.textSize=$('#bpTextSize').value;save();draw();closeModal();toast('Appearance updated')};$('#resetLogo').onclick=()=>{state.profile.logo=null;save();draw();openSettings('appearance');toast('Custom logo removed')}}
