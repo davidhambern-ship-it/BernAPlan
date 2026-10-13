@@ -47,3 +47,11 @@ Browser tests using a simulated IndexedDB exercised import, selection, saving, e
 ## Font collection verification (v2.0.6)
 
 The owner's 21 uploaded font files were checked against Chromium's FontFace loader. **18 TTF/OTF files loaded, representing 16 unique font styles**; two extra files are duplicate TTF/OTF formats of Digital Dare and Digital Glitch Demo. The 2K12.ttf failed actual Chromium parsing despite exposing a TrueType name table, so its tile was removed. Legacy Gabriele.pfm and SELFISH_.FON are unsupported and excluded; Gabrielle.ttf and SELFISH_.TTF are supported. Aliases for boxpot1.ttf and musictelevisionselector(1).ttf are recognized. **No font binaries are packaged**; upload into the in-app Font Library from the owner's computer once, then use the saved library and backups. Chromium checks confirm file-format compatibility, but persistence and click behavior in Lively must still be confirmed on the user's Windows device.
+
+## Personal font auto-setup (experimental v2.0.7)
+
+The previous font menu displayed names without the actual font data. A new local Windows setup bundle generates a separate Lively wallpaper by embedding only the user's **existing, local, compatible** font files into `index.html`. There is **no Windows font installation, no per-font import inside BernAPlan, no dependency on IndexedDB font persistence, and no network transfer**.
+
+The setup package is delivered separately with a PowerShell builder and `.cmd` launcher; it searches common user folders and lets the user choose the originals' folder only if it cannot locate all 16 supported styles. This public repository **does not include, host, or distribute third-party font files**. Because the resulting wallpaper contains user-owned fonts, it is personal and must not be redistributed without appropriate licenses.
+
+The font loader was syntax-checked with all 16 locally embedded fonts, and Chromium confirmed a Robotica font loaded and was selectable using the in-page tile interface. Windows PowerShell execution and import inside the user's actual Lively installation still require confirmation.
