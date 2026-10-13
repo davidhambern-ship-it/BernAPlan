@@ -1,0 +1,1157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b0b0b" />
+  <title>BernAPlan | Desktop Command Center</title>
+  <style>
+:root{--accent:#f77513;--bg:#08090a;--panel:#111214;--panel2:#17191b;--line:#34302c;--fg:#f7f7f7;--muted:#a6a6a6;--success:#60d5a3;--warn:#ffbb6d;--font:Inter,"Segoe UI",Arial,sans-serif}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--fg);font-family:var(--font)}body{background-image:radial-gradient(ellipse at 75% 1%,color-mix(in srgb,var(--accent) 10%,transparent),transparent 38%),radial-gradient(#ffffff12 .6px,transparent .7px);background-size:auto,16px 16px}button,input,select,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.task-card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}.shell{height:100dvh;min-height:660px;padding:14px 16px;display:flex;flex-direction:column;gap:12px;max-width:2200px;margin:auto}.topbar{height:86px;min-height:75px;display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:2px solid var(--accent);padding-bottom:10px}.identity{display:flex;gap:11px;align-items:center;flex:1;min-width:0}.brand-mark{font-style:italic;font-weight:1000;color:var(--accent);font-size:27px;letter-spacing:-5px;width:51px;max-height:48px;object-fit:contain}.brand-name{font-weight:900;font-size:clamp(21px,2.2vw,36px);white-space:nowrap;letter-spacing:-1.5px}.brand-name span{color:var(--accent)}.brand-caption{color:#c4b3a6;font-size:9px;letter-spacing:1.25px;margin-top:4px}.app-title{text-align:center;flex:1.5;min-width:0}.app-title strong{font-size:clamp(19px,2.1vw,34px);font-weight:1000;letter-spacing:-.8px;white-space:nowrap}.app-title strong span{color:var(--accent)}.app-title small{display:block;font-size:11px;letter-spacing:3px;color:#b2b2b2;margin-top:5px}.toolbar{display:flex;gap:8px;justify-content:flex-end;flex:1;white-space:nowrap}.quiet,.orange-button,.subtle-button,.icon-btn,.full-link,.secondary-btn,.primary-btn{border-radius:8px;padding:11px 13px;font-weight:800;background:#1a1b1d;border:1px solid #4a3c30;color:var(--fg)}.orange-button,.primary-btn{background:var(--accent);border-color:var(--accent);color:#120b07}.quiet:hover,.subtle-button:hover,.icon-btn:hover,.full-link:hover,.secondary-btn:hover{border-color:var(--accent)}.orange-button:hover,.primary-btn:hover{filter:brightness(1.15)}.layout{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(295px,20.5%);gap:12px;min-height:0}.planner{display:flex;flex-direction:column;min-width:0;min-height:0}.planner-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:4px 5px 12px}.eyebrow{font-size:10px;letter-spacing:3px;color:var(--accent);font-weight:850}h1,h2,h3,p{margin:0}h1{font-size:clamp(21px,2.15vw,34px);line-height:1.1;margin-top:4px}h2{font-size:16px}.week-picker{display:flex;align-items:center;gap:10px;white-space:nowrap;font-weight:850;font-size:13px}.icon-btn{width:32px;height:34px;padding:0;font-size:26px;line-height:26px}.calendar-holder{border:1px solid var(--accent);border-radius:10px;overflow:auto;min-height:0;flex:1;background:#080a0b}.calendar-grid{display:grid;grid-template-columns:minmax(102px,12%) repeat(7,minmax(108px,1fr));grid-template-rows:50px repeat(var(--slot-count,5),minmax(110px,1fr));min-height:100%;min-width:860px;background:#2b1e17;gap:1px}.col-header,.time-label{display:flex;align-items:center;justify-content:center;background:#0d0e0f;text-align:center}.col-header{font-size:13px;font-weight:900;letter-spacing:.3px}.col-header.today{color:var(--accent);background:#20150e}.time-label{flex-direction:column;gap:7px;padding:9px 3px}.time-label strong{font-size:clamp(17px,2vw,27px);line-height:1;color:var(--accent)}.time-label small{font-size:9px;letter-spacing:.8px;color:#c9c9c9}.calendar-cell{min-height:110px;background:#0b0d0e;padding:7px;position:relative}.calendar-cell.is-today{background:#16110e}.task-card{display:flex;flex-direction:column;gap:6px;width:100%;height:100%;background:linear-gradient(125deg,#202020,#141617);border:1px solid #4d3427;border-radius:7px;padding:9px 8px;text-align:left;color:inherit;cursor:pointer;transition:border-color .15s,transform .15s,background .15s}.task-card:hover{border-color:var(--accent);background:#29211a;transform:translateY(-1px)}.task-card.done{border-color:#27845e;background:#0c1d17}.card-title{color:var(--accent);font-size:clamp(11px,.9vw,15px);line-height:1.17;font-weight:900;overflow-wrap:anywhere}.task-card.done .card-title{color:var(--success)}.card-desc{font-size:clamp(10px,.72vw,12px);line-height:1.3;color:#ddd;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}.card-footer{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-top:auto}.type-pill{border:1px solid #555;padding:2px 5px;border-radius:20px;font-size:9px;color:#b4b4b4;text-transform:uppercase;white-space:nowrap}.card-check{font-size:16px;color:#999}.done .card-check{color:var(--success)}.empty-card{width:100%;height:100%;border:1px dashed #44362d;color:#787878;background:transparent;border-radius:6px}.empty-card:hover{color:var(--accent);border-color:var(--accent)}.bottom-bar{display:flex;align-items:center;justify-content:space-between;gap:9px;margin-top:9px}.bottom-bar strong{font-size:16px;letter-spacing:.5px}.muted{color:var(--muted)}.bottom-bar .muted{font-size:11px}.subtle-button{padding:7px 10px;font-size:11px}.nonneg-strip{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;min-height:51px;padding-top:6px}.nonneg-chip{padding:8px 11px;border-radius:7px;border:1px solid #553a2c;background:#171412;color:#e6e6e6;font-size:11px;white-space:nowrap}.nonneg-chip.hit{border-color:#468369;color:var(--success)}.footer-brand{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:7px;white-space:nowrap}.footer-brand span:first-child{font-size:19px;font-weight:900}.footer-brand b,.footer-brand strong{color:var(--accent)}.footer-brand span:nth-child(2){font-size:9px;letter-spacing:2.5px;color:#afafaf}.footer-brand strong{font-size:25px;font-style:italic}.sidepanel{min-height:0;overflow:auto;display:flex;flex-direction:column;gap:10px;padding-right:2px}.panel{padding:13px;border:1px solid #494039;border-radius:10px;background:linear-gradient(160deg,#151617,#101112)}.panel-title{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:13px}.panel-title h2{font-size:16px}.accent{color:var(--accent);font-weight:900}.score-line{display:grid;grid-template-columns:minmax(65px,1fr) minmax(80px,1.2fr) auto;align-items:center;gap:8px;margin:11px 0;font-size:12px}.score-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.score-track,.progress-track{height:8px;border-radius:40px;overflow:hidden;background:#303033}.score-fill,.progress-fill{height:100%;background:var(--accent);border-radius:40px;transition:width .18s}.score-value{font-size:11px;min-width:38px;text-align:right}.full-link{display:block;width:100%;margin-top:9px;padding:8px 6px;background:transparent;color:var(--accent);font-size:12px}.progress-track{height:10px}.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:13px}.stats-grid>div{border:1px solid #373737;padding:10px 5px;border-radius:6px;display:flex;flex-direction:column;gap:5px;text-align:center}.stats-grid strong{font-size:20px}.stats-grid small{font-size:10px;color:var(--muted)}.essentials{display:grid;gap:8px}.essentials label{display:flex;align-items:flex-start;gap:8px;font-size:12px;cursor:pointer}.essentials input{accent-color:var(--accent)}.helper p{color:#b5b5b5;font-size:12px;line-height:1.5}.overlay{position:fixed;inset:0;z-index:200;background:#000c;display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(5px)}.hidden{display:none!important}.modal{background:linear-gradient(135deg,#151618,#090a0b);border:1px solid var(--accent);box-shadow:0 20px 80px #000e,0 0 50px color-mix(in srgb,var(--accent) 10%,transparent);border-radius:16px;width:min(790px,95vw);max-height:min(88vh,950px);overflow:auto;padding:23px}.modal.wide{width:min(920px,96vw)}.modal-header{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:17px}.modal-header h2{font-size:26px}.modal-header p{color:var(--muted);font-size:12px;margin-top:5px}.close-btn{background:transparent;border:1px solid #484848;color:var(--fg);border-radius:8px;width:33px;height:33px;font-size:24px}.modal-columns{display:grid;grid-template-columns:1fr 1fr;gap:16px}.section-box{background:#151718;border:1px solid #383838;border-radius:9px;padding:14px;margin-bottom:12px}.section-box h3{font-size:15px;color:var(--accent);margin-bottom:10px}.section-box p,.section-box li{font-size:13px;line-height:1.5;color:#dfdfdf}.section-box ol,.section-box ul{margin:0;padding-left:20px}.section-box li+li{margin-top:5px}.todo{display:flex;align-items:flex-start;gap:8px;margin:10px 0;color:#ddd;font-size:13px;cursor:pointer}.todo input{margin-top:3px;accent-color:var(--accent)}.modal-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}.primary-btn,.secondary-btn{padding:10px 13px;font-size:13px}.danger{color:#ff8177}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:6px;margin:9px 0}.field label{font-size:12px;font-weight:800;color:#ddd}.field input,.field textarea,.field select{color:#fff;background:#1f2224;border:1px solid #525252;border-radius:7px;padding:10px;min-width:0}.field textarea{min-height:78px;resize:vertical}.field input[type=color]{height:40px;padding:4px}.field input[type=file]{font-size:11px}.small-hint{font-size:11px;color:#b5b5b5;line-height:1.4}.settings-tab-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}.tab-btn{padding:9px 12px;border-radius:7px;border:1px solid #444;background:#171717;color:#eee}.tab-btn.active{color:#151515;background:var(--accent);border-color:var(--accent);font-weight:900}.metric-editor{display:grid;grid-template-columns:1fr 100px 38px;gap:7px;align-items:end}.metric-editor input{width:100%;min-width:0}.score-adjust{display:flex;gap:8px;align-items:center}.score-adjust input{max-width:120px}.setup-card{border:1px solid #493b2f;background:#161513;border-radius:9px;padding:15px}.template-options{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:12px 0}.template-btn{background:#1c1c1c;color:#eee;border:1px solid #5c4b40;padding:14px;border-radius:8px;text-align:left}.template-btn.active{border-color:var(--accent);background:#392214}.template-btn b{display:block;margin-bottom:5px}.template-btn small{color:#aaa}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#202820;border:1px solid #5cb88c;border-radius:8px;color:#fff;padding:11px 17px;z-index:300;display:none;box-shadow:0 8px 30px #000b;font-size:13px}@media(max-width:1150px){.layout{grid-template-columns:minmax(0,1fr) 270px}.brand-caption,.footer-brand span:nth-child(2){display:none}.app-title small{font-size:9px;letter-spacing:1px}.calendar-grid{min-width:820px}.toolbar .quiet:first-child{display:none}}@media(max-width:800px){.shell{min-height:100dvh;height:auto}.topbar{height:auto;min-height:70px;flex-wrap:wrap}.app-title{order:3;flex-basis:100%;text-align:left}.toolbar{flex:0}.layout{grid-template-columns:1fr}.calendar-holder{height:580px;flex:none}.sidepanel{overflow:visible;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.footer-brand span:nth-child(2){display:none}.modal-columns{grid-template-columns:1fr}.modal{max-height:90vh}}@media(max-width:550px){.shell{padding:9px}.topbar{gap:6px}.brand-name{font-size:21px}.toolbar .quiet{display:none}.app-title strong{font-size:20px}.sidepanel{grid-template-columns:1fr}.planner-heading{flex-wrap:wrap}.week-picker{margin-left:auto}.bottom-bar .muted{display:none}.modal{padding:14px}.form-grid{grid-template-columns:1fr}}
+/* The five-row default playbook must be visible at desktop height without a page scroll. */
+@media(min-width:801px){
+ .calendar-grid{height:100%;min-height:0;grid-template-rows:43px repeat(var(--slot-count,5),minmax(0,1fr))}
+ .calendar-cell{min-height:0;overflow:hidden;padding:5px}
+ .task-card{min-height:0;gap:4px;padding:7px 6px}
+ .card-desc{-webkit-line-clamp:2}
+ .card-footer{padding-top:2px}
+ .time-label{min-height:0;gap:4px}
+}
+@media(max-height:810px) and (min-width:801px){.calendar-cell{padding:4px}.task-card{padding:5px;gap:3px}.card-desc{-webkit-line-clamp:2}.footer-brand{padding-top:3px}.bottom-bar{margin-top:6px}.nonneg-strip{min-height:42px;padding-top:3px}.nonneg-chip{padding:5px 8px}}
+
+  
+/* Guided onboarding and coaching additions */
+.wizard-progress{display:flex;justify-content:space-between;font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--accent);margin:6px 0 7px}
+.wizard-track{height:6px;border-radius:10px;background:#292929;overflow:hidden;margin-bottom:18px}
+.wizard-track>div{height:100%;background:var(--accent);transition:width .2s ease}
+.wizard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0;max-height:50vh;overflow:auto;padding:2px}
+.wizard-tile{position:relative;text-align:left;min-height:77px;background:#1a1b1d;color:white;border:1px solid #424242;border-radius:12px;padding:15px 36px 15px 15px;cursor:pointer;display:flex;flex-direction:column;gap:7px}
+.wizard-tile:hover,.wizard-tile:focus-visible{border-color:var(--accent);background:#24201b}
+.wizard-tile.active{border:2px solid var(--accent);background:#322114}
+.wizard-tile strong{font-weight:800;font-size:15px;line-height:1.25}.wizard-tile small{color:#bfc0c3;font-size:12px;line-height:1.35}
+.wizard-check{position:absolute;right:12px;top:12px;font-size:18px;color:var(--accent)}
+.wizard-nav{justify-content:space-between;margin-top:20px}.wizard-nav .primary-btn{margin-left:auto}
+.wizard-review p{font-size:14px;line-height:1.5;margin:9px 0}
+.guide-example{border-color:#57402b!important;background:#231d16!important}.guide-success{border-color:#305c44!important;background:#17251b!important}
+.personal-goal{margin-top:11px;background:#272017;border-left:3px solid var(--accent);border-radius:4px;padding:10px;color:#eac7aa!important;font-size:13px}
+.guided-next{border-color:var(--accent)!important;background:#281c12!important}
+.guided-next p{font-size:17px;line-height:1.45;font-weight:700;color:#fff}.mini-primary{font-size:12px;padding:9px 13px;min-height:36px}.mini-primary:disabled{opacity:.48;cursor:default}
+@media(max-width:660px){.wizard-grid{grid-template-columns:1fr;max-height:40vh}.wizard-tile{min-height:65px}.guided-next p{font-size:15px}}
+
+/* BernAPlan ACTION coach -- included in the free local-first build */
+.action-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 16px;margin-bottom:15px;background:linear-gradient(110deg,#28170c,#151718);border:1px solid var(--accent);border-radius:12px}
+.action-heading strong,.focus-label{color:var(--accent);font-size:12px;font-weight:900;letter-spacing:1.3px}
+.action-heading p{color:#d9d1cc;margin-top:5px;font-size:12px}
+.action-heading button{white-space:nowrap}
+.section-box.proof-summary{border-color:#705130}
+.proof-summary p+p{margin-top:8px}
+.help-btn{margin-top:10px;width:100%;white-space:normal}
+.focus-hero{background:#271910;border:1px solid var(--accent);border-radius:10px;padding:20px;margin-bottom:14px}
+.focus-hero h3{font-size:24px;margin:10px 0;color:#fff}
+.focus-hero p{font-size:13px;color:#d7c9bd;line-height:1.5}
+.focus-tools{text-align:center}
+.focus-clock{font-variant-numeric:tabular-nums;font-weight:900;letter-spacing:1px;font-size:clamp(44px,6vw,70px);line-height:1.2;margin:14px 0;color:#fff}
+.minute-buttons{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:14px 0}
+.focus-tools .modal-actions{justify-content:center}
+.rescue-choices{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:13px 0}
+.rescue-choices .wizard-tile{text-align:left;padding:10px;font-size:13px}
+.rescue-answer{border-color:var(--accent)}
+.rescue-next{margin-top:11px;color:#ffe4d0!important;border-top:1px solid #5b4b3a;padding-top:9px}
+.proof-context{padding:13px 15px;border:1px solid #6d4b2f;background:#251910;border-radius:10px;margin-bottom:13px}
+.proof-context h3{color:var(--accent);margin-bottom:7px;font-size:15px}
+.proof-context p{line-height:1.5;font-size:13px}
+.reality-stats{margin-top:11px;color:#ddd;font-size:11px;text-align:center}
+.review-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 17px}
+.review-summary>div{border:1px solid #4d3d33;border-radius:8px;padding:13px 8px;text-align:center;background:#1e1b18}
+.review-summary strong{font-size:24px;display:block;color:var(--accent)}
+.review-summary small{display:block;color:#c6c6c6;font-size:11px;margin-top:5px}
+@media(max-width:600px){.action-heading{align-items:flex-start;flex-direction:column}.rescue-choices{grid-template-columns:1fr}.review-summary strong{font-size:19px}}
+
+/* ACTIONABLE CALENDAR — each card says what to do, where to start, and what counts. */
+.task-card{gap:4px;padding:7px 7px 6px;justify-content:flex-start;overflow:hidden}
+.card-title{border:1px solid var(--accent);border-radius:5px;padding:3px 4px;text-align:center;line-height:1.12;flex-shrink:0;color:var(--accent);font-size:clamp(10px,.77vw,13px)}
+.task-card.done .card-title{border-color:var(--success)}
+.card-desc{color:#eee;line-height:1.23;font-size:clamp(10px,.72vw,12px);-webkit-line-clamp:4}
+.card-target{display:block;flex-shrink:0;color:#ffb672;font-weight:850;font-size:clamp(9px,.69vw,11px);line-height:1.12;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.task-card.done .card-target{color:#87d9af}
+.task-card{position:relative}
+.card-cardcheck{position:absolute;right:3px;bottom:2px;color:#c9c9c9;font-size:11px;background:#151617;border-radius:50%;height:13px;width:13px;text-align:center;line-height:12px}
+.task-card.done .card-cardcheck{color:#7adba5;background:#123324}
+.card-target{padding-right:8px}
+.card-footer{margin-top:auto}.type-pill{font-size:8px;padding:1px 4px}
+.calendar-cell{padding:5px;min-height:112px}
+.calendar-grid{grid-template-rows:44px repeat(var(--slot-count,5),minmax(112px,1fr))}
+@media(max-width:1450px){.task-card{gap:3px;padding:5px 5px 4px}.calendar-cell{padding:4px}.card-desc{-webkit-line-clamp:4}.calendar-grid{grid-template-columns:minmax(94px,11%) repeat(7,minmax(100px,1fr))}}
+@media(max-height:800px) and (min-width:801px){.calendar-grid{grid-template-rows:38px repeat(var(--slot-count,5),minmax(100px,1fr))}.calendar-cell{min-height:100px}.card-desc{-webkit-line-clamp:2}.card-title{font-size:10px}.card-target{font-size:9px}}
+
+@media(min-width:801px) and (max-height:820px){
+ .shell{padding:8px 12px;gap:7px;min-height:600px}
+ .topbar{height:70px;min-height:66px;padding-bottom:5px}
+ .planner-heading{padding:3px 4px 7px}
+ .bottom-bar{margin-top:3px}
+ .nonneg-strip{min-height:37px;padding-top:3px;gap:6px}
+ .nonneg-chip{padding:5px 8px}
+ .footer-brand{padding-top:2px}
+ .calendar-grid{grid-template-rows:36px repeat(var(--slot-count,5),minmax(0,1fr));height:100%;min-height:100%}
+ .calendar-cell{min-height:0}
+ .task-card{min-height:0}
+ .card-desc{-webkit-line-clamp:2}.card-target{-webkit-line-clamp:2}
+}
+
+@media(min-width:801px){
+ .layout{display:flex;flex-direction:column;gap:7px;min-height:0}
+ .planner{flex:1;min-height:0}
+ .sidepanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);flex:0 0 103px;min-height:103px;height:103px;overflow:hidden;gap:8px;padding-right:0}
+ .sidepanel>.panel:nth-child(1){order:2}
+ .sidepanel>.panel:nth-child(2){order:1}
+ .sidepanel>.panel:nth-child(3),.sidepanel>.panel:nth-child(4){display:none}
+ .sidepanel .panel{padding:7px 12px;overflow:auto}
+ .sidepanel .panel-title{margin-bottom:5px}
+ .sidepanel .panel-title h2{font-size:13px}
+ .score-line{margin:3px 0;font-size:10px;grid-template-columns:minmax(85px,1fr) minmax(65px,1fr) auto}
+ .sidepanel .full-link{padding:3px 8px;font-size:10px;margin-top:3px}
+ .stats-grid{gap:6px;margin-top:4px}
+ .stats-grid>div{padding:4px}
+ .stats-grid strong{font-size:16px}
+ .stats-grid small{font-size:9px}
+ .reality-stats{margin-top:2px}
+ .panel-title .accent{font-size:11px}
+ .calendar-grid{grid-template-columns:minmax(102px,10%) repeat(7,minmax(115px,1fr));grid-template-rows:42px repeat(var(--slot-count,5),minmax(0,1fr));height:100%;min-height:100%}
+ .calendar-cell{min-height:0}
+ .card-desc{-webkit-line-clamp:3}
+}
+@media(min-width:801px) and (max-height:820px){
+ .sidepanel{flex-basis:100px;height:100px;min-height:100px}
+ .calendar-grid{grid-template-rows:36px repeat(var(--slot-count,5),minmax(0,1fr));height:100%;min-height:100%}
+ .calendar-cell{min-height:0}
+ .card-desc{-webkit-line-clamp:2}
+ .planner-heading{padding:1px 4px 4px}
+ .nonneg-strip{min-height:30px;padding-top:1px}
+ .nonneg-chip{padding:4px 7px}
+ .bottom-bar{margin-top:2px}
+ .bottom-bar strong{font-size:13px}
+ .footer-brand{padding-top:0}
+ .footer-brand span:first-child{font-size:14px}
+ .footer-brand strong{font-size:17px}
+ .week-picker{gap:5px}
+}
+
+/* DESKTOP DISPLAY MODE v2 — make the seven-day playbook readable at a glance. */
+@media (min-width:801px) {
+  html,body{overflow:hidden}
+  .shell{height:100dvh;min-height:0;max-width:none;padding:10px 14px 8px;gap:6px}
+  .topbar{height:clamp(62px,7.2vh,80px);min-height:0;flex:none;gap:10px;padding-bottom:5px}
+  .brand-name{font-size:clamp(22px,1.75vw,30px)}
+  .app-title strong{font-size:clamp(21px,2vw,33px)}
+  .toolbar{gap:7px}
+  .toolbar button{min-height:38px}
+  .layout{display:flex;flex:1;flex-direction:column;gap:7px;min-height:0;min-width:0}
+  .planner{flex:1;min-height:0;min-width:0;display:flex;flex-direction:column}
+  .planner-heading{padding:3px 4px 7px;flex:none;min-height:clamp(54px,6vh,67px)}
+  .planner-heading h1{font-size:clamp(26px,2.35vw,40px);line-height:1.03}
+  .week-picker{font-size:13px;gap:8px}
+  .calendar-holder{flex:1;min-height:0;overflow:hidden;border:2px solid var(--accent);border-radius:8px}
+  .calendar-grid{height:100%;min-height:0;min-width:0;grid-template-columns:minmax(105px,10%) repeat(7,minmax(0,1fr));grid-template-rows:clamp(36px,4.1vh,45px) repeat(var(--slot-count,5), minmax(0,1fr));gap:1px}
+  .col-header{font-size:clamp(12px,.87vw,15px);padding:5px 2px;text-align:center;line-height:1.3}
+  .col-header small{display:inline-block;font-size:clamp(10px,.68vw,12px);margin-left:2px!important}
+  .time-label{padding:4px 3px;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+  .time-label strong{font-size:clamp(21px,1.8vw,31px);line-height:1.05}
+  .time-label small{font-size:clamp(10px,.7vw,12px);letter-spacing:1px}
+  .calendar-cell{padding:4px;min-height:0;overflow:hidden}
+  .task-card{display:flex;flex-direction:column;gap:3px;padding:6px 7px;min-height:0;height:100%;overflow:hidden;border-radius:7px}
+  .card-title{flex:none;border:1px solid var(--accent);border-radius:5px;max-width:100%;color:var(--accent);font-weight:900;text-align:center;font-size:clamp(12px,.90vw,15px);line-height:1.18;padding:3px 3px;overflow-wrap:break-word}
+  .card-desc{flex:1;min-height:0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;font-size:clamp(11.5px,.83vw,14px);line-height:1.25;color:#f0f0f0;white-space:normal}
+  .card-target{flex:none;color:#ffbd80;font-weight:850;line-height:1.2;font-size:clamp(10.5px,.75vw,12px);-webkit-line-clamp:2;min-height:0;padding-right:13px}
+  .card-cardcheck{font-size:13px;width:15px;height:15px;line-height:14px;right:4px;bottom:3px}
+  .bottom-bar{flex:none;min-height:22px;margin-top:4px;align-items:center}
+  .bottom-bar strong{font-size:clamp(13px,1.05vw,18px)}
+  .bottom-bar .muted{font-size:11px}
+  .nonneg-strip{flex:none;min-height:29px;max-height:34px;gap:7px;padding-top:1px;overflow-x:auto}
+  .nonneg-chip{padding:5px 9px;font-size:11px}
+  .footer-brand{flex:none;min-height:21px;padding-top:1px}
+  .footer-brand span:first-child{font-size:16px}
+  .footer-brand strong{font-size:20px}
+  .footer-brand span:nth-child(2){display:block;font-size:9px;letter-spacing:1.8px}
+  /* Compact, always-visible bottom scoreboard: no nested panel scrollbar. */
+  .sidepanel{display:grid;grid-template-columns:1fr 1fr;flex:0 0 clamp(111px,12vh,147px);height:clamp(111px,12vh,147px);min-height:0;gap:10px;overflow:hidden;padding:0}
+  .sidepanel>.panel:nth-child(1){order:2;display:flex;flex-direction:column}
+  .sidepanel>.panel:nth-child(2){order:1;display:flex;flex-direction:column}
+  .sidepanel>.panel:nth-child(3),.sidepanel>.panel:nth-child(4){display:none}
+  .sidepanel .panel{padding:9px 12px;overflow:hidden;border-radius:8px;min-width:0}
+  .sidepanel .panel-title{margin-bottom:5px;flex:none}
+  .sidepanel .panel-title h2{font-size:15px}
+  .sidepanel .panel-title .accent{font-size:13px}
+  .sidepanel #scoreboard{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:1fr;gap:6px 12px;min-height:0;flex:1}
+  .sidepanel .score-line{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:'label value' 'bar bar';grid-template-rows:auto 5px;gap:3px 5px;align-items:center;min-width:0;min-height:0}
+  .sidepanel .score-label{grid-area:label;font-size:clamp(10px,.75vw,13px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sidepanel .score-value{grid-area:value;font-size:11px;white-space:nowrap}
+  .sidepanel .score-track{grid-area:bar;height:5px;min-width:0}
+  .sidepanel .full-link{font-size:11px;padding:4px 8px;margin-top:4px;flex:none}
+  .sidepanel .progress-track{height:6px;flex:none}
+  .sidepanel .stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:6px;gap:7px;min-height:0}
+  .sidepanel .stats-grid>div{padding:5px 4px;gap:1px;min-width:0}
+  .sidepanel .stats-grid strong{font-size:19px;line-height:1.1}
+  .sidepanel .stats-grid small{font-size:10px}
+  .sidepanel .reality-stats{font-size:11px;margin-top:4px;text-align:center}
+  .sidepanel #weeklyReview{margin-top:auto}
+  .display-btn{border:1px solid #6d432b;border-radius:7px;color:#ffb57c;background:#191512;font-size:12px;font-weight:800;cursor:pointer;padding:8px 11px;white-space:nowrap}
+  .display-btn:hover{border-color:var(--accent);background:#352016}
+  .task-card:focus-visible{outline:2px solid #fff;outline-offset:-2px}
+}
+@media (min-width:801px) and (max-height:830px) {
+  .shell{padding:5px 11px 4px;gap:4px}
+  .topbar{height:61px;padding-bottom:3px}
+  .planner-heading{min-height:51px;padding:1px 4px 4px}
+  .planner-heading h1{font-size:clamp(25px,2vw,32px)}
+  .calendar-grid{grid-template-rows:33px repeat(var(--slot-count,5),minmax(0,1fr))}
+  .calendar-cell{padding:3px}
+  .task-card{padding:3px 5px;gap:2px}
+  .card-title{font-size:clamp(11.5px,.87vw,13px);padding:2px 2px}
+  .card-desc{font-size:clamp(11px,.80vw,12.5px);line-height:1.19;-webkit-line-clamp:2}
+  .card-target{font-size:clamp(10px,.72vw,11px);line-height:1.13;-webkit-line-clamp:1}
+  .bottom-bar{min-height:19px;margin-top:1px}
+  .nonneg-strip{min-height:26px;max-height:27px;padding-top:0}
+  .nonneg-chip{padding:3px 7px;font-size:10px}
+  .footer-brand{min-height:16px;padding-top:0}
+  .footer-brand span:first-child{font-size:14px}
+  .footer-brand strong{font-size:16px}
+  .sidepanel{flex-basis:103px;height:103px}
+  .sidepanel .panel{padding:6px 10px}
+  .sidepanel .panel-title h2{font-size:14px}
+  .sidepanel .stats-grid{margin-top:4px}
+  .sidepanel .stats-grid>div{padding:2px 4px}
+  .sidepanel .stats-grid strong{font-size:16px}
+  .sidepanel .reality-stats{font-size:10px;margin-top:2px}
+  .sidepanel .full-link{font-size:10px;padding:2px 6px;margin-top:2px}
+  .footer-brand span:nth-child(2){font-size:8px}
+  .toolbar .display-btn{padding:6px 8px;font-size:11px}
+}
+@media (min-width:801px) and (max-width:1250px) {
+  .brand-caption{display:none}
+  .app-title strong{font-size:22px}
+  .display-btn{font-size:11px;padding:6px 7px}
+  .task-card{padding-left:4px;padding-right:4px}
+  .card-title{font-size:11.5px}
+  .card-desc{font-size:11.5px}
+  .card-target{font-size:10px}
+}
+@media (min-width:801px) and (max-height:680px) {
+  /* Avoid silently cutting off the calendar in very short windows. */
+  html,body{overflow:auto}
+  .shell{height:auto;min-height:680px}
+}
+@media (max-width:800px){.display-btn{display:none}}
+
+
+/* Fine-tuning after multi-resolution render checks: never let a target obscure an action. */
+@media(min-width:801px){
+ .task-card{display:grid;grid-template-rows:auto minmax(0,1fr) auto;align-content:stretch;gap:3px;overflow:hidden}
+ .card-title{display:block;min-width:0;max-width:100%;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;overflow-wrap:normal;line-height:1.15}
+ .card-desc{min-height:0;max-height:100%;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;align-self:start;line-height:1.24;flex:none}
+ .card-target{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:100%;min-width:0;line-height:1.2;flex:none;padding-right:14px}
+ .weekly-actions{display:flex;align-items:center;justify-content:space-between;min-height:19px;margin-top:auto;gap:9px}
+ .weekly-actions .reality-stats{margin:0;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px}
+ .weekly-actions .full-link{margin:0!important;max-width:47%;width:auto;white-space:nowrap;font-size:11px;padding:3px 9px;flex-shrink:0}
+ .sidepanel .stats-grid>div{min-height:0}
+ .sidepanel .stats-grid small{line-height:1.1}
+}
+@media(min-width:801px) and (max-height:830px){
+ .task-card{gap:2px}
+ .card-desc{line-height:1.18}
+ .card-target{line-height:1.1}
+ .weekly-actions{min-height:15px;gap:5px}
+ .weekly-actions .reality-stats{font-size:10px}
+ .weekly-actions .full-link{font-size:10px;padding:1px 7px}
+}
+
+/* A single, readable essentials strip gives task cards additional vertical room. */
+@media(min-width:801px){
+ .planner-heading{min-height:clamp(49px,5.8vh,61px);padding-bottom:4px}
+ .bottom-bar{display:flex;flex:none;min-height:33px;max-height:36px;margin-top:5px;gap:12px;align-items:center}
+ .bottom-bar .nonneg-caption{flex:none;display:flex;gap:2px;align-items:center;white-space:nowrap}
+ .bottom-bar .nonneg-caption strong{font-size:clamp(13px,.96vw,17px)}
+ .bottom-bar .nonneg-caption .muted{display:none}
+ .bottom-bar #nonnegStrip{flex:1;min-height:0;max-height:33px;min-width:0;display:flex;gap:6px;align-items:center;overflow-x:auto;padding:0}
+ .bottom-bar #nonnegStrip .nonneg-chip{flex:none;font-size:11px;padding:6px 8px}
+ .bottom-bar #editNonneg{flex:none;padding:7px 9px;font-size:11px}
+ .footer-brand{min-height:18px;padding-top:0}
+ .sidepanel{flex-basis:clamp(104px,11.4vh,133px);height:clamp(104px,11.4vh,133px)}
+}
+@media(min-width:801px) and (max-height:830px){
+ .bottom-bar{min-height:26px;max-height:29px;margin-top:2px;gap:9px}
+ .bottom-bar #nonnegStrip{max-height:28px}
+ .bottom-bar #nonnegStrip .nonneg-chip{padding:4px 6px;font-size:10px}
+ .bottom-bar #editNonneg{padding:4px 8px;font-size:10px}
+ .footer-brand{min-height:16px}
+ .sidepanel{flex-basis:98px;height:98px}
+ .sidepanel .panel-title{margin-bottom:3px}
+}
+@media(max-width:800px){
+ .bottom-bar{flex-wrap:wrap}
+ .bottom-bar .nonneg-caption{flex:1}
+ .bottom-bar #nonnegStrip{order:3;flex:0 0 100%;min-width:0}
+}
+
+/* Ensure progress counters and labels never overlap in the scoreboard band. */
+@media(min-width:801px){
+ .sidepanel .stats-grid{min-height:0;margin-top:4px;gap:6px}
+ .sidepanel .stats-grid>div{min-height:0;padding:1px 4px;gap:1px;justify-content:center}
+ .sidepanel .stats-grid strong{font-size:clamp(15px,1vw,18px);line-height:1.05}
+ .sidepanel .stats-grid small{font-size:9px;line-height:1.05}
+ .sidepanel .score-line{margin:0}
+}
+
+/* Mission Builder V1: same calendar, stronger outcome-based coaching. */
+.mission-btn{border:1px solid var(--accent);background:#2c1b0e;color:#ffae55;font-weight:900;border-radius:9px;padding:10px 13px;white-space:nowrap}
+.mission-btn:hover{background:#40250f;color:#fff}
+.task-card.mission-optional{opacity:.76;border-color:#51433b;background:#121416}
+.task-card.mission-optional .card-title{color:#b6b4b1}
+.task-card.mission-optional .card-target{color:#aaa29a}
+.task-card.mission-core{border-color:var(--accent);background:linear-gradient(145deg,#2a1a11,#131416 65%)}
+.task-card.mission-core .card-title{color:#ffb357}
+.mission-summary-card,.mission-hero{border:1px solid var(--accent);border-radius:12px;background:linear-gradient(130deg,#2b1a11,#101214 75%);padding:18px;margin:10px 0;color:var(--fg)}
+.mission-summary-card h3{color:#ffa131;margin:0 0 10px;font-size:21px}.mission-summary-card p{line-height:1.55;margin:8px 0;font-size:14px}
+.mission-summary-card strong,.mission-hero strong{color:#fff}
+.mission-compact-step{border-bottom:1px solid #303030;padding:6px 0;margin:0;font-size:13px}
+.mission-compact-step strong{color:#ff9a31}.mission-compact-step span{color:#c9c9c9}
+.mission-section-title{font-size:15px;margin:18px 0 10px;color:#ff962a}
+.mission-hero strong{display:block;font-size:34px;line-height:1.35}.mission-hero strong small{font-size:16px;font-weight:500;color:#bbb}
+.mission-kicker{display:block;font-size:12px;font-weight:800;color:#ff962a;letter-spacing:1.5px}
+.mission-track{height:12px;border-radius:12px;background:#39322b;overflow:hidden;margin-top:10px}.mission-track>div{background:var(--accent);height:100%;transition:width .25s}
+.mission-hero p{color:#ccc;font-size:13px}
+.mission-totals{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:12px 0}
+.mission-totals strong{border:1px solid #58402d;border-radius:8px;padding:10px 6px;text-align:center;background:#1c1d1e;font-size:12px;color:#ffad57}
+.mission-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 15px}
+@media(max-width:1250px){.mission-btn{padding:8px 9px;font-size:12px}.toolbar{gap:5px}}
+@media(max-width:680px){.mission-totals{grid-template-columns:repeat(2,minmax(0,1fr))}.mission-fields{grid-template-columns:1fr}}
+
+.mission-welcome-choice{border:1px solid var(--accent);border-radius:12px;background:#27180f;padding:16px;margin:14px 0}.mission-welcome-choice strong{color:#ffa132;font-size:17px}.mission-welcome-choice p{color:#ddd;font-size:13px;line-height:1.5}
+
+/* BernAPlan Lively integration: full desktop, non-invasive current-block marker */
+.wall-clock {font-weight:800;color:#ffab62;font-size:clamp(11px,1.05vw,15px);white-space:nowrap;border:1px solid #714326;border-radius:9px;padding:7px 9px;background:#1b1511;letter-spacing:.03em}
+html.lively-hide-clock .wall-clock{display:none!important}
+html.lively-larger-text .card-desc{font-size:clamp(11px,.85vw,15px)!important}
+html.lively-larger-text .card-title{font-size:clamp(12px,1vw,17px)!important}
+html.lively-larger-text .card-footer{font-size:clamp(9px,.7vw,12px)!important}
+.calendar-cell.lively-current-block{box-shadow:inset 0 0 0 2px var(--accent),0 0 13px rgba(255,136,0,.14);background:#22190f!important;z-index:1}
+.calendar-cell.lively-current-block .task-card{border-color:var(--accent)!important}
+@media(max-width:1250px){.wall-clock{font-size:11px;padding:5px}.app-title small{display:none}}
+@media(max-width:850px){.wall-clock{display:none}}
+
+</style>
+
+</head>
+<body>
+  <div class="shell" id="shell">
+    <header class="topbar">
+      <div class="identity" aria-label="BernAPlan by HireBerna">
+        <div id="brandPicture" class="brand-mark">HB</div>
+        <div><div class="brand-name">HIRE<span>BERNA</span></div><div class="brand-caption">BUILT WITH STRATEGY. DELIVERED WITH HEART.</div></div>
+      </div>
+      <div class="app-title"><strong>DESKTOP <span>COMMAND CENTER</span></strong><small>YOUR WEEK. YOUR GOALS. YOUR PLAYBOOK.</small></div>
+      <div class="toolbar">
+        <button class="quiet" id="jumpToday" type="button">Today</button>
+      <button class="display-btn" id="fullScreenDisplay" type="button" title="Use more of your screen to read the weekly calendar" aria-label="Toggle full screen desktop display">⛶ Full screen</button>
+        <button class="mission-btn" id="missionOpen" type="button" title="Build or review a guided Mission">★ Missions</button>
+        <button class="quiet" id="settingsButton" type="button">⚙ Customize</button>
+        <button class="orange-button" id="newTask" type="button">+ New Block</button>
+      </div>
+    </header>
+    <main class="layout">
+      <section class="planner" aria-labelledby="playbookTitle">
+        <div class="planner-heading">
+          <div><div class="eyebrow">YOUR LIVE WEEKLY CALENDAR</div><h1 id="playbookTitle">Weekly Action Playbook</h1></div>
+          <div class="week-picker"><span id="wallClock" class="wall-clock" aria-label="Local time"></span><button id="prevWeek" class="icon-btn" aria-label="Previous week">‹</button><span id="weekLabel"></span><button id="nextWeek" class="icon-btn" aria-label="Next week">›</button></div>
+        </div>
+        <div class="calendar-holder"><div class="calendar-grid" id="calendar" aria-label="Seven-day interactive action calendar"></div></div>
+        <div class="bottom-bar"><div class="nonneg-caption"><strong>NON-NEGOTIABLES</strong><span class="muted"> • Build momentum, one block at a time</span></div><div id="nonnegStrip" class="nonneg-strip"></div><button class="subtle-button" id="editNonneg">Edit weekly essentials</button></div>
+        <div class="footer-brand"><span>HIRE<b>BERNA</b></span><span>CREATIVE WORK. REAL OPPORTUNITIES. A BRIGHTER TOMORROW.</span><strong>HB</strong></div>
+      </section>
+      <aside class="sidepanel">
+        <section class="panel"><div class="panel-title"><h2>Weekly Scoreboard</h2><span id="metricCount" class="accent"></span></div><div id="scoreboard"></div><button type="button" class="full-link" id="editScoreboard">+ Customize metrics & goals</button></section>
+        <section class="panel"><div class="panel-title"><h2>This Week</h2><span id="progressLabel" class="accent">0%</span></div><div class="progress-track"><div id="progressBar" class="progress-fill"></div></div><div class="stats-grid"><div><strong id="doneBlocks">0</strong><small>Blocks done</small></div><div><strong id="totalBlocks">0</strong><small>Planned blocks</small></div><div><strong id="openBlocks">0</strong><small>Remaining</small></div></div><div class="weekly-actions"><div class="reality-stats" id="actionProofStats">0 documented outcomes</div><button type="button" class="full-link" id="weeklyReview">Weekly Reality Check →</button></div></section>
+        <section class="panel"><div class="panel-title"><h2>My Essentials</h2><span id="nonnegCount" class="accent"></span></div><div id="nonnegPanel" class="essentials"></div></section>
+        <section class="panel helper"><div class="panel-title"><h2>Make it yours</h2></div><p>Change your tasks, times, theme and metrics. Everything here is editable—even on Free.</p><button type="button" class="full-link" id="openSetup">Open easy setup →</button></section>
+      </aside>
+    </main>
+  </div>
+  <div id="overlay" class="overlay hidden" aria-hidden="true"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>
+/* BernAPlan Desktop Command Center — zero-dependency, local-first calendar prototype.
+ * Stores only on this device. Never claims live external calendar sync.
+ */
+(()=>{'use strict';
+const KEY='bernaplan.desktop.v2.prototype.1';
+const DAY_NAMES=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const DEFAULT_SLOTS=[{id:'morning',time:'09:00',label:'FOCUS'},{id:'outreach',time:'11:00',label:'ACTION'},{id:'afternoon',time:'14:00',label:'BUILD'},{id:'evening',time:'17:00',label:'PROGRESS'},{id:'night',time:'20:00',label:'REVIEW'}];
+const DEFAULT_METRICS=[{id:'focus',name:'Focus hours',target:10,unit:'hours'},{id:'tasks',name:'Completed tasks',target:20,unit:'count'},{id:'wins',name:'Weekly wins',target:5,unit:'count'}];
+const DEFAULT_ESSENTIALS=[{id:'review',name:'Review my priorities'},{id:'progress',name:'Make progress on one goal'},{id:'reset',name:'Reflect and reset'}];
+const CATALOG={
+  everyday:{label:'Everyday Life',description:'An adaptable personal planning week',rows:[['Plan the day','Choose priorities','Organize tasks','Set intentions','Focus on essentials','Personal project','Review the week'],['Respond & organize','Follow up','Personal admin','Appointments','Finish essentials','Home tasks','Plan upcoming week'],['Deep focus','Project progress','Learning time','Creative block','Finish loose ends','Open project time','Prepare for Monday'],['Health & movement','Family & friends','Personal goals','Creative time','Weekly reflection','Free time','Recharge'],['Read & reflect','Evening review','Skill building','Wind down','Celebrate wins','Hobby time','Rest']]},
+  business:{label:'Business / Freelance',description:'Client work, delivery, follow-up and business growth',rows:[['Plan priorities','Find opportunities','Research clients','Follow-up review','Pipeline planning','Deep project work','Review goals'],['Client communication','Write proposals','Follow up','Client meeting','Send deliverables','Business admin','Plan next week'],['Project milestone','Portfolio building','Deliver client work','Learning block','Finish priority','Batch project work','Portfolio polish'],['Brand content','Network & connect','Track progress','Brand content','Invoices & finances','Creative development','Rest & ideas'],['Review results','Industry learning','Project planning','Community time','Close out week','Creative time','Weekly reset']]},
+  student:{label:'School / Study',description:'Plan studying, assignments and academic goals',rows:[['Plan school week','Review lessons','Read course material','Study session','Weekly quiz','Long study block','Study review'],['Class tasks','Research & notes','Assignment work','Class tasks','Submit coursework','Group project','Plan upcoming week'],['Practice problems','Writing block','Lab / project','Practice problems','Complete assignment','Study difficult topic','Organize materials'],['Movement break','Review flashcards','Academic goals','Read & reflect','Review progress','Personal time','Free time'],['Read & revise','Tomorrow plan','Study review','Reading block','Celebrate progress','Hobby time','Rest']]},
+  creator:{label:'Creative / Content',description:'Ideas, making, publishing and creative development',rows:[['Plan content','Explore ideas','Research audience','Refine ideas','Review content','Deep creative work','Review week'],['Draft scripts','Create outline','Record / produce','Edit content','Prepare release','Batch content','Plan next week'],['Design assets','Edit media','Creative build','Postproduction','Complete deliverable','Experiment','Organize portfolio'],['Publish / share','Community replies','Share progress','Publish / share','Review performance','Creative free time','Inspiration time'],['Collect ideas','Practice skills','Creative learning','Organize drafts','Celebrate wins','Creative play','Rest']]},
+  blank:{label:'Blank Calendar',description:'Start completely from scratch',rows:[]}
+};
+const $=s=>document.querySelector(s);const id=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-5);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const localDateKey=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const beginningOfWeek=(date=new Date())=>{const d=new Date(date);d.setHours(12,0,0,0);d.setDate(d.getDate()-(d.getDay()+6)%7);return d};
+const fromKey=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d,12)};
+const addDays=(date,n)=>{const d=new Date(date);d.setDate(d.getDate()+n);return d};
+const timeLabel=t=>{let [h,m]=t.split(':').map(Number);return `${h%12||12}${m?':'+String(m).padStart(2,'0'):''} ${h>=12?'PM':'AM'}`};
+const safeColor=s=>/^#[0-9a-fA-F]{6}$/.test(s)?s:'#f77513';
+const sanitizeImage=s=>typeof s==='string'&&/^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(s)&&s.length<350000?s:null;
+let state,selectedWeek=localDateKey(beginningOfWeek()),activeTask=null,editingTask=false,settingsTab='schedule',toastTimeout;
+/* BernAPlan guided playbooks: all local, curated, no API or paid model. */
+const GOAL_OPTIONS={
+ everyday:['Feel less overwhelmed','Build healthier routines','Finish personal projects','Keep up with responsibilities'],
+ business:['Find new clients','Finish client work','Grow my visibility','Get organized'],
+ student:['Finish assignments','Prepare for exams','Improve study habits','Manage my school week'],
+ creator:['Publish consistently','Finish a creative project','Grow an audience','Organize my ideas'],
+ blank:['Start from scratch','Keep my days organized','Follow my goals','Make consistent progress']
+};
+const OBSTACLE_OPTIONS=[['starting','I don’t know where to begin'],['overwhelm','I have too much to do'],['focus','I get distracted'],['consistency','I have trouble sticking to a plan']];
+const PACES=[['light','Light · 2 blocks per day','Room to breathe'],['balanced','Balanced · 3 blocks per day','A manageable rhythm'],['full','Full · 5 blocks per day','A detailed weekly schedule']];
+const GUIDES={
+ 'plan priorities':{
+  objective:'Identify the three most important business outcomes for this week, decide what done looks like, and reserve a time for the first action.',
+  steps:['Write down every open obligation: client work, deadlines, follow-ups, marketing, and admin. Set a 5-minute timer and do not sort yet.','Put a star beside anything with a real deadline or a significant impact on customers or income. Move tasks that can wait to a Later list.','Choose up to three priorities. For each, replace vague words with a visible outcome (for example, “email the revised design to the client Thursday”).','Break your #1 priority into one action that takes 15–30 minutes. Put that action in an actual time block today.','Check: if these three things were finished, would this week feel successful? If not, revise the list.'],
+  tips:['The Eisenhower urgent/important distinction helps separate deadlines from merely loud requests. Important but nonurgent work needs protected time.','Many planners recommend a small number of “most important tasks” rather than an enormous daily list. Three weekly outcomes is a starting point, not a rigid law.','Give priority to commitments you have already made before chasing a new idea. Leave a little buffer for unexpected work.'],
+  checklist:['List everything competing for attention','Select three measurable weekly outcomes','Identify one first action for each outcome','Reserve time for priority #1'],
+  example:'Instead of “work on website,” write: “Send the client the updated homepage draft by Thursday.” First action: “Open feedback email and make a five-item change list.”',
+  success:'You have three clear outcomes, one next action for each, and time booked for the most important one.'
+ },
+ 'find opportunities':{
+  objective:'Find a short list of genuine client opportunities that fit the services you can confidently deliver.',
+  steps:['Choose one service you offer (for example, website refreshes, video editing, or social graphics).','Search a relevant marketplace, local business directory, or professional group for businesses actively asking for that service.','Check each opportunity: Is the problem clear? Is there a real person or business behind it? Does your work solve it?','Save five promising prospects with their link, contact route, and the specific issue you noticed.'],
+  tips:['Relevance matters more than volume. A specific match is stronger than ten random contacts.','Do not lead with a copied sales pitch. First understand what the prospect actually needs.'],
+  checklist:['Choose one service','Find five relevant opportunities','Record contact information and needs','Select the best prospect to approach'],
+  example:'Business needs a clearer booking page. Save the URL and note “mobile booking button is difficult to find.”',success:'Five real opportunities are documented, and at least one has a clear next step.'
+ },
+ 'research clients':{
+  objective:'Understand the needs of three possible clients well enough to propose a relevant improvement.',
+  steps:['Choose three businesses from your lead list.','Visit each website or public profile and note what customers can do there.','Identify one specific improvement per business; look for confusing wording, weak mobile layout, outdated imagery, or missing calls to action.','Write a two-sentence personalized observation for each company.'],
+  tips:['Use publicly available business information; never assume a business has money or a problem you cannot verify.','Lead with an observation and a useful suggestion, not a long critique.'],
+  checklist:['Select three businesses','Identify one concrete issue for each','Write an improvement suggestion','Save notes for outreach'],
+  example:'“The salon gallery looks great, but the booking button is hard to find on mobile. A persistent booking link may help visitors act.”',success:'You have three specific, respectful observations ready to use.'
+ },
+ 'follow-up review':{
+  objective:'Identify outstanding conversations and choose which contacts need a respectful follow-up.',
+  steps:['Open your email, messages, or lead tracker.','List conversations waiting on a reply, approval, quote, or next meeting.','Check the last contact date; do not send repeated messages within an unreasonable period.','Prepare one short follow-up that refers to the previous discussion and offers a clear next step.'],
+  tips:['Following up is easier when every contact has a last-contact date and next action.','Give the other person an easy way to decline or choose a time.'],
+  checklist:['Review unanswered conversations','Identify follow-ups that are due','Send or schedule appropriate follow-ups','Update next-contact dates'],
+  example:'“Just checking whether you had a chance to review the homepage draft. Happy to answer questions or make a small revision.”',success:'Every active conversation has either a next action or a deliberate wait date.'
+ },
+ 'pipeline planning':{
+  objective:'Turn unorganized sales leads into a simple pipeline with one next action per prospect.',
+  steps:['Put your prospects into four groups: new, contacted, discussing, and won/lost.','Give every active prospect a next action such as “send proposal” or “follow up Friday.”','Choose the three prospects most likely to move forward this week.','Schedule the next actions rather than relying on memory.'],
+  tips:['A pipeline is only useful if the next action is current.','Keep opportunity values separate from money you have actually received.'],
+  checklist:['Group active prospects by stage','Assign a next action to each','Choose top three opportunities','Schedule their next steps'],success:'You can name the next action for each active prospect.'
+ },
+ 'deep project work':{
+  objective:'Finish one meaningful part of a client or personal project without switching between unrelated tasks.',
+  steps:['Choose one deliverable you can advance today.','Define a stopping point, such as “complete the first draft of the booking form.”','Gather the files and references you need, then silence avoidable notifications.','Work for one uninterrupted 25–50-minute interval, take a short break, and repeat if needed.','Check the output and document exactly what remains.'],
+  tips:['Timeboxing makes large projects less intimidating.','Avoid treating research, drafting, and polishing as the same step. Finish the draft before perfecting details.'],
+  checklist:['Select one deliverable','Define the next finished milestone','Complete a focused work interval','Save work and record next action'],success:'One visible project milestone moved forward.'
+ },
+ 'review goals':{
+  objective:'Compare what you planned with what actually happened and choose next week’s most valuable adjustment.',
+  steps:['Open your weekly scoreboard and completed tasks.','Write down three concrete wins, including small ones.','Check your goals one by one: met, partly met, or missed. Use actual results, not guesses.','Identify one cause of friction and one change to try next week.'],
+  tips:['Review the process as well as results: a missed target can reveal an unrealistic schedule.','Avoid judging the week by busyness alone; look for finished outcomes.'],
+  checklist:['Record actual results','Write three wins','Review missed targets without guessing','Choose one improvement'],success:'Your next week has one evidence-based adjustment.'
+ },
+ 'client communication':{
+  objective:'Respond to active clients clearly and prevent open questions from delaying project delivery.',
+  steps:['Gather client conversations in one place.','Flag anything that needs a decision, approval, status update, or promised reply.','Answer urgent commitments first; for each message state what happened, what comes next, and when.','Record any new deadline or action in your calendar.'],
+  tips:['Clear messages reduce follow-up questions. Use short paragraphs and specific dates.','Never promise a delivery date you have not checked against your schedule.'],
+  checklist:['Review client messages','Respond to time-sensitive needs','Confirm next steps and dates','Add resulting tasks to the plan'],success:'Important client conversations have clear next steps.'
+ },
+ 'write proposals':{
+  objective:'Create and send a relevant proposal that states the client’s problem, your solution, scope, timeline, and price.',
+  steps:['Choose a real opportunity where you understand the customer’s needs.','Write one sentence describing the problem in the client’s own terms.','Outline the deliverables, what is not included, a realistic timeline, and payment terms.','Explain your approach in plain language and add a clear invitation to accept or ask questions.','Proofread names, links, and dates before sending.'],
+  tips:['A useful proposal makes scope and next steps unambiguous.','Avoid padding it with jargon or promising results you cannot guarantee.'],
+  checklist:['Confirm the client need','Define scope and deliverables','Set timeline and price','Proofread and send'],success:'A clear, accurate proposal is ready or has been sent.'
+ },
+ 'follow up':{
+  objective:'Move one open professional conversation forward with a timely and helpful follow-up.',
+  steps:['Select a conversation with an agreed or reasonable follow-up date.','Reread the last message so your follow-up refers to a real need.','Write two or three sentences: context, a useful update or question, and one easy next step.','Send once, record the date, and choose when to check again.'],
+  tips:['A brief specific follow-up is easier to answer than “just checking in” without context.','Respect requests not to be contacted.'],
+  checklist:['Choose a due conversation','Write a context-specific follow-up','Send and record it','Schedule a reasonable next check'],success:'The contact has received a helpful message and your tracker is current.'
+ },
+ 'client meeting':{
+  objective:'Enter the meeting with a clear outcome and leave with documented decisions, owners, and dates.',
+  steps:['Before the meeting, choose one decision or result you need.','Prepare a short agenda, relevant links, and two questions that require an answer.','During the call, confirm what each person agrees to do.','Afterward, send a brief recap of decisions and deadlines and update your command center.'],
+  tips:['An agenda and decision log prevent meetings from turning into vague conversations.','If a decision is blocked, record who will provide the missing information.'],
+  checklist:['Define the meeting goal','Prepare agenda and questions','Capture decisions and owners','Send recap and add follow-ups'],success:'You know the decisions, owners, and next dates.'
+ },
+ 'send deliverables':{
+  objective:'Deliver the promised files or work to the client with clear instructions for review and approval.',
+  steps:['Compare the deliverable against what was agreed.','Open or test the final file, link, or page yourself.','Package the files with readable names and appropriate access permissions.','Send a short note describing what is included, how to review it, and when feedback is needed.'],
+  tips:['Check links in a private window where possible; access errors can delay approval.','Separate what is final from what still needs review.'],
+  checklist:['Check agreed scope','Test final files or links','Send with review instructions','Record delivery date and next step'],success:'The client can open the work and knows how to respond.'
+ },
+ 'business admin':{
+  objective:'Clear the operational tasks that would otherwise create missed payments, deadlines, or confusion.',
+  steps:['Check upcoming due dates, invoices, receipts, and commitments.','Pick the items with deadlines or financial consequences first.','Complete or schedule each item, keeping private data in a secure location.','Record anything unfinished with a clear next date.'],
+  tips:['Batch admin into a defined block so it does not interrupt creative work throughout the day.','Keep financial records and passwords out of public planning notes.'],
+  checklist:['Review due items','Handle urgent admin work','Organize records safely','Schedule remaining actions'],success:'Urgent admin is handled and everything else has a next date.'
+ },
+ 'plan next week':{
+  objective:'Prepare the next seven days with three important outcomes and realistic time blocks.',
+  steps:['Review this week’s unfinished commitments and actual results.','Choose three outcomes that matter for the upcoming week.','Place appointments and fixed deadlines first, then reserve focus time.','Leave open space for surprises and check whether the workload is realistic.'],
+  tips:['Plan around real constraints rather than assuming every hour is available.','Carry forward unfinished work only if it still matters.'],
+  checklist:['Review unfinished work','Pick three goals','Place deadlines and focus blocks','Check that the schedule is realistic'],success:'Next week starts with clear priorities and enough available time.'
+ },
+ 'project milestone':{
+  objective:'Finish one defined project milestone that someone else can review or you can objectively verify.',
+  steps:['Open the project scope and find the next unfinished milestone.','Write an acceptance check: what will be true when this part is done?','Finish the smallest piece that meets the check.','Test the result and document anything preventing completion.'],
+  tips:['Break large deliverables into independently testable chunks.','Avoid moving to the next milestone before checking the current one.'],
+  checklist:['Define milestone acceptance check','Complete the milestone','Test or review it','Log next action'],success:'A testable milestone is complete or a specific blocker is documented.'
+ },
+ 'portfolio building':{
+  objective:'Create one strong example that demonstrates a specific service or skill to a future customer.',
+  steps:['Pick the service you want to demonstrate.','Choose an appropriate sample or permitted project; never publish confidential client materials.','Show the problem, your process, and the improved result.','Publish the finished piece with a short explanation and an easy contact link.'],
+  tips:['One clear case study is often more convincing than many unexplained images.','Describe your contribution honestly; identify concept/spec work as such.'],
+  checklist:['Choose skill to demonstrate','Build or select sample','Explain problem and result','Publish with accurate attribution'],success:'One portfolio piece clearly demonstrates what you can do.'
+ },
+ 'deliver client work':{
+  objective:'Advance the client deliverable toward its agreed acceptance criteria without adding unapproved scope.',
+  steps:['Reopen the agreement or latest feedback.','Identify the highest-impact remaining task within scope.','Complete it, then test or proofread the result.','Update the client if a milestone is reached or a blocker changes the delivery date.'],
+  tips:['Validate against the agreement, not just your own idea of “finished.”','Record scope changes before investing time in them.'],
+  checklist:['Check current scope','Complete highest-priority change','Review/test output','Update status or send result'],success:'The deliverable is closer to approved completion, with status recorded.'
+ },
+ 'brand content':{
+  objective:'Publish one useful, on-brand piece of content aimed at the audience you want to serve.',
+  steps:['Choose one audience question or common mistake relevant to your work.','Write a helpful takeaway or show a real process example.','Create a concise visual, clip, or post with a clear caption.','Check accessibility and accuracy, publish, and note what you learned.'],
+  tips:['Value-first content is more useful than repeated “hire me” promotions.','Keep visuals consistent and ask for only one action at a time.'],
+  checklist:['Choose audience problem','Create useful content','Check and publish','Record response or lesson'],success:'One useful piece of brand content is published or ready.'
+ },
+ 'network & connect':{
+  objective:'Start authentic conversations with people who share your professional interests or may benefit from your expertise.',
+  steps:['Identify three relevant people or communities.','Read something they recently shared or worked on.','Leave one thoughtful comment or send a short personalized introduction.','Record conversations worth following up without immediately pushing a sale.'],
+  tips:['Build relationships before making requests.','Avoid mass unsolicited messages and generic praise.'],
+  checklist:['Identify three relevant contacts','Learn about their work','Send thoughtful outreach','Record real conversations'],success:'You made meaningful connections and know which to continue.'
+ },
+ 'track progress':{
+  objective:'Update your scoreboard with real numbers so you can see whether your activities are producing results.',
+  steps:['Open your lead list, completed tasks, invoices, and messages.','Count actual actions and results for each metric; do not guess.','Use “Log a result” for the appropriate metric.','Compare against your targets and choose one thing to adjust.'],
+  tips:['Keep activity numbers (messages sent) separate from outcome numbers (customers gained).','Track the same definition of a metric each week to make comparisons useful.'],
+  checklist:['Gather source records','Enter real results','Compare to goals','Choose an adjustment'],success:'Your scoreboard reflects documented activity and results.'
+ },
+ 'invoices & finances':{
+  objective:'Confirm invoices, amounts due, and payments so no important financial follow-up is missed.',
+  steps:['Open your existing invoice or bookkeeping records.','Check sent invoices for correct client, amount, due date, and status.','Send due or overdue reminders politely when appropriate.','Record actual payments received separately from expected payments.'],
+  tips:['Never count a quoted project as paid revenue.','Keep private billing details in secure finance tools, not public desktop notes.'],
+  checklist:['Review invoice statuses','Send or follow up on due items','Log actual payments received','Schedule any remaining action'],success:'Your invoice statuses and next actions are current.'
+ },
+ 'industry learning':{
+  objective:'Learn one practical idea you can apply to a service you currently offer.',
+  steps:['Identify one skill gap that slowed your current work.','Choose a trusted free tutorial or documentation page about that exact topic.','Practice the idea in a small test rather than watching passively.','Save one lesson and one situation where you will apply it.'],
+  tips:['Learning is most valuable when you use the skill soon after studying.','Prefer source documentation and hands-on practice over collecting endless tutorials.'],
+  checklist:['Choose a specific skill','Use a free resource','Practice once','Record an application'],success:'You practiced a usable skill and know where to apply it.'
+ },
+ 'plan the day':{
+  objective:'Pick one must-do task and two helpful tasks, then put them in a realistic order for today.',
+  steps:['Look at your fixed appointments and remaining free time.','Write down everything on your mind for two minutes.','Select one must-do and no more than two bonus tasks.','Break the must-do into one action you can start in ten minutes.'],
+  tips:['Prioritize outcomes, not how long a list looks.','Leave room for rest and unexpected responsibilities.'],
+  checklist:['Check real commitments','Choose one must-do outcome','Choose two optional tasks','Schedule first action'],success:'You know exactly what to start and what can wait.'
+ },
+ 'choose priorities':{
+  objective:'Separate today’s essential responsibilities from optional work and choose your first action.',
+  steps:['List your responsibilities without sorting.','Mark what has a genuine deadline or meaningful consequence.','Choose one top priority and two secondary items.','Write a first action with a verb and an object: “call the clinic,” not “health.”'],
+  tips:['Urgent does not always mean important; assess both.','Limit work in progress to reduce unfinished tasks.'],
+  checklist:['Write task list','Mark essential items','Choose top three','Name first concrete action'],success:'Your top priority and first step are unambiguous.'
+ },
+ 'plan school week':{
+  objective:'Organize assignments, due dates, and study blocks so important schoolwork has enough time.',
+  steps:['Open every course page or syllabus and copy upcoming deadlines.','Mark assessments, long assignments, and anything due within seven days.','Estimate work time and split larger assignments into research, drafting, and review blocks.','Place study sessions before deadlines and save one buffer slot.'],
+  tips:['Starting before the due date reduces last-minute surprises.','Use short recurring review sessions rather than a single cram block.'],
+  checklist:['Collect course deadlines','Rank urgent and high-impact work','Break down large assignments','Reserve study time'],success:'Each upcoming assignment has a due date and a planned work slot.'
+ },
+ 'study session':{
+  objective:'Learn and recall one clearly defined topic rather than passively rereading for the entire block.',
+  steps:['Choose the exact chapter, concept, or problem type to study.','Spend 10–15 minutes explaining what you know without looking at notes.','Check the material and correct your gaps.','Solve a few practice questions or teach the topic out loud.'],
+  tips:['Active recall and retrieval practice are generally more useful for memory than rereading alone.','Short breaks can help maintain attention during longer study sessions.'],
+  checklist:['Choose one topic','Attempt recall without notes','Correct weak spots','Practice with questions'],success:'You can explain the topic or solve representative questions with fewer gaps.'
+ },
+ 'assignment work':{
+  objective:'Move one assignment to a visible milestone before its due date.',
+  steps:['Read the rubric and instructions carefully.','Identify what the finished submission must include.','Choose the next milestone: outline, draft, calculations, or revisions.','Complete the milestone, check it against the rubric, and save it.'],
+  tips:['Use the grading criteria as a checklist.','Ask questions early when instructions are unclear.'],
+  checklist:['Review rubric','Define next milestone','Work on milestone','Save and verify progress'],success:'One identifiable part of the assignment is complete.'
+ },
+ 'prepare for exams':{
+  objective:'Identify weak topics and practice recalling or applying them before the exam.',
+  steps:['List topics from the syllabus or study guide.','Test yourself briefly without notes to identify gaps.','Choose two weak areas and review worked examples.','Retest and note which topics need another session.'],
+  tips:['Mix practice and spaced review over several days rather than cramming once.','Practice in a format similar to the exam when possible.'],
+  checklist:['List exam topics','Identify weak areas','Practice two areas','Schedule next review'],success:'You have identified gaps and made a repeatable review plan.'
+ },
+ 'plan content':{
+  objective:'Choose a clear audience, one topic, and a publishable outcome for this week.',
+  steps:['Decide who one piece of content is for.','List three questions that audience cares about.','Pick one question and one format: short video, image, or written post.','Write the key takeaway and put creation and review on the calendar.'],
+  tips:['Create for a specific audience problem rather than posting just to fill a slot.','Keep each piece focused on one message.'],
+  checklist:['Identify audience','Choose a useful topic','Select format and message','Schedule production'],success:'You have an audience-focused topic and a time to make it.'
+ },
+ 'draft scripts':{
+  objective:'Create a short script with a clear opening, useful middle, and one ending action.',
+  steps:['Write the audience and main takeaway at the top.','Draft a one-sentence hook explaining why the viewer should care.','Outline two or three supporting points and any visual examples.','Read it aloud, remove unnecessary words, and write a clear ending.'],
+  tips:['Read scripts aloud to catch unnatural phrasing.','Aim for one message per short-form video.'],
+  checklist:['Define main takeaway','Write opening hook','Draft body and examples','Read aloud and revise'],success:'You have a script you can read smoothly and record.'
+ },
+ 'record / produce':{
+  objective:'Capture the footage, audio, or creative assets needed to finish one defined piece of content.',
+  steps:['Open your script or shot list.','Check microphone, lighting, framing, and storage with a short test.','Capture the required takes or source materials.','Review one sample to verify audio and image quality before packing away.'],
+  tips:['A short equipment test saves the time of redoing an entire recording.','Record optional extra takes only after the required material is safe.'],
+  checklist:['Prepare shot list','Check audio and framing','Capture required material','Verify and back up files'],success:'Usable source material exists and is saved.'
+ },
+ 'publish / share':{
+  objective:'Publish one complete piece of content with accurate details and a clear purpose.',
+  steps:['Check the final media or text from start to finish.','Confirm title, caption, links, platform dimensions, and any necessary permissions.','Publish or schedule the item on the intended platform.','Save the link and note one thing to review later.'],
+  tips:['Quality-control before publishing prevents avoidable corrections.','Do not judge performance immediately; choose a sensible review interval.'],
+  checklist:['Review finished asset','Check metadata and links','Publish or schedule','Save publication link'],success:'Content is live or scheduled, and you have its link.'
+ },
+ 'review performance':{
+  objective:'Identify what actually worked in recent content and one test to run next.',
+  steps:['Choose a recent set of comparable posts.','Read actual reach, completion, saves, or other relevant metrics.','Note which message or format earned meaningful engagement.','Choose one small change to test on the next piece.'],
+  tips:['Compare similar time periods and formats when drawing conclusions.','Avoid making decisions from one unusually strong or weak post.'],
+  checklist:['Collect actual metrics','Spot one pattern','Choose one next experiment','Record the result'],success:'You have a data-informed change to test.'
+ }
+};
+const CARD_RECIPES={"plan the day":{"action":"Check appointments and deadlines; choose your top 3 actions.","target":"3 priorities + first action"},"choose priorities":{"action":"List open tasks; pick the 3 with the biggest impact.","target":"3 ranked priorities"},"organize tasks":{"action":"Sort your task list into Today, This Week, and Later.","target":"3 clear task lists"},"set intentions":{"action":"Choose 1 important outcome and block time to start it.","target":"1 outcome + start time"},"focus on essentials":{"action":"Finish the most urgent unfinished responsibility first.","target":"1 essential finished"},"personal project":{"action":"Open your personal project; finish 1 small milestone.","target":"1 visible milestone"},"review the week":{"action":"Check completed work, delays, and next commitments.","target":"3 wins + 1 improvement"},"respond & organize":{"action":"Answer 3 important messages; note the next actions.","target":"3 replies processed"},"follow up":{"action":"Message 2 people waiting on an answer or update.","target":"2 follow-ups sent"},"personal admin":{"action":"Pay, file, or schedule 1 overdue household item.","target":"1 admin item closed"},"appointments":{"action":"Check upcoming appointments; confirm time and location.","target":"Next appointments confirmed"},"finish essentials":{"action":"Complete 1 must-do task before starting something new.","target":"1 must-do finished"},"home tasks":{"action":"Pick 1 room; tidy for 20 minutes and put items away.","target":"20 minutes of tidying"},"plan upcoming week":{"action":"Check commitments; choose 3 priorities for next week.","target":"3 priorities scheduled"},"deep focus":{"action":"Choose 1 project step; work without notifications for 25 min.","target":"25-minute focus session"},"project progress":{"action":"Make and save 1 visible improvement to your project.","target":"1 saved improvement"},"learning time":{"action":"Study 1 topic; test yourself with 3 questions.","target":"1 topic + 3 answers"},"creative block":{"action":"Make 1 sketch, paragraph, or draft for a personal idea.","target":"1 rough draft"},"finish loose ends":{"action":"Close 2 small tasks that have been waiting.","target":"2 loose ends closed"},"open project time":{"action":"Work on the personal project that matters most today.","target":"1 completed next step"},"prepare for monday":{"action":"Pack, plan, or set out what tomorrow needs.","target":"3 things ready"},"health & movement":{"action":"Walk, stretch, or exercise at a comfortable pace.","target":"20 minutes of movement"},"family & friends":{"action":"Call or message someone important; listen and reconnect.","target":"1 meaningful conversation"},"personal goals":{"action":"Break 1 long-term goal into a step for this week.","target":"1 next step scheduled"},"creative time":{"action":"Spend 30 minutes making something you enjoy.","target":"30 creative minutes"},"weekly reflection":{"action":"Write 2 successes and 1 thing to change next week.","target":"2 wins + 1 change"},"free time":{"action":"Take a guilt-free break with no work obligations.","target":"30 minutes for yourself"},"recharge":{"action":"Rest, unplug, or take a calming walk.","target":"30 minutes of recovery"},"read & reflect":{"action":"Read for 20 minutes; note 1 idea worth keeping.","target":"20 minutes + 1 insight"},"evening review":{"action":"Mark today's actual results; choose tomorrow's first task.","target":"1 result + tomorrow's start"},"skill building":{"action":"Practice 1 useful skill with a hands-on exercise.","target":"1 completed exercise"},"wind down":{"action":"Put screens aside and prepare for restful sleep.","target":"30 minutes of quiet"},"celebrate wins":{"action":"Write 3 things you followed through on this week.","target":"3 genuine wins noted"},"hobby time":{"action":"Do an enjoyable hobby without a productivity goal.","target":"30 minutes of hobby time"},"rest":{"action":"Protect a real rest period; leave work unfinished if needed.","target":"Rest—no proof required"},"plan priorities":{"action":"List current jobs and deadlines; rank the top 3 outcomes.","target":"3 priorities + first action"},"find opportunities":{"action":"Check Upwork, Contra, LinkedIn Services or local listings.","target":"Save 10 fitting opportunities"},"research clients":{"action":"Review 3 potential clients' sites; note 1 need for each.","target":"3 client audit notes"},"follow-up review":{"action":"Check sent proposals and replies; identify who needs a nudge.","target":"5 follow-ups identified"},"pipeline planning":{"action":"Review lead stages; choose who to contact next.","target":"Top 5 leads prioritized"},"deep project work":{"action":"Work uninterrupted on the most urgent client deliverable.","target":"1 finished project section"},"review goals":{"action":"Compare client, sales and delivery results against targets.","target":"3 results + next priority"},"client communication":{"action":"Send 3 clear updates or replies to active clients.","target":"3 client messages sent"},"write proposals":{"action":"Draft 2 tailored proposals with scope, price and next step.","target":"2 proposals drafted"},"client meeting":{"action":"Prepare agenda and questions; confirm the next client meeting.","target":"1 meeting agenda ready"},"send deliverables":{"action":"Quality-check and send a finished item to a client.","target":"1 deliverable sent"},"business admin":{"action":"Update invoices, expenses and upcoming due dates.","target":"3 records updated"},"plan next week":{"action":"Choose 3 revenue or delivery priorities; block calendar time.","target":"3 goals scheduled"},"project milestone":{"action":"Complete 1 clearly defined piece of client work.","target":"1 milestone finished"},"portfolio building":{"action":"Create 1 sample or case study showing your work.","target":"1 portfolio piece drafted"},"deliver client work":{"action":"Finish and share 1 approved client deliverable.","target":"1 approved item delivered"},"learning block":{"action":"Study 1 skill needed for current client work; practice it.","target":"1 hands-on practice task"},"finish priority":{"action":"Close the highest-impact open business task.","target":"1 priority finished"},"batch project work":{"action":"Process 2 similar client tasks without switching projects.","target":"2 items completed"},"portfolio polish":{"action":"Improve 1 portfolio project's images, copy or proof.","target":"1 case study improved"},"brand content":{"action":"Publish 1 case study, tip, breakdown or behind-the-scenes post.","target":"1 useful post published"},"network & connect":{"action":"Reach out to 3 relevant contacts with a personal message.","target":"3 genuine connections"},"track progress":{"action":"Update lead, proposal, delivery and revenue numbers.","target":"4 metrics recorded"},"invoices & finances":{"action":"Check unpaid invoices; update the ledger and follow up.","target":"1 invoice or ledger update"},"creative development":{"action":"Build 1 sample ad, design or offer for your services.","target":"1 finished concept"},"rest & ideas":{"action":"Take a low-pressure break; capture any useful ideas.","target":"Rest + optional idea"},"review results":{"action":"Compare leads, replies, sales and delivery against the plan.","target":"3 results + 1 adjustment"},"industry learning":{"action":"Read 1 industry resource; test a practical takeaway.","target":"1 applied takeaway"},"project planning":{"action":"Break the next client project into 3 ordered milestones.","target":"3 milestones with dates"},"community time":{"action":"Join 1 relevant community discussion; contribute helpfully.","target":"1 meaningful contribution"},"close out week":{"action":"Send final updates, log results, and identify carryovers.","target":"1 weekly closeout note"},"weekly reset":{"action":"Archive finished work; set the next most important action.","target":"1 clean handoff"},"plan school week":{"action":"Check class deadlines and choose your top 3 school tasks.","target":"3 school priorities"},"review lessons":{"action":"Reread class notes; recall 5 key ideas without looking.","target":"5 ideas recalled"},"read course material":{"action":"Read the assigned section; write a short summary.","target":"1 section + 5 bullet summary"},"study session":{"action":"Review 1 difficult topic; answer 5 practice questions.","target":"5 answers + corrections"},"weekly quiz":{"action":"Take a self-quiz, then review every missed answer.","target":"1 quiz + corrected mistakes"},"long study block":{"action":"Work 45 minutes on the toughest upcoming subject.","target":"45 minutes + 1 output"},"study review":{"action":"Check this week's assignments; note gaps for next week.","target":"1 gap list + next action"},"class tasks":{"action":"Check the course portal; complete the nearest small task.","target":"1 class task submitted"},"research & notes":{"action":"Find 2 reliable sources; record 3 useful notes.","target":"2 sources + 3 notes"},"assignment work":{"action":"Complete 1 section of the next assignment and save it.","target":"1 assignment section"},"submit coursework":{"action":"Review the rubric, upload finished work and confirm receipt.","target":"1 submission confirmed"},"group project":{"action":"Contact your team; agree on tasks and the next deadline.","target":"1 assigned next step"},"practice problems":{"action":"Solve 5 problems; review the ones you missed.","target":"5 attempted problems"},"writing block":{"action":"Outline or draft 300 words for the next written task.","target":"300 useful words"},"lab / project":{"action":"Complete 1 experiment, coding step or project milestone.","target":"1 lab/project step"},"complete assignment":{"action":"Finish and check 1 task against the assignment rubric.","target":"1 checked deliverable"},"study difficult topic":{"action":"Review 1 confusing concept; teach it back in your words.","target":"1 explain-back summary"},"organize materials":{"action":"File notes and downloads by class; clear the study area.","target":"1 organized class folder"},"movement break":{"action":"Walk or stretch away from your study screen.","target":"15-minute active break"},"review flashcards":{"action":"Practice 20 cards; repeat those you missed.","target":"20 cards reviewed"},"academic goals":{"action":"Choose 1 course improvement; plan 2 actions toward it.","target":"1 goal + 2 actions"},"review progress":{"action":"Check upcoming grades and deadlines; choose next focus.","target":"1 updated study plan"},"personal time":{"action":"Enjoy an activity unrelated to class or deadlines.","target":"30 minutes personal time"},"read & revise":{"action":"Reread 1 passage or draft; make 3 targeted improvements.","target":"3 useful revisions"},"tomorrow plan":{"action":"Check tomorrow's classes; prepare materials and first task.","target":"1 ready-for-tomorrow list"},"reading block":{"action":"Read for 25 minutes; write 3 questions or notes.","target":"25 minutes + 3 notes"},"celebrate progress":{"action":"Name 3 study efforts that helped, even if unfinished.","target":"3 honest wins"},"prepare for exams":{"action":"List exam topics; practice 10 questions on a weak subject.","target":"10 questions checked"},"plan content":{"action":"Choose 3 post topics; match each to an audience need.","target":"3 post ideas + hook"},"explore ideas":{"action":"Review audience comments and trends; save 5 ideas.","target":"5 ideas with context"},"research audience":{"action":"Read 10 comments or questions in your niche; note patterns.","target":"3 recurring audience needs"},"refine ideas":{"action":"Pick 1 idea; write its hook, promise and call to action.","target":"1 production-ready concept"},"review content":{"action":"Study 3 recent posts; record which hooks worked best.","target":"3 post observations"},"deep creative work":{"action":"Create the most important unfinished section of a project.","target":"1 saved deliverable section"},"review week":{"action":"Check published posts, unfinished drafts and next deadlines.","target":"3 results + next goal"},"draft scripts":{"action":"Write 1 short script with hook, main point and CTA.","target":"1 complete short script"},"create outline":{"action":"Outline 1 piece with opening, three beats and ending.","target":"1 structured outline"},"record / produce":{"action":"Record 1 usable video or audio segment; label the files.","target":"1 usable recording"},"edit content":{"action":"Cut, caption and export 1 publish-ready short video.","target":"1 exported edit"},"prepare release":{"action":"Check artwork, title, captions and publish date.","target":"1 release checklist complete"},"batch content":{"action":"Produce or schedule 3 posts while assets are open.","target":"3 posts prepared"},"design assets":{"action":"Create 1 cover, thumbnail or graphic for a planned post.","target":"1 usable design asset"},"edit media":{"action":"Trim and caption 1 piece of media for its platform.","target":"1 edited media file"},"creative build":{"action":"Finish 1 concrete component of your current project.","target":"1 saved component"},"postproduction":{"action":"Check audio, captions, transitions and export settings.","target":"1 checked final export"},"complete deliverable":{"action":"Finish and package 1 asset ready to send or publish.","target":"1 ready-to-share asset"},"experiment":{"action":"Try 1 new technique and save the best test.","target":"1 saved experiment"},"organize portfolio":{"action":"Select 3 strong samples; improve one presentation.","target":"3 samples + 1 update"},"publish / share":{"action":"Publish 1 ready piece; add a caption and invitation to respond.","target":"1 published piece"},"community replies":{"action":"Reply thoughtfully to 5 comments or questions.","target":"5 useful replies"},"share progress":{"action":"Show 1 work-in-progress update with what changed.","target":"1 progress update"},"review performance":{"action":"Check reach, saves and responses for 3 posts.","target":"3 metrics + 1 lesson"},"creative free time":{"action":"Create without a deadline; save any idea you like.","target":"30 minutes of play"},"inspiration time":{"action":"Review 3 inspiring works; note a technique to try.","target":"3 references + 1 idea"},"collect ideas":{"action":"Capture 5 prompts from your notes, audience or surroundings.","target":"5 categorized ideas"},"practice skills":{"action":"Practice one editing, writing or design technique 20 min.","target":"1 completed skill drill"},"creative learning":{"action":"Follow 1 tutorial; reproduce its result yourself.","target":"1 recreated example"},"organize drafts":{"action":"Sort drafts into Ready, Needs Work and Later.","target":"3 sorted draft groups"},"creative play":{"action":"Make 1 low-stakes sketch, sound or layout experiment.","target":"1 playful experiment"}};
+function cardRecipe(title){return CARD_RECIPES[String(title||'').toLowerCase().trim()]||null;}
+function isAutoGeneratedTask(t){return t&&t.guided===true&&t.kind==='task';}
+function personalizeCalendarTask(t){
+ const recipe=cardRecipe(t.title);if(!recipe)return false;
+ let changed=false;
+ const old=String(t.description||'');
+ // Only replace the generic descriptions emitted by prior versions. User-edited text stays untouched.
+ const wasBoilerplate=!old||old===t.success||old===t.objective||/^You can point to one /i.test(old)||/^You have one /i.test(old)||/^Make meaningful progress on /i.test(old);
+ if(wasBoilerplate&&old!==recipe.action){t.description=recipe.action;changed=true;}
+ if(!t.target){t.target=recipe.target;changed=true;}
+ return changed;
+}
+function supportBlock(template,day,row){
+ const d=DAY_NAMES[day];
+ const options={
+  everyday:[['Inbox reset','Sort 5 messages or notes; save the 1 action that matters.','5 items sorted'],['Break & recharge','Take a real break, stretch or enjoy a quiet moment.','20-minute break'],['Catch-up window','Finish 1 small unfinished responsibility, or rest if caught up.','1 item or planned rest']],
+  business:[['Client inbox check','Reply to 2 client messages; note any real deadlines.','2 client replies'],['Business buffer','Finish 1 loose end or take a planned work break.','1 loose end or break'],['File & follow-up','Save today’s work and schedule 1 next client action.','1 saved next action']],
+  student:[['Class inbox check','Check the class portal and note the next due assignment.','1 deadline captured'],['Study break','Step away from screens and recharge before the next topic.','15-minute break'],['School catch-up','Finish 1 small course requirement or review notes.','1 task or notes review']],
+  creator:[['Comments & messages','Reply to 3 audience questions or creative collaborators.','3 useful replies'],['Creative reset','Take a screen break and save one fresh thought if inspired.','20-minute reset'],['Asset tidy-up','Name and file 3 project assets so you can find them.','3 organized files']]
+ };
+ const rowMap={1:0,3:1,4:2,2:2,0:0};
+ const choices=options[template]||options.everyday;
+ return choices[rowMap[row]];
+}
+function upgradeGeneratedCalendar(){
+ // Older light/balanced setups only generated 14 or 21 cards, leaving visually empty 11/5 rows.
+ // Fill only untouched template-shaped plans, once; never overwrite user-created plans.
+ const pace=state.profile.guidance?.pace;
+ const template=state.profile.template;
+ const expected=pace==='light'?14:pace==='balanced'?21:null;
+ const nativeRows=pace==='light'?[0,2]:pace==='balanced'?[0,2,4]:null;
+ let changes=0;
+ if(expected&&state.tasks.length===expected&&state.tasks.every(t=>isAutoGeneratedTask(t)&&nativeRows.includes(t.slot))){
+  const used=new Set(state.tasks.map(t=>`${t.day}:${t.slot}`));
+  for(let row=0;row<5;row++)for(let day=0;day<7;day++){
+   if(used.has(`${day}:${row}`))continue;
+   const [title,action,target]=supportBlock(template,day,row);
+   const t=createTask(day,row,title,action),g=guidanceFor(title,template,state.profile.guidance||{});
+   Object.assign(t,{description:action,target,objective:action+' Result: '+target+'.',instructions:[`Start with: ${action}`,`Complete or check: ${target}.`,'Note what happened; if this was a rest block, simply take the break.'],tips:g.tips,checklist:[`Start: ${title}`,`Finish: ${target}`],success:target,guided:true,support:true});
+   state.tasks.push(t);changes++;
+  }
+ }
+ for(const t of state.tasks)if(isAutoGeneratedTask(t)&&personalizeCalendarTask(t))changes++;
+ return changes;
+}
+
+function guidanceFor(title,template,preferences={}){
+ const key=String(title||'').trim().toLowerCase();
+ let g=GUIDES[key];
+ // Related titles receive a relevant curated process, not the same generic three-step placeholder.
+ if(!g){
+  const domain=template==='student'?'course or assignment':template==='creator'?'piece of content':template==='business'?'client or business outcome':'personal responsibility';
+  let p;
+  if(/review|reflect|reset|celebrat|close out/i.test(key))p=['Review what happened','Look at completed work and any real results.','Name what worked, where you got stuck, and why.','Choose one useful adjustment and put its first step on the calendar.','Compare outcomes to goals instead of measuring only busyness.'];
+  else if(/plan|organize|outline|intentions|prepare/i.test(key))p=['Turn an idea into a manageable plan','List what must happen and any real due date.','Choose the most important result and break it into small actions.','Reserve a calendar block for the very first action.','Keep the plan realistic; fewer priorities are easier to finish.'];
+  else if(/learn|study|read|practice|quiz|flashcard|lesson|research|skill/i.test(key))p=['Learn one useful thing','Pick one precise question or concept.','Read a reliable resource, then test your understanding without looking.','Apply the idea in a tiny exercise and note what you still need to learn.','Testing yourself is more informative than rereading without checking recall.'];
+  else if(/edit|finish|complete|polish|deliver|milestone|build|create|project|design|media|production|draft|writing|assignment|lab/i.test(key))p=['Finish a visible piece of work','Define the smallest finished result for this block.','Gather the files and remove avoidable distractions.','Work, check the result against the requirements, and record the next change.','Separate creating a first version from polishing it.'];
+  else if(/communicat|respond|follow|repl|community|network|share|publish|post/i.test(key))p=['Communicate with purpose','Choose the person or audience and the specific outcome.','Write or prepare a useful, context-aware message.','Send or publish it, then record the next follow-up or review date.','Keep messages specific and easy to respond to.'];
+  else if(/health|movement|rest|recharge|wind down|family|friends|personal time|free time|hobby/i.test(key))p=['Protect time for wellbeing','Pick a realistic activity that fits your energy and schedule.','Prepare anything you need to start without friction.','Do the activity, then decide whether to repeat it next week.','Rest is part of sustainable productivity; do not turn every break into a target.'];
+  else p=['Complete one useful outcome','Name a specific result for this block.','Choose the smallest first action that moves toward it.','Complete that action and note what changed.','Choose a result you can observe, not just an intention.'];
+  const r=cardRecipe(title);
+  g=r?{objective:`${r.action} Aim for: ${r.target}.`,steps:[`Get started: ${r.action}`,`Work toward this result: ${r.target}.`,'Check what actually happened, record the result, and choose a next action if anything remains.'],tips:[p[4],'Start with a small first action rather than waiting for motivation.'],checklist:[`Begin: ${title}`,`Complete: ${r.target}`, 'Write down the actual result'],example:`A successful block has this outcome: ${r.target}.`,success:r.target}
+  :{objective:`Use this block to ${key} and make measurable progress on your ${domain}.`,steps:[p[1],p[2],p[3]],tips:[p[4],'If you get stuck, reduce the first action to something you can do in ten minutes.'],checklist:[`Choose a specific outcome for ${title}`,`Complete the main ${title.toLowerCase()} action`,`Record what changed and what comes next`],example:`For “${title}”: choose one result you can point to afterward rather than simply spending time on the activity.`,success:`You can point to one concrete result from ${title.toLowerCase()}.`};
+ }
+ const result=structuredClone(g);
+ const goal=preferences.goal||'';
+ const obstacle=preferences.obstacle||'';
+ if(goal&&preferences.personalize!==false){result.personalFocus=`Your current goal: ${goal}. Choose examples that help this goal, but keep real deadlines and commitments first.`;}
+ if(obstacle==='starting')result.tips.push('Having trouble starting? Do only the first checklist item. You can decide the rest after that.');
+ if(obstacle==='overwhelm')result.tips.push('Feeling overloaded? Pick your one most important outcome and move lower-impact items to Later.');
+ if(obstacle==='focus')result.tips.push('If distractions interrupt you, try a 20-minute notification-free work interval.');
+ if(obstacle==='consistency')result.tips.push('Aim for repeatable progress, not perfect days. Carry a missed block into the next available slot.');
+ return result;
+}
+function improveGuideIfGeneric(task){
+ const isDefault=String(task.objective||'')===`Make meaningful progress on ${String(task.title||'').toLowerCase()}.`&&Array.isArray(task.instructions)&&task.instructions.length===3&&task.instructions[0]==='Define the specific result you want by the end of the block.';
+ if(!isDefault)return false;
+ const g=guidanceFor(task.title,state.profile.template,{...state.profile.guidance,personalize:true});
+ Object.assign(task,{objective:g.objective,instructions:g.steps,tips:g.tips,checklist:g.checklist,example:g.example,success:g.success,personalFocus:g.personalFocus||'',guided:true});
+ return true;
+}
+
+function defaultState(){return {version:1,configured:false,profile:{name:'My Command Center',template:'everyday',accent:'#f77513',background:'midnight',logo:null},slots:structuredClone(DEFAULT_SLOTS),tasks:[],metrics:structuredClone(DEFAULT_METRICS),essentials:structuredClone(DEFAULT_ESSENTIALS),weeks:{}}}
+function load(){try{const raw=localStorage.getItem(KEY);if(!raw)return defaultState();const parsed=JSON.parse(raw);if(parsed.version!==1||!Array.isArray(parsed.tasks)||!Array.isArray(parsed.slots)||!Array.isArray(parsed.metrics))throw Error('Unsupported save format');return {...defaultState(),...parsed,profile:{...defaultState().profile,...parsed.profile},weeks:parsed.weeks||{}}}catch(e){console.warn('Could not read BernAPlan save:',e);alert('Your local BernAPlan save could not be loaded. We will not overwrite it; you can export a copy from your browser storage before proceeding.');return defaultState()}}
+let preventWrite=false;
+function save(){if(preventWrite)return;try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){toast('Device storage is full. Export a backup; changes may not persist.')}}
+function weekRecord(){
+ const w=state.weeks[selectedWeek]??(state.weeks[selectedWeek]={complete:{},checks:{},notes:{},metrics:{},nonneg:{}});
+ w.complete??={};w.checks??={};w.notes??={};w.metrics??={};w.nonneg??={};
+ w.proofs??={};w.sessions??={};w.review??={};
+ return w;
+}
+function createTask(day,slot,title,description){return {id:id(),day,slot,title,description,kind:'task',objective:`Make meaningful progress on ${title.toLowerCase()}.`,instructions:['Define the specific result you want by the end of the block.','Work on the most valuable part first.','Capture what you completed and your next action.'],tips:['Keep the task small enough for the available time.','Minimize distractions and record real results.'],checklist:[`Decide what success looks like`,`Complete the main action`,`Record your progress`],metricId:''}}
+function applyTemplate(template,overwrite=true,preferences={}){
+ const source=CATALOG[template]||CATALOG.everyday;
+ if(overwrite)state.tasks=[];
+ const pace=preferences.pace||'full';
+ const priorityRows=pace==='light'?[0,2]:pace==='balanced'?[0,2,4]:[0,1,2,3,4];
+ // Goal-specific adjustments make the weekly plan itself respond to the user's answers.
+ const goalAdjustments={
+ business:{
+  'Find new clients':{'0:2':'Research clients','1:1':'Write proposals','2:1':'Portfolio building'},
+  'Finish client work':{'0:1':'Deep project work','0:2':'Project milestone','0:4':'Send deliverables','1:1':'Client communication','1:4':'Deliver client work'},
+  'Grow my visibility':{'0:1':'Plan content','0:2':'Brand content','0:4':'Review performance','1:1':'Network & connect','2:3':'Portfolio building'},
+  'Get organized':{'0:1':'Pipeline planning','0:2':'Business admin','1:1':'Track progress','2:1':'Plan priorities'}
+ },
+ student:{
+  'Finish assignments':{'0:1':'Assignment work','0:3':'Plan school week','2:2':'Assignment work'},
+  'Prepare for exams':{'0:1':'Study session','0:3':'Prepare for exams','2:2':'Study session','4:2':'Prepare for exams'},
+  'Improve study habits':{'0:1':'Study session','2:1':'Study session','4:2':'Study review'},
+  'Manage my school week':{'0:1':'Plan school week','2:1':'Assignment work','4:2':'Study review'}
+ },
+ creator:{
+  'Publish consistently':{'0:1':'Draft scripts','0:3':'Record / produce','0:4':'Publish / share','2:1':'Edit content'},
+  'Finish a creative project':{'0:1':'Deep creative work','0:3':'Edit content','0:4':'Prepare release'},
+  'Grow an audience':{'0:1':'Research audience','0:4':'Review performance','1:1':'Community replies'},
+  'Organize my ideas':{'0:1':'Explore ideas','0:2':'Refine ideas','4:1':'Collect ideas'}
+ },
+ everyday:{
+  'Feel less overwhelmed':{'0:0':'Choose priorities','0:1':'Plan the day','2:2':'Focus on essentials'},
+  'Build healthier routines':{'0:1':'Health & movement','2:2':'Health & movement','3:3':'Health & movement'},
+  'Finish personal projects':{'0:1':'Personal project','2:2':'Project progress','3:3':'Personal goals'},
+  'Keep up with responsibilities':{'0:1':'Organize tasks','2:2':'Personal admin','3:3':'Weekly reflection'}
+ }
+ };
+ const swaps=goalAdjustments[template]?.[preferences.goal]||{};
+ source.rows.forEach((row,slot)=>{row.forEach((original,day)=>{
+  const priority=priorityRows.includes(slot);
+  const support=priority?null:supportBlock(template,day,slot);
+  const name=support?support[0]:(swaps[`${slot}:${day}`]||original);
+  const recipe=support?{action:support[1],target:support[2]}:cardRecipe(name);
+  const guide=guidanceFor(name,template,preferences);
+  const action=recipe?.action||guide.objective;
+  const target=recipe?.target||guide.success||'1 completed result';
+  const t=createTask(day,slot,name,action);
+  Object.assign(t,{description:action,target,objective:support?`${action} Result: ${target}.`:guide.objective,
+   instructions:support?[`Start with this activity: ${action}`,`Aim for: ${target}.`,'Record your next action if you did not finish.']:guide.steps,
+   tips:guide.tips,checklist:support?[`Begin: ${name}`,`Complete: ${target}`]:guide.checklist,
+   example:guide.example||'',success:support?target:(guide.success||''),personalFocus:guide.personalFocus||'',guided:true,support:!!support});
+  state.tasks.push(t);
+ })});
+ state.profile.template=template;
+ state.profile.guidance={goal:preferences.goal||'',obstacle:preferences.obstacle||'',pace};
+}
+
+function applyTheme(){document.documentElement.style.setProperty('--accent',safeColor(state.profile.accent));document.body.style.backgroundColor=state.profile.background==='paper'?'#171717':'#08090a';let p=$('#brandPicture');if(p){p.innerHTML='';const image=sanitizeImage(state.profile.logo);if(image){const img=document.createElement('img');img.src=image;img.alt='Custom logo';img.style.cssText='max-width:49px;max-height:46px;object-fit:contain';p.appendChild(img)}else{p.textContent='HB'}}}
+function toast(message){const el=$('#toast');el.textContent=message;el.style.display='block';clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>el.style.display='none',3500)}
+const dateTitle=()=>{const d=fromKey(selectedWeek),e=addDays(d,6);const a=d.toLocaleDateString(undefined,{month:'short',day:'numeric'});const b=e.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});return `${a} – ${b}`};
+function draw(){applyTheme();applyWallpaperPrefs();renderMissionUi();$('.eyebrow').textContent=state.profile.name.toUpperCase()+' · LIVE WEEKLY CALENDAR';$('#weekLabel').textContent=dateTitle();renderCalendar();renderScoreboard();renderEssentials();refreshWallpaperClock()}
+function renderCalendar(){const week=weekRecord();const visible=missionVisibleTasks();const calendar=$('#calendar');calendar.style.setProperty('--slot-count',String(state.slots.length));calendar.innerHTML='';let top=document.createElement('div');top.className='col-header';top.style.color='var(--accent)';top.textContent='TIME / FOCUS';calendar.append(top);
+for(let day=0;day<7;day++){const d=addDays(fromKey(selectedWeek),day),h=document.createElement('div');h.className='col-header'+(localDateKey(d)===localDateKey(new Date())?' today':'');h.innerHTML=`${DAY_NAMES[day].toUpperCase()}<br><small style="font-weight:400;color:#999;margin-left:4px">${esc(d.toLocaleDateString(undefined,{month:'short',day:'numeric'}))}</small>`;calendar.append(h)}
+state.slots.forEach((slot,row)=>{const label=document.createElement('div');label.className='time-label';label.innerHTML=`<strong>${esc(timeLabel(slot.time))}</strong><small>${esc(slot.label)}</small>`;calendar.append(label);for(let day=0;day<7;day++){const cell=document.createElement('div');cell.className='calendar-cell'+(localDateKey(addDays(fromKey(selectedWeek),day))===localDateKey(new Date())?' is-today':'');const tasks=visible.filter(t=>t.day===day&&t.slot===row);if(!tasks.length){const empty=document.createElement('button');empty.className='empty-card';empty.textContent='+ Add block';empty.title='Add a block';empty.onclick=()=>openEditor(null,day,row);cell.append(empty)}else{tasks.forEach(t=>{const b=document.createElement('button');b.className='task-card'+(week.complete[t.id]?' done':'')+(t.missionOptional?' mission-optional':'')+(t.missionCore?' mission-core':'');b.innerHTML=`<span class="card-title">${esc(t.title)}</span><span class="card-desc">${esc(t.description||t.objective)}</span><span class="card-target">${t.target?'TARGET: '+esc(t.target):'ADD A CLEAR TARGET'}</span><span class="card-cardcheck" aria-hidden="true">${week.complete[t.id]?'✓':'○'}</span>`;b.setAttribute('aria-label',`${t.title}. ${t.description||t.objective}. Target: ${t.target||'not set'}. Open instructions and checklist.`);b.title=`${t.title} — ${t.description||t.objective} — Target: ${t.target||'not set'}`;b.onclick=()=>openTask(t.id);cell.append(b)});if(tasks.length>1)cell.style.overflowY='auto'}calendar.append(cell)}});
+const countable=missionCountable(),total=countable.length,done=countable.filter(t=>week.complete[t.id]).length;$('#doneBlocks').textContent=done;$('#totalBlocks').textContent=total;$('#openBlocks').textContent=total-done;const p=total?Math.round(done/total*100):0;$('#progressLabel').textContent=p+'%';$('#progressBar').style.width=p+'%';$('#actionProofStats').textContent=countable.filter(t=>week.complete[t.id]&&week.proofs?.[t.id]?.level==='documented').length+' documented outcomes · '+done+' completed';}
+function renderScoreboard(){const week=weekRecord();if(state.mission){const totals=missionSummary();$('#metricCount').textContent='MISSION · REAL RESULTS';const lines=[['Prospects',totals.prospects,10,''],['Offers sent',totals.offers,5,''],['Money received',totals.paid,20,'$']];$('#scoreboard').innerHTML=lines.map(([label,val,target,prefix])=>`<div class="score-line"><span class="score-label">${esc(label)}</span><div class="score-track"><div class="score-fill" style="width:${Math.min(100,100*val/target)}%"></div></div><span class="score-value">${prefix}${esc(String(val))}/${prefix}${target}</span></div>`).join('');return;}$('#metricCount').textContent=state.metrics.length+' TRACKED';$('#scoreboard').innerHTML=state.metrics.map(m=>{const value=m.id==='tasks'?state.tasks.filter(t=>week.complete[t.id]).length:(Number(week.metrics[m.id])||0),target=Number(m.target)||0,percent=target?Math.min(100,Math.max(0,value/target*100)):0;return `<div class="score-line"><span class="score-label" title="${esc(m.name)}">${esc(m.name)}</span><div class="score-track"><div class="score-fill" style="width:${percent}%"></div></div><span class="score-value">${esc(String(value))}/${esc(String(target))}</span></div>`}).join('')||'<p class="small-hint">Add a metric to begin tracking your wins.</p>'}
+function renderEssentials(){const week=weekRecord();const count=state.essentials.filter(e=>week.nonneg[e.id]).length;$('#nonnegCount').textContent=`${count}/${state.essentials.length}`;$('#nonnegPanel').innerHTML=state.essentials.map(e=>`<label><input type="checkbox" data-nonneg="${esc(e.id)}" ${week.nonneg[e.id]?'checked':''}/><span>${esc(e.name)}</span></label>`).join('')||'<p class="small-hint">Add essentials in Setup.</p>';$('#nonnegStrip').innerHTML=state.essentials.map(e=>`<button class="nonneg-chip ${week.nonneg[e.id]?'hit':''}" data-nonneg-btn="${esc(e.id)}">${week.nonneg[e.id]?'✓':'○'} ${esc(e.name)}</button>`).join('')}
+function setNonneg(item,value){weekRecord().nonneg[item]=value;save();draw()}
+const openModal=(html,wide=false)=>{const ov=$('#overlay');ov.classList.remove('hidden');ov.setAttribute('aria-hidden','false');ov.innerHTML=`<div class="modal ${wide?'wide':''}" role="dialog" aria-modal="true" aria-label="BernAPlan dialog">${html}</div>`;ov.querySelector('.close-btn')?.addEventListener('click',closeModal);ov.querySelector('input,button,textarea,select')?.focus()};
+function closeModal(){if(focusTick){clearInterval(focusTick);focusTick=null;}const ov=$('#overlay');ov.classList.add('hidden');ov.setAttribute('aria-hidden','true');ov.innerHTML='';activeTask=null;editingTask=false}
+function head(title,subtitle=''){return `<div class="modal-header"><div><h2>${esc(title)}</h2><p>${esc(subtitle)}</p></div><button type="button" class="close-btn" aria-label="Close">×</button></div>`}
+function bullets(lines,ordered=false){const tag=ordered?'ol':'ul';return `<${tag}>${(lines||[]).map(t=>`<li>${esc(t)}</li>`).join('')}</${tag}>`}
+const lines=text=>String(text||'').split(/\r?\n/).map(t=>t.trim()).filter(Boolean);
+/* ACTION execution system: local-only focus sessions, adaptive micro-steps, honest evidence. */
+let focusTick=null;
+function taskProofQuestion(t){
+ const title=t.title.toLowerCase();
+ if(/priorit|plan the day|plan school|plan content|plan next week|pipeline planning|organize task/.test(title))return 'What are your top priorities or planned outcomes, and which first action have you scheduled?';
+ if(/proposal|outreach|follow.up|client communication|network|community repl|respond/.test(title))return 'How many messages did you send or follow up on? Record an actual next step or a link to your tracker.';
+ if(/study|read|learn|practice|quiz|flashcard|exam|lesson/.test(title))return 'Which topic did you cover? Write one thing you learned or demonstrate it with a short answer.';
+ if(/design|create|record|edit|project|portfolio|deliver|draft|publish|release|creative|video|script/.test(title))return 'What did you produce or finish? Describe the deliverable and include a file link if you have one.';
+ if(/meeting|appointment|interview|class/.test(title))return 'Did the commitment happen? Write one takeaway or a follow-up action.';
+ if(/exercise|health|movement|workout/.test(title))return 'What activity did you do, and for how long? Self-report is fine if there is no external record.';
+ if(/review|reflect|weekly reset|check|track progress/.test(title))return 'What changed, what did you learn, and what will you do differently next?';
+ return 'What specific result happened? Add a short description or supporting link if one exists.';
+}
+function nextAction(t,week){const c=week.checks[t.id]||[];return (t.checklist||[]).find((_,i)=>!c[i])||(t.steps||t.instructions||[])[0]||'Choose one clear, manageable first action.'}
+function sessionFor(t){return weekRecord().sessions[t.id]||null}
+function sessionSeconds(session){if(!session)return 0;return Math.max(0,Number(session.elapsed)||0)+(session.running?Math.max(0,Math.floor((Date.now()-session.startedAt)/1000)):0)}
+function formatFocus(seconds){const m=Math.floor(seconds/60),sec=seconds%60;return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`}
+function openTask(taskId){
+ const t=state.tasks.find(t=>t.id===taskId);if(!t)return;
+ activeTask=taskId;const week=weekRecord(),checks=week.checks[t.id]||[],proof=week.proofs[t.id];
+ const duration=t.missionId==='first20'&&state.mission?missionEnd(t):slotEnd(t.slot),subtitle=`${DAY_NAMES[t.day]} • ${timeLabel(state.slots[t.slot].time)} – ${timeLabel(duration)} • ${t.missionOptional?'Optional 5-minute activity':(t.missionCore?'Mission milestone':t.kind)}`;
+ const proofMessage=week.complete[t.id]?(proof?.level==='documented'?'Documented result saved — user-provided, not independently verified.':'Completed by self-report; no evidence recorded.'):'Completion is not recorded yet.';
+ openModal(head(t.title,subtitle)+`
+ <div class="action-heading"><div><strong>YOUR ACTION COACH</strong><p>Start small. Work one step at a time. Show what you finished.</p></div><button type="button" id="startBlock" class="primary-btn">▶ Start Block</button></div>
+ <div class="modal-columns"><div>
+  <div class="section-box"><h3>◎ Why you're doing this</h3><p>${esc(t.objective||t.description||'Choose a clear result for this block.')}</p>${t.personalFocus?`<p class="personal-goal">✦ ${esc(t.personalFocus)}</p>`:''}</div>
+  <div class="section-box"><h3>☷ Follow these steps</h3><p class="small-hint">Follow these in order. One useful step is enough to get moving.</p>${bullets(t.instructions,true)}</div>
+  ${t.example?`<div class="section-box guide-example"><h3>◈ Here's what that looks like</h3><p>${esc(t.example)}</p></div>`:''}
+  <div class="section-box"><h3>✦ How experienced people approach this</h3>${bullets(t.tips)}</div>
+  ${t.success?`<div class="section-box guide-success"><h3>✓ What a finished result looks like</h3><p>${esc(t.success)}</p></div>`:''}
+ </div><div>
+  <div class="section-box guided-next"><h3>→ Your next small action</h3><p id="nextHint"></p><button type="button" id="doNextStep" class="primary-btn mini-primary">✓ I did this step</button></div>
+  <div class="section-box"><h3>☑ Follow-along checklist <span id="checkCount"></span></h3>${(t.checklist||[]).map((item,index)=>`<label class="todo"><input type="checkbox" data-check="${index}" ${checks[index]?'checked':''}/><span>${esc(item)}</span></label>`).join('')||'<p class="small-hint">Add steps through Edit Block.</p>'}</div>
+  <div class="section-box"><h3>◇ Need a hand getting started?</h3><p>You don't have to feel motivated first. Tell us what's getting in the way.</p><button type="button" class="secondary-btn help-btn" id="getUnstuck">I don't feel like doing this</button></div>
+  <div class="section-box"><h3>▤ Your Notes</h3><div class="field"><textarea id="taskNotes" placeholder="Results, ideas, links or next steps…">${esc(week.notes[t.id]||'')}</textarea></div><button type="button" id="saveNotes" class="secondary-btn">Save notes</button></div>
+  <div class="section-box proof-summary"><h3>◉ Completion & accountability</h3><p>${esc(proofMessage)}</p>${proof?.result?`<p><strong>Recorded:</strong> ${esc(proof.result)}</p>`:''}<p class="small-hint">${esc(taskProofQuestion(t))}</p></div>
+ </div></div>
+ <div class="modal-actions"><button id="markDone" type="button" class="primary-btn">${week.complete[t.id]?'↩ Undo completion':'✓ Show my results & finish'}</button><button id="editThisTask" type="button" class="secondary-btn">✎ Edit block</button><button id="logProgress" type="button" class="secondary-btn">${state.mission&&t.missionId==='first20'?'＋ Log mission results':'＋ Log a number'}</button>${t.kind!=='task'?'<button id="exportIcs" class="secondary-btn">↓ Export calendar event</button>':''}</div>`,true);
+ const updateCoach=()=>{
+  const c=week.checks[t.id]||(week.checks[t.id]=[]), remaining=(t.checklist||[]).findIndex((_,i)=>!c[i]);
+  $('#checkCount').textContent=`(${(t.checklist||[]).filter((_,i)=>!!c[i]).length}/${(t.checklist||[]).length})`;
+  $('#nextHint').textContent=remaining===-1?'All steps checked! Now record your actual result.':t.checklist[remaining];
+  $('#doNextStep').disabled=remaining===-1;
+  $('#doNextStep').textContent=remaining===-1?'All steps finished':'✓ I did this step';
+ };
+ updateCoach();
+ document.querySelectorAll('[data-check]').forEach(input=>input.onchange=e=>{const c=week.checks[t.id]||(week.checks[t.id]=[]);c[Number(input.dataset.check)]=e.target.checked;save();updateCoach();});
+ $('#doNextStep').onclick=()=>{const c=week.checks[t.id]||(week.checks[t.id]=[]),i=(t.checklist||[]).findIndex((_,ix)=>!c[ix]);if(i<0)return;c[i]=true;const input=document.querySelector(`[data-check="${i}"]`);if(input)input.checked=true;save();updateCoach();};
+ $('#saveNotes').onclick=()=>{week.notes[t.id]=$('#taskNotes').value;save();toast('Notes saved')};
+ $('#startBlock').onclick=()=>{week.notes[t.id]=$('#taskNotes').value;save();openFocusTask(t.id)};
+ $('#getUnstuck').onclick=()=>{week.notes[t.id]=$('#taskNotes').value;save();openMotivation(t.id)};
+ $('#markDone').onclick=()=>{week.notes[t.id]=$('#taskNotes').value;if(week.complete[t.id]){week.complete[t.id]=false;save();draw();openTask(t.id);toast('Completion undone. Your evidence is kept for your records.')}else{save();openCompleteTask(t.id)}};
+ $('#editThisTask').onclick=()=>openEditor(t);$('#logProgress').onclick=()=>state.mission&&t.missionId==='first20'?openMissionLog(t.id):openLog(t.id);
+ if(t.kind!=='task')$('#exportIcs').onclick=()=>exportCalendarEvent(t);
+}
+function openFocusTask(taskId){
+ const t=state.tasks.find(x=>x.id===taskId);if(!t)return;
+ const week=weekRecord();let session=week.sessions[t.id]||(week.sessions[t.id]={elapsed:0,running:false,minutes:5,startedAt:null});
+ const html=head('Focus on: '+t.title,'One step, one timer, no pressure. The timer is optional.')+`
+ <div class="focus-hero"><span class="focus-label">START HERE</span><h3>${esc(nextAction(t,week))}</h3><p>${esc(t.objective)}</p></div>
+ <div class="section-box focus-tools"><h3>Focus timer</h3><div class="focus-clock" id="focusClock">05:00</div><p class="small-hint">The timer helps you focus; it does not prove the task was done.</p>
+ <div class="minute-buttons"><button class="secondary-btn" data-minutes="5">5 minutes</button><button class="secondary-btn" data-minutes="15">15 minutes</button><button class="secondary-btn" data-minutes="25">25 minutes</button></div>
+ <div class="modal-actions"><button id="toggleFocus" class="primary-btn">▶ Start focus</button><button id="finishFocus" class="secondary-btn">✓ I finished this step</button><button id="focusHelp" class="secondary-btn">I'm stuck</button><button id="focusBack" class="secondary-btn">← Back to instructions</button></div></div>`;
+ openModal(html);
+ const clock=$('#focusClock'),start=$('#toggleFocus');
+ function update(){const sec=sessionSeconds(session),remaining=Math.max(0,session.minutes*60-sec);clock.textContent=formatFocus(remaining);start.textContent=session.running?'Ⅱ Pause focus':sec>0?'▶ Resume focus':'▶ Start focus';if(remaining===0&&session.running){session.elapsed=session.minutes*60;session.running=false;session.startedAt=null;save();clock.textContent='00:00';toast('Focus interval finished. Record what you actually completed.')}}
+ function pause(){if(session.running){session.elapsed=sessionSeconds(session);session.startedAt=null;session.running=false;save()}}
+ document.querySelectorAll('[data-minutes]').forEach(btn=>btn.onclick=()=>{pause();session.minutes=Number(btn.dataset.minutes);session.elapsed=0;save();update();});
+ start.onclick=()=>{if(session.running)pause();else{if(sessionSeconds(session)>=session.minutes*60)session.elapsed=0;session.running=true;session.startedAt=Date.now();save()}update()};
+ $('#finishFocus').onclick=()=>{pause();const c=week.checks[t.id]||(week.checks[t.id]=[]),i=(t.checklist||[]).findIndex((_,n)=>!c[n]);if(i>=0){c[i]=true;save();toast('One step completed. Keep going!')}openTask(t.id)};
+ $('#focusHelp').onclick=()=>{pause();openMotivation(t.id)};
+ $('#focusBack').onclick=()=>{pause();openTask(t.id)};
+ update();focusTick=setInterval(update,1000);
+}
+function openMotivation(taskId){
+ const t=state.tasks.find(x=>x.id===taskId);if(!t)return;
+ const options=[['overwhelm','It feels like too much'],['starting','I don’t know where to start'],['focus','I keep getting distracted'],['energy','I’m exhausted'],['fear','I’m afraid I’ll do it wrong']];
+ const first=nextAction(t,weekRecord());
+ const actions={
+  overwhelm:['Shrink the task','Ignore the whole project for now. Your only job is the first small step. If that is still too big, work on it for two minutes.'],
+  starting:['Make the first move obvious','Open the document, gather your supplies, or write the first sentence. Do not worry about finishing yet.'],
+  focus:['Clear one distraction','Close one unrelated tab, silence notifications briefly, and give just five minutes to this task.'],
+  energy:['Make room for recovery','Rest or do a two-minute version. If you genuinely need a break, choose a new time without treating that as failure.'],
+  fear:['Try a rough first draft','A first attempt is allowed to be imperfect. Make a draft you can improve later; you are not being graded here.']
+ };
+ const show=(kind)=>{
+  const a=actions[kind],next=esc(first);
+  openModal(head('Let’s make '+t.title+' easier','You are allowed to start small, rest, or ask for help.')+`<p class="small-hint">What is making this difficult right now?</p><div class="rescue-choices">${options.map(([key,label])=>`<button type="button" class="wizard-tile ${kind===key?'active':''}" data-rescue="${key}">${esc(label)}</button>`).join('')}</div>
+  <div class="section-box rescue-answer"><h3>✦ ${esc(a[0])}</h3><p>${esc(a[1])}</p><p class="rescue-next"><strong>Your actual next action:</strong> ${next}</p></div>
+  <div class="modal-actions"><button class="primary-btn" id="rescueStart">▶ Try five minutes</button><button class="secondary-btn" id="rescueBack">← Back to task</button></div>`,true);
+  document.querySelectorAll('[data-rescue]').forEach(el=>el.onclick=()=>show(el.dataset.rescue));
+  $('#rescueStart').onclick=()=>openFocusTask(t.id);
+  $('#rescueBack').onclick=()=>openTask(t.id);
+ };
+ const obstacle=state.profile.guidance?.obstacle;show(obstacle==='overwhelm'?'overwhelm':obstacle==='focus'?'focus':obstacle==='starting'?'starting':'starting');
+}
+function openCompleteTask(taskId){
+ const t=state.tasks.find(x=>x.id===taskId);if(!t)return;
+ const week=weekRecord(),old=week.proofs[t.id]||{},question=taskProofQuestion(t),checks=week.checks[t.id]||[];
+ const count=(t.checklist||[]).filter((_,i)=>checks[i]).length,total=(t.checklist||[]).length;
+ openModal(head('Show your results: '+t.title,'This is for your own accountability, not an outside audit.')+`
+ <div class="proof-context"><h3>What were you trying to accomplish?</h3><p>${esc(t.success||t.objective||t.description)}</p></div>
+ <div class="section-box"><h3>◉ What actually happened?</h3><p>${esc(question)}</p>
+ <div class="field"><label for="proofResult">Describe the result in your own words</label><textarea id="proofResult" placeholder="Example: Finished the draft and shared the link; here’s the next step...">${esc(old.result||'')}</textarea></div>
+ <div class="field"><label for="proofLink">Supporting link (optional)</label><input id="proofLink" type="url" placeholder="https://..." value="${esc(old.link||'')}"></div>
+ <p class="small-hint">${count} of ${total} checklist steps marked. A note or link documents your result but is not independently verified. Keep private details out of links you share.</p></div>
+ <div class="section-box"><h3>Choose how to record completion</h3>
+ <div class="modal-actions"><button type="button" id="saveEvidence" class="primary-btn">✓ Save documented result</button><button type="button" id="selfReport" class="secondary-btn">✓ Mark complete (self-reported)</button><button type="button" id="proofBack" class="secondary-btn">← Back</button></div>
+ <p class="small-hint" style="margin-top:9px">Documented = you wrote down an outcome or attached a link. Self-reported = you confirm completion without proof. Neither is externally authenticated.</p></div>`,true);
+ function finish(level){
+  const result=$('#proofResult').value.trim(),link=$('#proofLink').value.trim();
+  if(link&&!/^https?:\/\//i.test(link)){toast('Use a full http:// or https:// URL, or leave the link blank.');$('#proofLink').focus();return;}
+  if(level==='documented'&&!result&&!link){toast('Write down what you finished or add a supporting link.');$('#proofResult').focus();return;}
+  week.complete[t.id]=true;week.proofs[t.id]={level,result:level==='documented'?result:'',link:level==='documented'?link:'',recordedAt:new Date().toISOString(),prompt:question};
+  if(level==='documented'&&result)week.notes[t.id]=[week.notes[t.id]||'',result].filter(Boolean).join('\n') .slice(0,12000);
+  save();draw();closeModal();toast(level==='documented'?'Outcome documented. Nice work following through!':'Task recorded as self-reported completion.');if(state.mission&&t.missionCore)openMissionLog();
+ }
+ $('#saveEvidence').onclick=()=>finish('documented');$('#selfReport').onclick=()=>finish('self');$('#proofBack').onclick=()=>openTask(t.id);
+}
+function openWeeklyReview(){
+ const week=weekRecord(),existing=week.review||{},tasks=missionCountable(),all=tasks.length,finished=tasks.filter(t=>week.complete[t.id]).length,documented=tasks.filter(t=>week.complete[t.id]&&week.proofs[t.id]?.level==='documented').length;
+ const rate=all?finished/all:0;
+ const suggestion=rate<.35?'Consider reducing next week to two or three essential blocks per day. Consistency starts with a realistic plan.':rate<.75?'You made progress. Choose one frequent obstacle to address and leave buffer time between tasks.':'Your follow-through was strong. Keep a realistic pace and review the quality of outcomes, not just checkmarks.';
+ openModal(head('Weekly Reality Check','An honest review helps you make next week easier.')+`
+ <div class="review-summary"><div><strong>${finished}/${all}</strong><small>blocks completed</small></div><div><strong>${documented}</strong><small>documented outcomes</small></div><div><strong>${all?Math.round(rate*100):0}%</strong><small>completion rate</small></div></div>
+ <div class="field"><label for="reviewWins">What actually went well this week?</label><textarea id="reviewWins" placeholder="A win, finished project, or step forward...">${esc(existing.wins||'')}</textarea></div>
+ <div class="field"><label for="reviewBarrier">What got in the way?</label><select id="reviewBarrier"><option value="none">Nothing major</option><option value="overwhelm">Too much on my calendar</option><option value="focus">Distractions</option><option value="energy">Low energy</option><option value="starting">I struggled to begin</option><option value="other">Something else</option></select></div>
+ <div class="field"><label for="reviewChange">What's one thing you'll change next week?</label><textarea id="reviewChange" placeholder="Example: Shorter morning focus blocks...">${esc(existing.change||'')}</textarea></div>
+ <div class="section-box"><h3>✦ Your suggested adjustment</h3><p>${esc(suggestion)}</p><p class="small-hint">A rule-based suggestion, not an AI assessment. It does not change your calendar without permission.</p></div>
+ <div class="modal-actions"><button id="saveReview" class="primary-btn">Save my review</button><button id="cancelReview" class="secondary-btn">Close</button></div>`,true);
+ $('#reviewBarrier').value=existing.barrier||'none';
+ $('#saveReview').onclick=()=>{week.review={wins:$('#reviewWins').value.trim(),barrier:$('#reviewBarrier').value,change:$('#reviewChange').value.trim(),savedAt:new Date().toISOString()};save();closeModal();toast('Weekly review saved. Your plan remains unchanged.')};
+ $('#cancelReview').onclick=closeModal;
+}
+function slotEnd(index){return state.slots[index+1]?.time||((Number(state.slots[index].time.slice(0,2))+1)%24).toString().padStart(2,'0')+state.slots[index].time.slice(2)}
+function openLog(taskId){const t=state.tasks.find(x=>x.id===taskId);const opts=state.metrics.filter(m=>m.id!=='tasks').map(m=>`<option value="${esc(m.id)}" ${t?.metricId===m.id?'selected':''}>${esc(m.name)}</option>`).join('');if(!opts){closeModal();toast('Add a scoreboard metric in Setup first');return}openModal(head('Log actual progress','Only recorded results count toward your scoreboard.')+`<div class="field"><label for="metricToLog">What did you accomplish?</label><select id="metricToLog">${opts}</select></div><div class="field"><label for="resultNumber">How much?</label><input id="resultNumber" type="number" min="0" max="1000000" step="0.25" value="1" /></div><div class="modal-actions"><button id="addResult" class="primary-btn">Add to scoreboard</button><button id="skipResult" class="secondary-btn">Not now</button></div>`);$('#skipResult').onclick=closeModal;$('#addResult').onclick=()=>{let key=$('#metricToLog').value,v=Number($('#resultNumber').value);if(!Number.isFinite(v)||v<0||v>1e6){toast('Enter a valid positive number');return}const week=weekRecord();week.metrics[key]=(Number(week.metrics[key])||0)+v;save();closeModal();draw();toast('Scoreboard updated')}}
+function field(name,id,value='',opts={}){const type=opts.type||'text';if(type==='textarea')return `<div class="field"><label for="${id}">${esc(name)}</label><textarea id="${id}" placeholder="${esc(opts.placeholder||'')}">${esc(value)}</textarea></div>`;return `<div class="field"><label for="${id}">${esc(name)}</label><input id="${id}" type="${type}" value="${esc(value)}" ${opts.min!==undefined?'min="'+opts.min+'"':''}/></div>`}
+function openEditor(task=null,day=null,slot=null){editingTask=true;const isEdit=!!task;const t=task||createTask(day??0,slot??0,'','');const dayOptions=DAY_NAMES.map((name,i)=>`<option value="${i}" ${t.day===i?'selected':''}>${esc(name)}</option>`).join('');const slotOptions=state.slots.map((s,i)=>`<option value="${i}" ${t.slot===i?'selected':''}>${esc(timeLabel(s.time)+' · '+s.label)}</option>`).join('');const typeOpts=[['task','Regular task'],['meeting','Meeting / appointment'],['deadline','Deadline'],['reminder','Important reminder']].map(([val,txt])=>`<option value="${val}" ${t.kind===val?'selected':''}>${txt}</option>`).join('');
+openModal(head(isEdit?'Edit this block':'Add a calendar block','Make your action plan personal. Every field can be changed.')+`<div class="form-grid">${field('Task title','editTitle',t.title)}${field('Action: What should I do?','editDesc',t.description)}${field('Target: What will I finish?','editTarget',t.target||'')}<div class="field"><label for="editDay">Day of week</label><select id="editDay">${dayOptions}</select></div><div class="field"><label for="editSlot">Time row</label><select id="editSlot">${slotOptions}</select></div><div class="field"><label for="editKind">Type</label><select id="editKind">${typeOpts}</select></div><div class="field"><label for="editMetric">Suggested metric when logging results</label><select id="editMetric"><option value="">None / choose later</option>${state.metrics.map(m=>`<option value="${esc(m.id)}" ${t.metricId===m.id?'selected':''}>${esc(m.name)}</option>`).join('')}</select></div></div><div class="section-box"><h3>Need help writing the instructions?</h3><p>Give the block a clear title, then use our free guide library to suggest beginner-friendly steps. You can still edit anything afterward.</p><button id="suggestGuide" type="button" class="secondary-btn">✦ Suggest steps for this task</button></div>${field('Objective','editObjective',t.objective,{type:'textarea'})}${field('Instructions — one step per line','editSteps',(t.instructions||[]).join('\n'),{type:'textarea'})}${field('Best practices — one tip per line','editTips',(t.tips||[]).join('\n'),{type:'textarea'})}${field('Checklist — one item per line','editChecks',(t.checklist||[]).join('\n'),{type:'textarea'})}<p class="small-hint">For meetings, deadlines and reminders, you can export an .ics event. Direct Google/Outlook sync is not connected in this prototype.</p><div class="modal-actions"><button id="saveTask" class="primary-btn">${isEdit?'Save changes':'Create block'}</button>${isEdit?'<button id="deleteTask" class="secondary-btn danger">Delete block</button>':''}<button id="cancelEditor" class="secondary-btn">Cancel</button></div>`,true);
+let pendingGuide=null;
+$('#suggestGuide').onclick=()=>{
+ const title=$('#editTitle').value.trim();if(!title){toast('Name the task first so we can suggest useful steps');return}
+ if(!confirm('Replace the objective, instructions, tips and checklist in this editor with suggestions? Your other task details will stay.'))return;
+ const g=guidanceFor(title,state.profile.template,state.profile.guidance||{});
+ pendingGuide={...g,title};
+ $('#editObjective').value=g.objective;$('#editSteps').value=g.steps.join('\n');$('#editTips').value=g.tips.join('\n');$('#editChecks').value=g.checklist.join('\n');const r=cardRecipe(title);if(r){$('#editDesc').value=r.action;$('#editTarget').value=r.target;}
+ toast('Suggested guide added. Review and save when ready.');
+};
+$('#cancelEditor').onclick=()=>isEdit?openTask(t.id):closeModal();$('#saveTask').onclick=()=>{const title=$('#editTitle').value.trim();if(!title){toast('Give this block a title');$('#editTitle').focus();return}if(!$('#editDesc').value.trim()){toast('Add a short action so the calendar tells you what to do.');$('#editDesc').focus();return}const next={...t,title,description:$('#editDesc').value.trim(),target:$('#editTarget').value.trim(),day:Number($('#editDay').value),slot:Number($('#editSlot').value),kind:$('#editKind').value,metricId:$('#editMetric').value,objective:$('#editObjective').value.trim(),instructions:lines($('#editSteps').value),tips:lines($('#editTips').value),checklist:lines($('#editChecks').value)};
+if(title!==t.title){next.example='';next.success='';next.personalFocus='';}
+if(pendingGuide&&pendingGuide.title===title){next.example=pendingGuide.example||'';next.success=pendingGuide.success||'';next.personalFocus=pendingGuide.personalFocus||'';next.guided=true;}if(isEdit){state.tasks=state.tasks.map(x=>x.id===t.id?next:x)}else{state.tasks.push(next)}save();closeModal();draw();toast(isEdit?'Block updated':'New block added')};if(isEdit)$('#deleteTask').onclick=()=>{if(!confirm(`Delete "${t.title}" from the weekly template?`))return;state.tasks=state.tasks.filter(x=>x.id!==t.id);save();closeModal();draw();toast('Block deleted')}}
+function openSettings(tab='schedule'){settingsTab=tab;const tabs=[['schedule','My schedule'],['appearance','Appearance'],['goals','Goals & scoreboard'],['essentials','Essentials'],['data','Backups']];const b=head('Build Your Command Center','Set it up your way. All personalization is free.')+`<div class="settings-tab-row">${tabs.map(([key,label])=>`<button data-tab="${key}" class="tab-btn ${settingsTab===key?'active':''}">${label}</button>`).join('')}</div><div id="settingsBody"></div>`;openModal(b,true);document.querySelectorAll('[data-tab]').forEach(el=>el.onclick=()=>openSettings(el.dataset.tab));renderSettingsBody()}
+function renderSettingsBody(){const container=$('#settingsBody');if(!container)return;
+if(settingsTab==='schedule'){container.innerHTML=`<div class="section-box"><h3>Not sure what to put in your calendar?</h3><p>Answer four quick multiple-choice questions. We’ll build a weekly playbook with guided instructions based on your goals—no long forms or paid AI.</p><button class="primary-btn" type="button" id="restartWizard">✦ Build a guided weekly plan →</button><p class="small-hint">Rebuilding will replace the current task layout after confirmation. Export a backup first if you need to preserve it.</p></div><p class="small-hint">Your calendar always shows Monday–Sunday. Edit the time rows without changing the seven-day layout.</p><div id="slotFields">${state.slots.map((s,i)=>`<div class="form-grid"><div class="field"><label>Row ${i+1} time</label><input type="time" data-time="${i}" value="${esc(s.time)}" /></div><div class="field"><label>Focus label</label><input data-slot-label="${i}" value="${esc(s.label)}" /></div></div>`).join('')}</div><div class="modal-actions"><button class="primary-btn" id="saveSlots">Save times</button><button class="secondary-btn" id="addSlot">+ Add row</button>${state.slots.length>1?'<button class="secondary-btn" id="removeSlot">Remove last row</button>':''}</div><div class="section-box"><h3>Starting templates</h3><p>Choose a user-focused example, or start blank. Changing templates replaces the current weekly block definitions, so export a backup first if needed.</p><div class="template-options">${Object.entries(CATALOG).map(([key,val])=>`<button class="template-btn" data-template="${key}"><b>${esc(val.label)}</b><small>${esc(val.description)}</small></button>`).join('')}</div></div>`;
+$('#restartWizard').onclick=()=>openWelcome(true);
+$('#saveSlots').onclick=()=>{const inputs=[...container.querySelectorAll('[data-time]')];const slots=inputs.map((el,i)=>({id:state.slots[i].id,time:el.value,label:container.querySelector(`[data-slot-label="${i}"]`).value.trim()||'FOCUS'}));if(slots.some(x=>!/^\d\d:\d\d$/.test(x.time))){toast('Every time row needs a valid time');return}if(new Set(slots.map(x=>x.time)).size!==slots.length){toast('Each row needs a different time');return}state.slots=slots;save();draw();toast('Time rows updated')};$('#addSlot').onclick=()=>{if(state.slots.length>=9){toast('Maximum 9 rows to keep the calendar readable');return}state.slots.push({id:id(),time:'12:00',label:'NEW ROW'});save();draw();openSettings('schedule')};const rm=$('#removeSlot');if(rm)rm.onclick=()=>{const i=state.slots.length-1;if(state.tasks.some(t=>t.slot===i)&&!confirm('Remove the last row and all blocks in it?'))return;state.tasks=state.tasks.filter(t=>t.slot!==i);state.slots.pop();save();draw();openSettings('schedule')};container.querySelectorAll('[data-template]').forEach(btn=>btn.onclick=()=>{if(state.tasks.length&&!confirm('Replace your current calendar blocks with this template? Export a backup first if needed.'))return;applyTemplate(btn.dataset.template);save();draw();openSettings('schedule');toast('Calendar template loaded')});}
+if(settingsTab==='appearance'){container.innerHTML=`<div class="form-grid">${field('Name your command center','customName',state.profile.name)}${field('Accent color','customAccent',safeColor(state.profile.accent),{type:'color'})}</div><div class="field"><label>Header logo (PNG, JPEG, WebP under 200 KB)</label><input type="file" id="customLogo" accept="image/png,image/jpeg,image/webp"/></div><p class="small-hint">Leave the logo picker untouched to keep the current mark. Uploading your own logo is free. HireBerna product attribution remains in the header/footer.</p><div class="modal-actions"><button class="primary-btn" id="saveAppearance">Apply appearance</button><button class="secondary-btn" id="resetLogo">Remove custom logo</button></div>`;let newLogo=state.profile.logo;$('#customLogo').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>200000||!['image/png','image/jpeg','image/webp'].includes(f.type)){toast('Choose a PNG, JPEG, or WebP smaller than 200 KB');e.target.value='';return}newLogo=await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(f)});toast('Logo ready — click Apply appearance')};$('#saveAppearance').onclick=()=>{state.profile.name=$('#customName').value.trim()||'My Command Center';state.profile.accent=safeColor($('#customAccent').value);state.profile.logo=sanitizeImage(newLogo);save();draw();closeModal();toast('Appearance updated')};$('#resetLogo').onclick=()=>{state.profile.logo=null;save();draw();openSettings('appearance');toast('Custom logo removed')}}
+if(settingsTab==='goals'){const week=weekRecord();container.innerHTML=`<p class="small-hint">Choose the exact numbers that matter to you. Metrics are only increased when you log real results.</p><div id="metricEditors">${state.metrics.map((m,i)=>`<div class="metric-editor"><div class="field"><label>Metric ${i+1}</label><input data-metric-name="${i}" value="${esc(m.name)}"/></div><div class="field"><label>Weekly goal</label><input type="number" min="0" data-metric-target="${i}" value="${esc(m.target)}"/></div><button class="secondary-btn" data-remove-metric="${i}" aria-label="Remove metric">×</button></div>`).join('')}</div><div class="modal-actions"><button id="saveMetrics" class="primary-btn">Save metrics</button><button id="addMetric" class="secondary-btn">+ Add metric</button><button id="adjustMetrics" class="secondary-btn">Log / correct progress</button></div>`;$('#saveMetrics').onclick=()=>{state.metrics=state.metrics.map((m,i)=>({...m,name:container.querySelector(`[data-metric-name="${i}"]`).value.trim()||m.name,target:Math.max(0,Number(container.querySelector(`[data-metric-target="${i}"]`).value)||0)}));save();draw();openSettings('goals');toast('Weekly goals saved')};$('#addMetric').onclick=()=>{if(state.metrics.length>=12){toast('Limit 12 metrics to keep the board readable');return}state.metrics.push({id:id(),name:'New metric',target:5,unit:'count'});save();draw();openSettings('goals')};container.querySelectorAll('[data-remove-metric]').forEach(btn=>btn.onclick=()=>{if(!confirm('Remove this metric from the scoreboard?'))return;state.metrics.splice(Number(btn.dataset.removeMetric),1);save();draw();openSettings('goals')});$('#adjustMetrics').onclick=()=>openAdjustMetrics();}
+if(settingsTab==='essentials'){container.innerHTML=`<p class="small-hint">Choose the must-do habits or commitments for this week. Check them off in the board's bottom strip.</p><div id="essentialFields">${state.essentials.map((e,i)=>`<div class="field"><label>Essential ${i+1}</label><input data-essential="${i}" value="${esc(e.name)}"/></div>`).join('')}</div><div class="modal-actions"><button id="saveEssentials" class="primary-btn">Save essentials</button><button id="addEssential" class="secondary-btn">+ Add essential</button><button id="removeEssential" class="secondary-btn">Remove last</button></div>`;$('#saveEssentials').onclick=()=>{state.essentials=state.essentials.map((e,i)=>({...e,name:container.querySelector(`[data-essential="${i}"]`).value.trim()||e.name}));save();draw();openSettings('essentials');toast('Essentials saved')};$('#addEssential').onclick=()=>{if(state.essentials.length>=15){toast('Maximum 15 essentials');return}state.essentials.push({id:id(),name:'New essential'});save();draw();openSettings('essentials')};$('#removeEssential').onclick=()=>{state.essentials.pop();save();draw();openSettings('essentials')};}
+if(settingsTab==='data'){container.innerHTML=`<div class="section-box"><h3>Your data stays on this device</h3><p>BernAPlan currently uses browser local storage. It does NOT have cloud backup, direct Google/Outlook calendar synchronization, or automatic device syncing yet. Export your data regularly, especially before clearing browser data or changing computers.</p></div><div class="modal-actions"><button id="exportBackup" class="primary-btn">↓ Export JSON backup</button><button id="importBackup" class="secondary-btn">↑ Import backup</button><input id="backupFile" type="file" accept="application/json,.json" class="hidden"/></div><p class="small-hint">This is an early prototype developed independently of the existing v0.4.2 desktop release. Import only backups exported by this prototype.</p>`;$('#exportBackup').onclick=()=>downloadFile('BernAPlan-backup-'+localDateKey(new Date())+'.json',JSON.stringify(state,null,2),'application/json');$('#importBackup').onclick=()=>$('#backupFile').click();$('#backupFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;if(file.size>1e6){toast('Backup is too large');return}let candidate;try{candidate=JSON.parse(await file.text());if(candidate.version!==1||!Array.isArray(candidate.tasks)||!Array.isArray(candidate.slots)||!Array.isArray(candidate.metrics)||!Array.isArray(candidate.essentials)||typeof candidate.weeks!=='object')throw Error('Invalid format')}catch(err){toast('Invalid BernAPlan prototype backup');return}if(!confirm('Import this backup and replace the current local board?'))return;state=candidate;save();draw();closeModal();toast('Backup imported')};}
+}
+function openAdjustMetrics(){const week=weekRecord();openModal(head('Correct weekly results','Enter actual totals for the selected week. Completed tasks are counted automatically.')+state.metrics.filter(m=>m.id!=='tasks').map(m=>field(m.name,'adjust_'+m.id,week.metrics[m.id]||0,{type:'number'})).join('')+`<div class="modal-actions"><button class="primary-btn" id="saveAdjust">Save results</button><button class="secondary-btn" id="cancelAdjust">Cancel</button></div>`);$('#cancelAdjust').onclick=closeModal;$('#saveAdjust').onclick=()=>{for(const m of state.metrics.filter(m=>m.id!=='tasks')){const num=Number($('#adjust_'+m.id).value);if(!Number.isFinite(num)||num<0||num>1e6){toast('Enter nonnegative results');return}week.metrics[m.id]=num}save();closeModal();draw();toast('Results saved')}}
+function downloadFile(filename,content,type){const link=document.createElement('a');const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);link.href=url;link.download=filename;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function exportCalendarEvent(task){if(task.kind==='task')return;const day=addDays(fromKey(selectedWeek),task.day),start=state.slots[task.slot].time,end=slotEnd(task.slot);const toICS=(date,time)=>{const [h,m]=time.split(':').map(Number);const d=new Date(date);d.setHours(h,m,0,0);return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}T${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}00`};const clean=s=>String(s||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//HireBerna//BernAPlan//EN','BEGIN:VEVENT',`UID:${task.id}-${selectedWeek}@bernaplan.local`,`DTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'')}`,`DTSTART:${toICS(day,start)}`,`DTEND:${toICS(day,end)}`,`SUMMARY:${clean(task.title)}`,`DESCRIPTION:${clean(task.objective||task.description)}`,'END:VEVENT','END:VCALENDAR'].join('\r\n');downloadFile('BernAPlan-'+task.kind+'-'+selectedWeek+'.ics',ics,'text/calendar');toast('Event exported. Import the .ics file into your calendar. No live sync is active.')}
+/* FIRST $20 MISSION: offline, rules-based teaching and user-reported results. */
+const FIRST20_SERVICES={
+ graphics:{title:'Simple social graphic',short:'One original social post or event graphic',tool:'A free graphic editor (for example Canva Free)',sample:'a sample social graphic for a pretend neighborhood cafe',deliverable:'one square promotional graphic (1080×1080 pixels) and one JPG or PNG file',pitch:'I can make one clear promotional graphic for your next post or event for $20. Here is a sample of my work. Interested?',practical:'Check the free editor has suitable export options; avoid premium templates or watermarked images.'},
+ writing:{title:'Short caption or proofreading',short:'Polish a short business caption or description',tool:'A free text editor or Google Docs',sample:'a before-and-after 100-word social caption for an imaginary bakery',deliverable:'one polished caption, short bio, or up-to-250-word proofread document',pitch:'I can improve one short caption or description for $20 and deliver the edited text. Here is a before-and-after example. Would that help?',practical:'Ask the customer to supply the original text. Keep the meaning, and do not claim to be a licensed editor.'},
+ spreadsheet:{title:'Simple spreadsheet cleanup',short:'Make a clean, useful spreadsheet',tool:'Google Sheets (free with a Google account) or LibreOffice Calc',sample:'a fictional 10-row expense tracker with useful columns and totals',deliverable:'one small, organized spreadsheet with up to 50 customer-provided rows',pitch:'I can organize a small spreadsheet or create a simple tracker for $20. Here is an example. Would that save you some time?',practical:'Use fictional information in your sample; do not ask for passwords, banking details, or unnecessary sensitive data.'},
+ discovery:{title:'Discover a beginner service',short:'Try a simple skill before offering it',tool:'A free text editor or graphic editor',sample:'one small writing, graphic, or spreadsheet practice sample',deliverable:'one finished practice sample of a service you can confidently explain',pitch:'I can help with one small, well-defined task for $20. Here is a sample of what I can deliver. Would that be useful?',practical:'Do not pitch until you can complete the sample yourself. If you need more practice, extend the mission rather than promising delivery.'}
+};
+const MISSION_STAGES=[
+ {title:'Choose a $20 offer',target:'1 clear $20 offer',short:'Pick one deliverable, price it at $20, and set a realistic delivery time.',steps:s=>[
+  `Look at your chosen service: ${s.title.toLowerCase()}. You are offering ${s.deliverable}.`,
+  'Write exactly what the customer gets. Keep the work small enough for a beginner to finish.',
+  'Set your example price to $20. Decide how many reasonable revisions and delivery days are included.',
+  'Check that you can use a free tool and deliver the work without buying supplies or subscriptions.',
+  'Write one sentence explaining who needs it and how it helps them.'
+ ],tips:['A clearly defined offer is easier to sell than “I can do anything.”','Avoid promising instant results or expertise you do not have.','Do not quit your job or assume you will earn money this week.'],check:s=>['Choose one service','Write the specific $20 deliverable','Set a realistic deadline and revision limit'],example:s=>`Example offer: “For $20 I will make ${s.deliverable}. Delivery within three days, with one simple revision.”`,proof:'A written offer naming the service, price, deliverable, timeframe and revision limit.'},
+ {title:'Make a real sample',target:'1 finished sample',short:'Make one original example using free tools; save a shareable copy.',steps:s=>[
+  `Open ${s.tool}. Do not purchase a plan or paid template.`,
+  `Make ${s.sample}. Use invented names and information rather than someone else's private data.`,
+  'Check the sample for spelling, readability, and whether it demonstrates the service you want to sell.',
+  'Save or export the finished sample. Open the saved file to confirm it really works.',
+  'Record the file location or a shareable link you control.'
+ ],tips:['Customers buy visible examples, not vague promises.','One polished small example beats ten unfinished examples.','A sample is practice, not proof that customers will buy.'],check:s=>['Open a free tool','Finish one real example','Save the sample and verify it opens'],example:s=>`Sample idea: ${s.sample}.`,proof:'One saved sample file or a working, user-provided link.'},
+ {title:'Write a $20 pitch',target:'1 saved customer pitch',short:'Prepare a respectful, specific message with your sample and $20 offer.',steps:s=>[
+  'Choose who could benefit: a small business, event organizer, creator, or someone with a simple task.',
+  `Start from this draft: “${s.pitch}”`,
+  'Replace the generic phrase with the exact improvement you can offer that person.',
+  'Mention your sample and $20 scope; include a clear question instead of pressure.',
+  'Read the message aloud and remove anything exaggerated, misleading, or too long.'
+ ],tips:['Personalization matters more than volume.','Ask permission and follow each platform’s contact rules.','Do not send the same unsolicited message repeatedly.'],check:s=>['Identify a suitable type of customer','Write a specific offer and price','Save your final customer message'],example:s=>`Starter wording: ${s.pitch}`,proof:'A saved, polite customer message including a clear service, example and price.'},
+ {title:'Find 10 prospects',target:'10 suitable prospects',short:'Search business pages and directories; note a real need and a public contact method.',steps:s=>[
+  'Open a map or search engine and search for one type of nearby small business or creator.',
+  `Look for public pages where ${s.short.toLowerCase()} could genuinely be useful.`,
+  'Check each prospect’s own site or social page for a real need. Do not guess based only on appearance.',
+  'Write down the prospect name, public contact channel, and one specific reason your offer could help.',
+  'Repeat until you have ten suitable names. If you find fewer, record the real number and stop.'
+ ],tips:['Quality is more important than a large scraped list.','Use publicly offered business contact channels and follow site rules.','Never collect passwords, private customer lists, or unrelated personal details.'],check:s=>['Find public business or creator pages','Note a real potential need','Log up to ten suitable prospects'],example:s=>`Example record: “Sample Bakery — public contact form — could use ${s.short.toLowerCase()} for weekly specials.”`,proof:'A real count and short notes for the prospects you identified.'},
+ {title:'Send 5 offers',target:'5 actual personal offers',short:'Contact up to five relevant prospects through channels that welcome business inquiries.',steps:s=>[
+  'Open your prospect list and choose up to five businesses with a clear need.',
+  'Check their published contact instructions and the platform’s messaging rules.',
+  'Personalize each message with the one improvement you noticed and your clear $20 offer.',
+  'Send only where appropriate; do not misrepresent yourself or spam strangers.',
+  'Record how many messages were really sent, not how many you planned to send.'
+ ],tips:['Respectful, specific offers outperform aggressive or vague mass outreach.','A sent message is an activity, not revenue.','Keep the prospect list and customer details private.'],check:s=>['Choose five suitable prospects','Personalize each permitted message','Record the number genuinely sent'],example:s=>`Short pitch: ${s.pitch}`,proof:'Count of actual messages sent; notes may include dates and non-sensitive contact channels.'},
+ {title:'Reply or improve',target:'1 reply or improvement',short:'Respond to real interest; if nobody replies, improve the sample or offer instead.',steps:s=>[
+  'Check for real replies on channels you used, without sending repeated follow-ups.',
+  'If interested, ask what they need, confirm scope, price, revisions, delivery date, and payment method.',
+  'Do not send final paid work before both sides understand the agreement.',
+  'If there are no replies, review your audience and rewrite one message more specifically.',
+  'Record actual replies and any customers who explicitly agree. Do not count silence as rejection or agreement.'
+ ],tips:['A customer question is an opportunity to clarify, not an automatic sale.','Never pay money to unlock an alleged job or receive payment.','Use legitimate payment channels and watch for fake payment screenshots.'],check:s=>['Check for genuine replies','Respond or improve your pitch','Record real agreements, if any'],example:s=>`Agreement summary: “${s.deliverable} for $20, delivered by agreed date, with one revision.”`,proof:'One genuine customer response or one documented improvement to the offer.'},
+ {title:'Review real results',target:'1 honest results review',short:'Count prospects, offers, replies, agreed customers, and money actually received.',steps:s=>[
+  'Open the mission scoreboard. Record only what actually happened, using real numbers.',
+  'Count prospects found, pitches sent, genuine replies, and customers who explicitly agreed.',
+  'Enter money only if you actually received it; a promise, invoice, or screenshot is not paid revenue.',
+  'Check which stage blocked progress: sample, prospects, outreach, conversion, or delivery.',
+  'Use “Suggest next week’s action” to choose a relevant improvement; apply it only if it makes sense.'
+ ],tips:['First earnings are a milestone, not sustainable income.','Track fees and expenses separately from gross receipts.','Keep your job until your finances and replacement-income stability support a safe decision.'],check:s=>['Log actual results','Identify your main obstacle','Choose one realistic next action'],example:s=>'Example: “Found 8 prospects, sent 4 messages, received 1 reply, earned $0. Next week: revise the sample and send a better-tailored offer.”',proof:'A written summary of actual activity and payments, even if the amount is $0.'}
+];
+function missionEnd(t){const parts=state.slots[t.slot].time.split(':').map(Number);const total=(parts[0]*60+parts[1]+(t.missionOptional?5:Math.min(120,Number(state.mission?.minutes)||30)))%1440;return String(Math.floor(total/60)).padStart(2,'0')+':'+String(total%60).padStart(2,'0')}
+function missionSummary(){const m=state.mission||{};const out={prospects:0,offers:0,replies:0,customers:0,paid:0};for(const item of (m.logs||[])){for(const k of Object.keys(out)){out[k]+=Number(item[k]||0)}}out.paid=Math.round(out.paid*100)/100;return out}
+function missionVisibleTasks(){const matched=state.tasks.filter(t=>!t.weekKey||t.weekKey===selectedWeek);const overrides=new Set(matched.filter(t=>t.weekKey===selectedWeek).map(t=>t.day+':'+t.slot));return matched.filter(t=>t.weekKey===selectedWeek||!overrides.has(t.day+':'+t.slot));}
+function missionCountable(){const ts=missionVisibleTasks();return state.mission?ts.filter(t=>!t.missionOptional):ts}
+function missionSupport(day,slot,focus){const stage=MISSION_STAGES[day];const suggestions=[
+ ['2-minute preview',`Read today's objective: ${stage.title.toLowerCase()}. Choose one tiny starting action.`],
+ ['Free tool / example',`Look at one free example relevant to: ${stage.title.toLowerCase()}. No purchase necessary.`],
+ ['Optional practice',`Spend up to five extra minutes improving: ${stage.short}`],
+ ['Record your notes',`Note what you did and your next action; record no result you did not earn.`],
+ ['Rest or catch up',`Take a break. If you have energy, complete an unfinished step from ${stage.title.toLowerCase()}.`]
+ ];const [title,action]=suggestions[slot];return {title,description:action,target:'Optional — no quota',objective:action,instructions:[action,'Stop after a few minutes; this is not required for your mission milestone.'],tips:['Optional time never counts against your required mission progress.','Your schedule belongs to you. You can rest or add a personal task.'],checklist:['Use this time if helpful'],success:'A useful small action or real rest.',example:'Optional support; no proof needed.',missionOptional:true};}
+function buildMissionTasks(serviceKey,focusSlot,minutes){const svc=FIRST20_SERVICES[serviceKey];let tasks=[];
+ for(let day=0;day<7;day++)for(let slot=0;slot<5;slot++){
+  const major=slot===focusSlot;const stage=MISSION_STAGES[day];
+  const t=createTask(day,slot,major?stage.title:'',major?stage.short:'');
+  const content=major?{title:stage.title,description:stage.short,target:stage.target,objective:`Your main ${minutes}-minute mission: ${stage.short}`,instructions:stage.steps(svc),tips:stage.tips,checklist:stage.check(svc),success:stage.proof,example:stage.example(svc),guided:true,missionCore:true,missionOptional:false,missionStage:day}:missionSupport(day,slot,focusSlot);
+  Object.assign(t,content,{missionId:'first20',missionService:serviceKey,metricId:''});tasks.push(t)
+ }return tasks;
+}
+function activateFirst20(picks){if(state.tasks.length){state.beforeMission={tasks:structuredClone(state.tasks),profile:structuredClone(state.profile),metrics:structuredClone(state.metrics),essentials:structuredClone(state.essentials),slots:structuredClone(state.slots)};}
+ state.slots=structuredClone(DEFAULT_SLOTS);state.tasks=buildMissionTasks(picks.service,picks.slot,picks.minutes);
+ state.mission={id:'first20',goal:20,service:picks.service,slot:picks.slot,minutes:picks.minutes,device:picks.device,startedAt:new Date().toISOString(),logs:[]};
+ state.profile.name='My First $20 Mission';state.profile.template='mission';state.profile.guidance={goal:'Earn first $20 through a simple service',obstacle:'starting',pace:'light'};
+ state.essentials=[{id:'sample',name:'Prepare an honest sample'},{id:'safe',name:'Contact people respectfully'},{id:'results',name:'Record actual results'}];
+ state.configured=true;selectedWeek=localDateKey(beginningOfWeek());save();closeModal();draw();toast('Your $20 mission is ready. Begin with Monday’s highlighted milestone.');}
+function restoreBeforeMission(){if(!state.beforeMission){toast('No previous playbook snapshot is available.');return}if(!confirm('Restore your earlier task layout? Mission notes and results will remain in your saved data, but the previous board will appear.'))return;
+ const s=state.beforeMission;state.tasks=structuredClone(s.tasks);state.profile=structuredClone(s.profile);state.metrics=structuredClone(s.metrics);state.essentials=structuredClone(s.essentials);state.slots=structuredClone(s.slots);state.mission=null;state.beforeMission=null;save();closeModal();draw();toast('Your original weekly playbook was restored.');}
+function openMissionWizard(){const picks={service:'graphics',device:'computer',minutes:30,slot:3};let step=0;
+ const tiles=(items,key)=>items.map(([v,label,desc])=>`<button type="button" class="wizard-tile ${String(picks[key])===String(v)?'active':''}" data-mpick="${key}" data-mval="${esc(String(v))}" aria-pressed="${String(picks[key])===String(v)}"><strong>${esc(label)}</strong>${desc?`<small>${esc(desc)}</small>`:''}<span class="wizard-check">${String(picks[key])===String(v)?'✓':'+'}</span></button>`).join('');
+ function paint(){let body='';const label=['Choose something small to sell','Choose your available tools','Find a realistic daily rhythm','Review your first mission'][step];
+ if(step===0)body=`<p class="small-hint">Start with a service you can practice free. No experience is assumed.</p><div class="wizard-grid">${tiles(Object.entries(FIRST20_SERVICES).map(([k,v])=>[k,v.title,v.short]),'service')}</div>`;
+ if(step===1)body=`<p class="small-hint">We will use free tools. No paid account or subscription is needed.</p><div class="wizard-grid">${tiles([['phone','Smartphone only','You can still practice and offer simple services.'],['computer','Computer or laptop','Use free browser tools or locally installed software.'],['both','Phone and computer','Work on whichever device is easier.']],'device')}</div>`;
+ if(step===2)body=`<p class="small-hint">This is the time for ONE required mission milestone per day—not five hours of work.</p><h3 class="mission-section-title">How much time can you actually spare?</h3><div class="wizard-grid">${tiles([[15,'15 minutes','A small first step per day'],[30,'30 minutes','A manageable practice or outreach block'],[60,'60 minutes','Extra time for a deeper task']],'minutes')}</div><h3 class="mission-section-title">When would you rather work?</h3><div class="wizard-grid">${tiles([[0,'Morning','9 AM focus row'],[2,'Afternoon','2 PM build row'],[3,'Evening','5 PM progress row'],[4,'Night','8 PM review row']],'slot')}</div>`;
+ if(step===3){const svc=FIRST20_SERVICES[picks.service];body=`<div class="mission-summary-card"><h3>${esc(svc.title)} — First $20 mission</h3><p><strong>Your offer:</strong> ${esc(svc.deliverable)}</p><p><strong>Free tool:</strong> ${esc(svc.tool)}</p><p><strong>Daily commitment:</strong> One ${picks.minutes}-minute milestone at ${timeLabel(DEFAULT_SLOTS[picks.slot].time)}, seven days. Other calendar cells are clearly marked optional.</p><p><strong>Actual earnings:</strong> $0 at the start. Payment is never inferred from completed tasks.</p></div><div class="section-box"><h3>Seven real milestones</h3>${MISSION_STAGES.map((v,i)=>`<p class="mission-compact-step"><strong>${DAY_NAMES[i]}:</strong> ${esc(v.title)} <span>→ ${esc(v.target)}</span></p>`).join('')}</div><p class="small-hint">A first sale is not guaranteed. This mission is for learning and testing a small service, not advice to leave a job. Your existing plan will be saved as a restorable snapshot if you continue.</p>`;}
+ openModal(head('Mission Builder · Earn Your First $20',label)+`<div class="wizard-progress"><span>STEP ${step+1} OF 4</span><span>${(step+1)*25}%</span></div><div class="wizard-track"><div style="width:${(step+1)*25}%"></div></div>${body}<div class="modal-actions wizard-nav">${step?'<button id="missionWizardBack" class="secondary-btn">← Back</button>':''}<button id="missionWizardNext" class="primary-btn">${step===3?'Start My Guided Mission':'Continue →'}</button></div>`,true);
+ document.querySelectorAll('[data-mpick]').forEach(btn=>btn.onclick=()=>{picks[btn.dataset.mpick]=btn.dataset.mpick==='minutes'||btn.dataset.mpick==='slot'?Number(btn.dataset.mval):btn.dataset.mval;paint()});if(step)$('#missionWizardBack').onclick=()=>{step--;paint()};$('#missionWizardNext').onclick=()=>{if(step<3){step++;paint();return}if(state.tasks.length&&!confirm('The Mission will replace the displayed task board. Your previous layout will be saved so you can restore it later. Start?'))return;activateFirst20(picks)};}
+ paint();}
+function missionRecommended(){const s=missionSummary();const core=state.tasks.filter(t=>t.missionCore);const finished=stage=>core.filter(t=>t.missionStage===stage).some(t=>Object.values(state.weeks||{}).some(w=>w.complete?.[t.id]));
+ if(s.paid>=20)return {title:'Plan the next careful milestone',action:'Record your actual earnings, fees and expenses. Decide whether another small paid order is worth pursuing; do not assume this replaces wages.',target:'1 realistic next financial goal',stage:6};
+ if(!finished(1))return {title:'Finish a convincing sample',action:'Finish and save one honest example using free tools before asking people to pay.',target:'1 saved sample',stage:1};
+ if(s.prospects<5)return {title:'Find suitable customers',action:'Identify five suitable prospects using public contact channels, noting one actual need for each.',target:'5 suitable prospects',stage:3};
+ if(s.offers<5)return {title:'Send five appropriate offers',action:'Send up to five tailored, respectful messages through channels that welcome business enquiries. Record the real number sent.',target:'5 genuine messages',stage:4};
+ if(s.replies===0)return {title:'Improve the sample and pitch',action:'Revisit your five offers. Update one confusing line of the message or improve one sample detail; then test with a better-matched audience.',target:'1 improved pitch + 3 new appropriate contacts',stage:2};
+ if(s.customers===0)return {title:'Clarify real customer needs',action:'Reply to genuine interest. Ask what outcome the person wants, and confirm the $20 scope and deliverables without pressure.',target:'1 clear customer conversation',stage:5};
+ return {title:'Deliver what was agreed',action:'Confirm the agreement, finish the exact small deliverable, and record payment only after receiving it.',target:'1 delivered service and actual payment record',stage:5};}
+function openMissionLog(backToTask=null){if(!state.mission)return;const totals=missionSummary();openModal(head('Log real results','Record only genuine activity and money already received. Entries are added to your mission totals.')+`
+ <div class="mission-totals"><strong>${totals.prospects} prospects</strong><strong>${totals.offers} offers</strong><strong>${totals.replies} replies</strong><strong>${totals.customers} customers</strong><strong>$${totals.paid.toFixed(2)} received</strong></div>
+ <div class="mission-fields">${[['prospects','New suitable prospects'],['offers','New personalized offers actually sent'],['replies','Real replies received'],['customers','Customers who agreed to a job'],['paid','Money actually received ($)']].map(([k,l])=>`<div class="field"><label for="mission_${k}">${l}</label><input id="mission_${k}" type="number" inputmode="decimal" step="${k==='paid'?'0.01':'1'}" min="0" max="100000" value="0"></div>`).join('')}</div>
+ <div class="field"><label for="mission_note">Short progress note (optional)</label><textarea id="mission_note" rows="2" placeholder="What happened? What will you try next?"></textarea></div>
+ <p class="small-hint">All values are entered by you; BernAPlan cannot independently confirm a payment or client. “Received” means money you actually have, not a promised amount or unpaid invoice. Keep sensitive customer details out of these notes.</p>
+ <div class="modal-actions"><button class="primary-btn" id="saveMissionLog">Save actual results</button><button class="secondary-btn" id="missionLogBack">← Back</button>${(state.mission.logs||[]).length?'<button class="secondary-btn" id="undoMissionLog">Undo last entry</button>':''}</div>`,true);
+ $('#saveMissionLog').onclick=()=>{const values={};for(const k of ['prospects','offers','replies','customers','paid']){const v=Number($('#mission_'+k).value);if(!Number.isFinite(v)||v<0||v>100000||(k!=='paid'&&!Number.isInteger(v))){toast('Please enter nonnegative whole counts and a valid dollar amount.');return;}values[k]=v}if(Object.values(values).every(v=>v===0)&&!$('#mission_note').value.trim()){toast('Add at least one actual result or a short progress note.');return}
+ state.mission.logs.push({...values,note:$('#mission_note').value.trim().slice(0,1000),date:new Date().toISOString()});save();draw();openMissionHub();toast('Real results added to your mission scoreboard.')};
+ $('#missionLogBack').onclick=()=>backToTask?openTask(backToTask):openMissionHub();if($('#undoMissionLog'))$('#undoMissionLog').onclick=()=>{if(!confirm('Remove the most recent mission results entry?'))return;state.mission.logs.pop();save();draw();openMissionLog(backToTask);toast('Last result entry removed.')};}
+function openMissionNext(){if(!state.mission)return;const recommendation=missionRecommended();const nextWeek=localDateKey(addDays(fromKey(selectedWeek),7));openModal(head('A practical next move','Your recorded activity suggests this action. No calendar changes happen without permission.')+`<div class="mission-summary-card"><h3>${esc(recommendation.title)}</h3><p>${esc(recommendation.action)}</p><p><strong>Target:</strong> ${esc(recommendation.target)}</p><p><strong>Where:</strong> Next Monday at ${esc(timeLabel(state.slots[state.mission.slot].time))}, week of ${esc(nextWeek)}</p></div><p class="small-hint">Rule-based suggestion, not a promise of sales or AI diagnosis. This adds one next-week-only block, replacing the default mission block in that time cell without changing past weeks.</p><div class="modal-actions"><button class="primary-btn" id="applyMissionNext">Add to next week</button><button class="secondary-btn" id="backMissionNext">← Back</button></div>`,true);
+ $('#applyMissionNext').onclick=()=>{if(state.tasks.some(t=>t.weekKey===nextWeek&&t.missionId==='first20'&&t.day===0&&t.slot===state.mission.slot)){toast('A next-week mission adjustment already exists at that time.');return}
+ const t=createTask(0,state.mission.slot,recommendation.title,recommendation.action);Object.assign(t,{weekKey:nextWeek,target:recommendation.target,objective:recommendation.action,instructions:[recommendation.action,'Use your recorded result to decide whether this improves your original attempt.','Do the small action and record what truly happened.'],tips:['Keep the task realistic for your available time.','Check that any offer is honest and appropriately scoped.'],checklist:['Decide the small action','Complete the actual work','Record your honest result'],example:'Use your earlier progress as a starting point, not a reason to give up.',success:recommendation.target,guided:true,missionCore:true,missionStage:recommendation.stage,missionId:'first20'});state.tasks.push(t);save();selectedWeek=nextWeek;closeModal();draw();toast('Next-week action added. Your earlier weeks were not changed.');};$('#backMissionNext').onclick=openMissionHub;}
+function openMissionHub(){if(!state.mission){openModal(head('Missions','Follow a specific outcome, not a generic task list.')+`<div class="mission-summary-card"><h3>Earn Your First $20 Online</h3><p>Try one beginner-friendly service, make a sample, contact suitable customers respectfully, and track actual results. Includes real instructions and a seven-day calendar.</p><p>Free, local-first, and no paid AI or API required.</p></div><div class="modal-actions"><button id="startMissionWizard" class="primary-btn">Build My First $20 Mission →</button><button id="dismissMission" class="secondary-btn">Not now</button></div>`,true);$('#startMissionWizard').onclick=openMissionWizard;$('#dismissMission').onclick=closeModal;return}
+ const m=state.mission,s=missionSummary(),rate=Math.min(100,100*s.paid/20),rec=missionRecommended();openModal(head('My First $20 Mission',FIRST20_SERVICES[m.service]?.title+' · '+m.minutes+' minutes per day · Your own results')+`<div class="mission-hero"><div><span class="mission-kicker">YOUR SELF-REPORTED EARNINGS</span><strong>$${s.paid.toFixed(2)} <small>/ $20</small></strong></div><div class="mission-track"><div style="width:${rate}%"></div></div><p>${s.paid>=20?'You recorded at least $20 received. Good work—this is a milestone, not proof that income will repeat.':'Earning money is not guaranteed. You can make progress through real samples, prospects and thoughtful offers.'}</p></div>
+ <div class="mission-totals"><strong>${s.prospects} prospects</strong><strong>${s.offers} offers</strong><strong>${s.replies} replies</strong><strong>${s.customers} customers</strong><strong>$${s.paid.toFixed(2)} received</strong></div>
+ <div class="section-box"><h3>Your suggested next move</h3><p><strong>${esc(rec.title)}:</strong> ${esc(rec.action)}</p><p class="small-hint">The suggestion uses your recorded milestones. It does not edit your calendar automatically.</p></div>
+ <div class="modal-actions"><button class="primary-btn" id="missionLogButton">＋ Log actual results</button><button class="secondary-btn" id="missionNextButton">Suggest next week’s action</button>${state.beforeMission?'<button class="secondary-btn" id="missionRestoreButton">Restore previous board</button>':'<button class="secondary-btn" id="missionRegularPlan">Start a regular plan</button>'}</div><p class="small-hint">All statistics are self-reported and stored in this browser. A promised $20 payment is NOT $20 earned. Export a JSON backup from Customize → Backups to protect your data.</p>`,true);
+ $('#missionLogButton').onclick=()=>openMissionLog();$('#missionNextButton').onclick=openMissionNext;if($('#missionRestoreButton'))$('#missionRestoreButton').onclick=restoreBeforeMission;if($('#missionRegularPlan'))$('#missionRegularPlan').onclick=()=>openWelcome(true);}
+function renderMissionUi(){const m=state.mission;const button=$('#missionOpen');if(!button)return;$('#editScoreboard').textContent=m?'＋ Log mission results':'+ Customize metrics & goals';if(!m){button.textContent='★ Missions';return}const s=missionSummary();button.textContent=`★ $${s.paid.toFixed(2)} / $20`;button.title='Open your First $20 Mission. Amounts are user-reported.';}
+
+function openWelcome(rebuild=false){
+ let step=0;
+ const picks={template:state.profile.template||'everyday',goal:state.profile.guidance?.goal||'',obstacle:state.profile.guidance?.obstacle||'starting',pace:state.profile.guidance?.pace||'full'};
+ const steps=[['Choose a starting point','What area of life are you planning?'],['Pick a goal','What would make the biggest difference right now?'],['Tell us what gets in the way','Which challenge sounds most familiar?'],['Choose your rhythm','How much structure would help you?'],['Check your playbook','Here’s what we’ll put on your calendar.']];
+ function tile(id,value,label,desc='',chosen=false){return `<button type="button" class="wizard-tile ${chosen?'active':''}" data-wizard-pick="${esc(id)}" data-value="${esc(value)}" aria-pressed="${chosen?'true':'false'}"><strong>${esc(label)}</strong>${desc?`<small>${esc(desc)}</small>`:''}<span class="wizard-check">${chosen?'✓':'+'}</span></button>`}
+ function drawWizard(){
+ const title=steps[step][0],subtitle=steps[step][1];
+ let body='';
+ if(step===0)body=`<div class="wizard-grid">${Object.entries(CATALOG).map(([k,v])=>tile('template',k,v.label,v.description,picks.template===k)).join('')}</div><div class="mission-welcome-choice"><strong>Want to earn your first $20 online?</strong><p>Get a practical, beginner-friendly Mission with real steps, a sample project and a truthful earnings tracker.</p><button type="button" id="chooseFirst20" class="primary-btn">★ Build my First $20 Mission →</button></div>`;
+ if(step===1){const goals=GOAL_OPTIONS[picks.template]||GOAL_OPTIONS.everyday;if(!goals.includes(picks.goal))picks.goal=goals[0];body=`<div class="wizard-grid">${goals.map(g=>tile('goal',g,g,'',picks.goal===g)).join('')}</div>`}
+ if(step===2)body=`<div class="wizard-grid">${OBSTACLE_OPTIONS.map(([k,l])=>tile('obstacle',k,l,'',picks.obstacle===k)).join('')}</div>`;
+ if(step===3)body=`<div class="wizard-grid">${PACES.map(([k,l,d])=>tile('pace',k,l,d,picks.pace===k)).join('')}</div>`;
+ if(step===4){const examples=CATALOG[picks.template]?.rows?.[0]||[];const guide=guidanceFor(examples[0]||'Plan the day',picks.template,{goal:picks.goal,obstacle:picks.obstacle});const rows=picks.pace==='full'?5:picks.pace==='balanced'?3:2;body=`<div class="wizard-review"><p><strong>Your focus:</strong> ${esc(picks.goal||'My priorities')}</p><p><strong>My challenge:</strong> ${esc(OBSTACLE_OPTIONS.find(v=>v[0]===picks.obstacle)?.[1]||'Getting started')}</p><p><strong>Your calendar:</strong> 7 days × 5 filled rows. ${rows} daily priority blocks; other rows have light support or recovery activities. You can change them anytime.</p><div class="section-box guide-example"><h3>Example: ${esc(examples[0]||'Your first task')}</h3><p>${esc(guide.objective)}</p><p class="small-hint">First step: ${esc(guide.steps[0])}</p></div></div>${field('Optional: Name your command center','setupName',state.profile.name)}`;}
+ const percentage=Math.round((step+1)/steps.length*100);
+ openModal(head('Build Your Command Center',subtitle)+`<div class="wizard-progress"><span>STEP ${step+1} OF ${steps.length}</span><span>${percentage}%</span></div><div class="wizard-track"><div style="width:${percentage}%"></div></div><p class="small-hint">Just tap your choices. No typing required. You can change anything later.</p>${body}<div class="modal-actions wizard-nav">${step>0?'<button type="button" class="secondary-btn" id="wizardBack">← Back</button>':''}<button type="button" class="primary-btn" id="wizardNext">${step===4?'✓ Create My Playbook':'Continue →'}</button></div>`,true);
+ if($('#chooseFirst20'))$('#chooseFirst20').onclick=openMissionWizard;
+ document.querySelectorAll('[data-wizard-pick]').forEach(el=>el.onclick=()=>{const key=el.dataset.wizardPick;picks[key]=el.dataset.value; if(key==='template')picks.goal=(GOAL_OPTIONS[picks.template]||GOAL_OPTIONS.everyday)[0];drawWizard();});
+ const back=$('#wizardBack');if(back)back.onclick=()=>{step--;drawWizard()};
+ $('#wizardNext').onclick=()=>{
+  if(step<4){step++;drawWizard();return}
+  if(rebuild&&state.tasks.length&&!confirm('This will replace the task layout on your calendar. Your existing plan has NOT been backed up automatically. Continue?'))return;
+  const name=$('#setupName').value.trim();state.profile.name=name||'My Command Center';
+  if(state.mission){state.lastMissionArchive={mission:structuredClone(state.mission),tasks:structuredClone(state.tasks)};state.mission=null;state.beforeMission=null;}
+  applyTemplate(picks.template,true,{goal:picks.goal||GOAL_OPTIONS[picks.template]?.[0],obstacle:picks.obstacle,pace:picks.pace});
+  state.configured=true;save();closeModal();draw();toast('Your guided playbook is ready! Open any block to follow its steps.');
+ };
+ }
+ drawWizard();
+}
+$('#missionOpen').onclick=openMissionHub;$('#calendar').addEventListener('click',()=>{});$('#prevWeek').onclick=()=>{selectedWeek=localDateKey(addDays(fromKey(selectedWeek),-7));draw()};$('#nextWeek').onclick=()=>{selectedWeek=localDateKey(addDays(fromKey(selectedWeek),7));draw()};$('#jumpToday').onclick=()=>{selectedWeek=localDateKey(beginningOfWeek());draw()};
+const fullscreenButton=$('#fullScreenDisplay');if(fullscreenButton){fullscreenButton.onclick=async()=>{try{if(document.fullscreenElement){await document.exitFullscreen()}else{await document.documentElement.requestFullscreen()}}catch(e){toast('Full screen is unavailable here. Try F11 in your browser.')}};document.addEventListener('fullscreenchange',()=>{fullscreenButton.textContent=document.fullscreenElement?'⛶ Exit full screen':'⛶ Full screen'})}$('#newTask').onclick=()=>openEditor();$('#settingsButton').onclick=()=>openSettings('appearance');$('#openSetup').onclick=()=>openSettings('schedule');$('#editScoreboard').onclick=()=>state.mission?openMissionLog():openSettings('goals');$('#weeklyReview').onclick=openWeeklyReview;$('#editNonneg').onclick=()=>openSettings('essentials');$('#nonnegPanel').onchange=e=>{if(e.target.matches('[data-nonneg]'))setNonneg(e.target.dataset.nonneg,e.target.checked)};$('#nonnegStrip').onclick=e=>{const btn=e.target.closest('[data-nonneg-btn]');if(btn){const key=btn.dataset.nonnegBtn;setNonneg(key,!weekRecord().nonneg[key])}};$('#overlay').addEventListener('click',e=>{if(e.target===$('#overlay'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#overlay').classList.contains('hidden'))closeModal()});
+
+/* Lively Wallpaper adapter, intentionally separate from personal task persistence. */
+const wallpaperPrefs={accent:null,showClock:true,highlightCurrent:true,largerText:false};
+function applyWallpaperPrefs(){
+  document.documentElement.classList.toggle('lively-hide-clock',!wallpaperPrefs.showClock);
+  document.documentElement.classList.toggle('lively-larger-text',!!wallpaperPrefs.largerText);
+  if(wallpaperPrefs.accent&&/^#[0-9a-fA-F]{6}$/.test(wallpaperPrefs.accent)){
+    document.documentElement.style.setProperty('--accent',wallpaperPrefs.accent);
+  }
+}
+function refreshWallpaperClock(){
+  const now=new Date(),el=$('#wallClock');
+  if(el)el.textContent=now.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+  const c=$('#calendar');if(!c)return;
+  c.querySelectorAll('.lively-current-block').forEach(cell=>cell.classList.remove('lively-current-block'));
+  if(!wallpaperPrefs.highlightCurrent||localDateKey(beginningOfWeek(now))!==selectedWeek)return;
+  const mins=now.getHours()*60+now.getMinutes();let slot=-1;
+  for(let i=0;i<state.slots.length;i++){
+    const [hh,mm]=state.slots[i].time.split(':').map(Number),start=hh*60+mm;
+    const end=i+1<state.slots.length?Number(state.slots[i+1].time.slice(0,2))*60+Number(state.slots[i+1].time.slice(3,5)):Math.min(start+120,1440);
+    if(mins>=start&&mins<end){slot=i;break;}
+  }
+  if(slot<0)return;
+  const day=(now.getDay()+6)%7,cell=c.children[8+(slot*8)+1+day];
+  if(cell?.classList?.contains('calendar-cell'))cell.classList.add('lively-current-block');
+}
+window.livelyPropertyListener=function(name,value){
+  switch(name){
+    case 'accentColor':if(typeof value==='string'&&/^#[0-9a-fA-F]{6}$/.test(value))wallpaperPrefs.accent=value;break;
+    case 'showClock':wallpaperPrefs.showClock=Boolean(value);break;
+    case 'highlightCurrent':wallpaperPrefs.highlightCurrent=Boolean(value);break;
+    case 'largerText':wallpaperPrefs.largerText=Boolean(value);break;
+    default:return;
+  }
+  // Refresh display settings but preserve every task, metric, and weekly record.
+  applyWallpaperPrefs();refreshWallpaperClock();
+};
+let wallpaperLastWeek=localDateKey(beginningOfWeek());
+setInterval(()=>{
+  const currentWeek=localDateKey(beginningOfWeek());
+  if(wallpaperLastWeek!==currentWeek){
+    if(selectedWeek===wallpaperLastWeek){selectedWeek=currentWeek;draw();}
+    wallpaperLastWeek=currentWeek;
+  }
+  refreshWallpaperClock();
+},60000);
+
+state=load();
+const previousGuidesImproved=state.tasks.reduce((n,t)=>n+(!t.missionId&&improveGuideIfGeneric(t)?1:0),0);
+const agendaImproved=upgradeGeneratedCalendar();
+if(previousGuidesImproved||agendaImproved||!localStorage.getItem(KEY))save();
+draw();if(!state.configured)openWelcome();
+})();
+
+</script>
+</body>
+</html>
