@@ -56,3 +56,11 @@ The new build uses the same localStorage key, but browser files opened from diff
 - **Task editor:** editable action and outcome/target fields; ACTION coach, motivation, checklist, completion evidence and weekly review still present.
 
 Open **`prototype/index.html`** (standalone; CSS and JS bundled inline). The extracted `app.js` and `styles.css` files are editable source copies. No backend, paid service, or user account is required. This is still a browser prototype and does not replace the existing Windows v0.4.2 beta.
+
+## Guided Mission: Earn Your First $20 (experimental)
+
+The standalone `prototype/index.html` includes a free, offline **Missions** wizard. Choose a small beginner service (graphics, writing, spreadsheet organization, or skill discovery), available device, daily minutes, and focus time. A fixed Monday–Sunday calendar displays seven required milestones plus clearly labeled optional support cells. Each primary task has unique detailed instructions, checklists, examples, and accountability.
+
+The mission scoreboard records **user-reported** prospects, offers, replies, agreed customers, and money *actually received*. These are not independently verified; completing a task does not create earnings or send messages. Users may correct the last logged entry, view rules-based next steps, and approve a single next-week-only adjustment. Existing boards are snapshotted before replacement and can be restored. Basic mission operation requires no cloud services, paid AI, API keys, or payment account.
+
+The mission does **not** promise sales, replace employment income, perform outreach, process payments, or access third-party calendars. It is still a browser prototype, not the Lively Wallpaper installation or Android launcher. The user's own browser stores progress; exporting a JSON backup is strongly recommended before switching builds or clearing storage.
