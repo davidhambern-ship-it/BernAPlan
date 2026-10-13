@@ -9,3 +9,22 @@
  .time-label{min-height:0;gap:4px}
 }
 @media(max-height:810px) and (min-width:801px){.calendar-cell{padding:4px}.task-card{padding:5px;gap:3px}.card-desc{-webkit-line-clamp:2}.footer-brand{padding-top:3px}.bottom-bar{margin-top:6px}.nonneg-strip{min-height:42px;padding-top:3px}.nonneg-chip{padding:5px 8px}}
+
+  
+/* Guided onboarding and coaching additions */
+.wizard-progress{display:flex;justify-content:space-between;font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--accent);margin:6px 0 7px}
+.wizard-track{height:6px;border-radius:10px;background:#292929;overflow:hidden;margin-bottom:18px}
+.wizard-track>div{height:100%;background:var(--accent);transition:width .2s ease}
+.wizard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0;max-height:50vh;overflow:auto;padding:2px}
+.wizard-tile{position:relative;text-align:left;min-height:77px;background:#1a1b1d;color:white;border:1px solid #424242;border-radius:12px;padding:15px 36px 15px 15px;cursor:pointer;display:flex;flex-direction:column;gap:7px}
+.wizard-tile:hover,.wizard-tile:focus-visible{border-color:var(--accent);background:#24201b}
+.wizard-tile.active{border:2px solid var(--accent);background:#322114}
+.wizard-tile strong{font-weight:800;font-size:15px;line-height:1.25}.wizard-tile small{color:#bfc0c3;font-size:12px;line-height:1.35}
+.wizard-check{position:absolute;right:12px;top:12px;font-size:18px;color:var(--accent)}
+.wizard-nav{justify-content:space-between;margin-top:20px}.wizard-nav .primary-btn{margin-left:auto}
+.wizard-review p{font-size:14px;line-height:1.5;margin:9px 0}
+.guide-example{border-color:#57402b!important;background:#231d16!important}.guide-success{border-color:#305c44!important;background:#17251b!important}
+.personal-goal{margin-top:11px;background:#272017;border-left:3px solid var(--accent);border-radius:4px;padding:10px;color:#eac7aa!important;font-size:13px}
+.guided-next{border-color:var(--accent)!important;background:#281c12!important}
+.guided-next p{font-size:17px;line-height:1.45;font-weight:700;color:#fff}.mini-primary{font-size:12px;padding:9px 13px;min-height:36px}.mini-primary:disabled{opacity:.48;cursor:default}
+@media(max-width:660px){.wizard-grid{grid-template-columns:1fr;max-height:40vh}.wizard-tile{min-height:65px}.guided-next p{font-size:15px}}
