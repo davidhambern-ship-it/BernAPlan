@@ -51,4 +51,4 @@ jobs:
             It does not replace or uninstall the older v0.4.2 Lively Wallpaper/native notifier package. The new planner stores its data in browser local storage. Export a JSON backup before changing builds or computers.
           files: BernAPlan_Setup_Studio_v2.0.0.zip
         env:
-          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
