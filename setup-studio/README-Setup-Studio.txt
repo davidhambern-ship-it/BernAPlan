@@ -1,42 +1,27 @@
-BernAPlan Setup Studio 2.0.0 Beta
-=================================
+BernAPlan Setup Studio — Browser Edition
+========================================
 
-This is the NEW setup package for the new BernAPlan Desktop Command Center.
+This package uses setup.html instead of a Windows installer.
 
-It installs the browser-based BernAPlan 2.0 weekly planner from prototype/index.html.
-It does NOT install the old v0.4.2 Lively Wallpaper package and does NOT remove or
-overwrite that older installation.
+START
+1. In File Explorer, choose Extract all for the ZIP and extract the whole folder somewhere permanent.
+2. Open setup.html in Microsoft Edge or Chrome.
+3. Choose "Open BernAPlan" to launch the bundled version.
 
-INSTALL
-1. Extract the entire ZIP to a folder.
-2. Double-click Start-Setup-Studio.cmd.
-3. Click "Install / Update Latest".
-4. Click "Launch BernAPlan" when installation finishes.
-
-UPDATE
-1. Open Setup Studio again from the extracted folder.
-2. Click "Install / Update Latest". It downloads the latest new BernAPlan HTML build.
-3. Launch BernAPlan from Setup Studio or from the desktop shortcut.
+INSTALL OR UPDATE
+1. Open setup.html.
+2. Choose "Open latest BernAPlan".
+3. In the browser, save the page as index.html inside a folder named BernAPlan. For an existing installation, save over the existing BernAPlan/index.html.
+4. Open the updated index.html from File Explorer.
 
 IMPORTANT DATA NOTE
-BernAPlan 2.0 stores planning data in the browser's local storage, not in the HTML file.
-The installer keeps the app at the same local path during updates and does not delete
-browser data. Before updates or moving to another computer, open BernAPlan and use
-Backups -> Export JSON backup. Keep that backup somewhere safe.
+BernAPlan stores planner data in browser local storage. Before replacing the app, open your current BernAPlan and use Backups -> Export JSON backup. Keep the backup somewhere safe. Updating the same file in the same location helps preserve the local browser data.
 
-WHAT THIS PACKAGE DOES
-- Installs the new interactive seven-day Desktop Command Center.
-- Creates a desktop shortcut that opens BernAPlan in an Edge/Chrome app-style window
-  when a supported browser is found.
-- Updates the installed HTML from the latest main/prototype/index.html on GitHub.
-- Keeps a timestamped copy of the previous HTML file before replacing it.
-- Does not require administrator rights, paid services, accounts, API keys, or a build.
-
-CURRENT LIMITATIONS
-This is the free, local-first browser prototype. It does not yet integrate the old
-native Windows/Lively Wallpaper/BernANotifier installation. It does not provide live
-Google/Outlook/Apple calendar synchronization or cross-device sync. Those are separate
-future development tasks.
+SECURITY AND LIMITATIONS
+- The ZIP does not include a PowerShell launcher or CMD installer.
+- No administrator rights or Windows security changes are required.
+- The latest app page is opened from the official GitHub source and must be saved into the BernAPlan folder manually.
+- This is a local-first browser app. It does not yet provide native Lively Wallpaper integration, native Windows reminders, or Google/Outlook/Apple calendar synchronization.
 
 SOURCE
 https://github.com/davidhambern-ship-it/BernAPlan
