@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 
 const BERNAPLAN_DOWNLOAD_URL =
-  'https://github.com/davidhambern-ship-it/BernAPlan/releases/download/v0.4.2-beta/BernAPlan_Setup_Studio_v0.4.2.zip';
+  'https://github.com/davidhambern-ship-it/BernAPlan/releases/download/v2.0.0-beta/BernAPlan_Setup_Studio_v2.0.0.zip';
 
 export default function HeroSection() {
   return (
