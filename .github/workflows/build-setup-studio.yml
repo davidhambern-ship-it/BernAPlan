@@ -20,6 +20,18 @@ jobs:
       - name: Check out BernAPlan
         uses: actions/checkout@v4
 
+      - name: Inspect original browser setup page from v0.4.2
+        shell: pwsh
+        run: |
+          $legacy = Join-Path $env:RUNNER_TEMP 'BernAPlan_v0.4.2_inspect'
+          if (Test-Path $legacy) { Remove-Item $legacy -Recurse -Force }
+          Expand-Archive -LiteralPath 'BernAPlan_Setup_Studio_v0.4.2.zip' -DestinationPath $legacy -Force
+          $setup = Get-ChildItem -LiteralPath $legacy -Filter 'setup.html' -File -Recurse | Select-Object -First 1
+          if (-not $setup) { throw 'Original setup.html was not found in the v0.4.2 ZIP.' }
+          Write-Output 'ORIGINAL_SETUP_HTML_BEGIN'
+          Get-Content -LiteralPath $setup.FullName -Raw
+          Write-Output 'ORIGINAL_SETUP_HTML_END'
+
       - name: Package the new Setup Studio and BernAPlan 2.0
         shell: pwsh
         run: |
