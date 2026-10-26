@@ -24,4 +24,57 @@ main{max-width:960px;margin:auto;padding:28px 18px 52px}.top{display:flex;justif
 <div class="notice"><strong>Protect your data.</strong> BernAPlan stores your plan in browser local storage. Before updating, open the current app and use <b>Backups → Export JSON backup</b>. Keep the backup somewhere safe and update the existing file in the same location to help preserve your data.</div>
 <div class="notice"><strong>Windows security stays on.</strong> This package is designed to open through your browser. It does not require PowerShell, a CMD installer, administrator access, or changes to Smart App Control.</div>
 <footer class="foot">BernAPlan Setup Studio · Free, local-first browser workflow<br>Source: github.com/davidhambern-ship-it/BernAPlan</footer>
+<script>
+const LATEST_URL = "https://raw.githubusercontent.com/davidhambern-ship-it/BernAPlan/main/prototype/index.html";
+const updateBtn = document.getElementById("updateBtn");
+const statusBox = document.getElementById("status");
+function showStatus(message, good=true) {
+  statusBox.textContent = message;
+  statusBox.style.display = "block";
+  statusBox.style.borderColor = good ? "#78d89166" : "#ff747466";
+  statusBox.style.color = good ? "#b8efc7" : "#ffc0c0";
+}
+async function installLatest() {
+  updateBtn.disabled = true;
+  updateBtn.textContent = "Fetching latest version…";
+  showStatus("Fetching the latest BernAPlan build…");
+  try {
+    const response = await fetch(LATEST_URL, {cache:"no-store"});
+    if (!response.ok) throw new Error("GitHub returned HTTP " + response.status);
+    const source = await response.text();
+    if (!source.includes("<html") || !source.includes("BernAPlan")) throw new Error("The downloaded file did not look like BernAPlan.");
+    const blob = new Blob([source], {type:"text/html;charset=utf-8"});
+    if (typeof window.showSaveFilePicker === "function") {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: "index.html",
+        types: [{description:"BernAPlan HTML app", accept:{"text/html":[".html"]}}]
+      });
+      const writable = await handle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+      showStatus("Saved successfully. Open the index.html file you selected. For an update, choose your existing BernAPlan/index.html and confirm replacement.", true);
+    } else {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "index.html";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+      showStatus("The latest index.html was downloaded. Move it into your BernAPlan folder and replace the old file. Keep the same location to help preserve your data.", true);
+    }
+  } catch (error) {
+    if (error && error.name === "AbortError") {
+      showStatus("Save cancelled. No files were changed.", true);
+    } else {
+      showStatus("Could not fetch or save the update in this browser. Use the full ZIP link above instead. Details: " + (error && error.message ? error.message : "unknown error"), false);
+    }
+  } finally {
+    updateBtn.disabled = false;
+    updateBtn.textContent = "Install / Update Latest ↓";
+  }
+}
+updateBtn.addEventListener("click", installLatest);
+</script>
 </main></body></html>
