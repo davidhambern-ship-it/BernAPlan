@@ -1,0 +1,54 @@
+name: Build BernAPlan Setup Studio
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'prototype/index.html'
+      - 'setup-studio/**'
+      - '.github/workflows/build-setup-studio.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    runs-on: windows-latest
+    steps:
+      - name: Check out BernAPlan
+        uses: actions/checkout@v4
+
+      - name: Package the new Setup Studio and BernAPlan 2.0
+        shell: pwsh
+        run: |
+          $stage = Join-Path $env:RUNNER_TEMP 'BernAPlan_Setup_Studio_v2.0.0'
+          if (Test-Path $stage) { Remove-Item $stage -Recurse -Force }
+          New-Item -ItemType Directory -Path $stage -Force | Out-Null
+          Copy-Item -Path 'setup-studio\*' -Destination $stage -Recurse -Force
+          New-Item -ItemType Directory -Path (Join-Path $stage 'BernAPlan') -Force | Out-Null
+          Copy-Item -LiteralPath 'prototype\index.html' -Destination (Join-Path $stage 'BernAPlan\index.html') -Force
+          $zipPath = Join-Path $env:GITHUB_WORKSPACE 'BernAPlan_Setup_Studio_v2.0.0.zip'
+          if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
+          Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $zipPath -CompressionLevel Optimal
+          if (-not (Test-Path $zipPath)) { throw 'Setup Studio ZIP was not created.' }
+
+      - name: Publish the beta download
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v2.0.0-beta
+          name: BernAPlan Setup Studio v2.0.0 Beta
+          target_commitish: main
+          prerelease: true
+          make_latest: false
+          fail_on_unmatched_files: true
+          body: |
+            New Setup Studio for the new BernAPlan 2.0 Desktop Command Center.
+
+            This package includes the new standalone weekly planner plus a Windows Setup Studio that installs it separately, creates a desktop shortcut, and can update the app from the latest main branch.
+
+            It does not replace or uninstall the older v0.4.2 Lively Wallpaper/native notifier package. The new planner stores its data in browser local storage. Export a JSON backup before changing builds or computers.
+          files: BernAPlan_Setup_Studio_v2.0.0.zip
+        env:
+          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
