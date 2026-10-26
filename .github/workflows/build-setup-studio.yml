@@ -13,6 +13,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: bernaplan-setup-studio-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-and-publish:
     runs-on: windows-latest
@@ -20,25 +24,14 @@ jobs:
       - name: Check out BernAPlan
         uses: actions/checkout@v4
 
-      - name: Inspect original browser setup page from v0.4.2
-        shell: pwsh
-        run: |
-          $legacy = Join-Path $env:RUNNER_TEMP 'BernAPlan_v0.4.2_inspect'
-          if (Test-Path $legacy) { Remove-Item $legacy -Recurse -Force }
-          Expand-Archive -LiteralPath 'BernAPlan_Setup_Studio_v0.4.2.zip' -DestinationPath $legacy -Force
-          $setup = Get-ChildItem -LiteralPath $legacy -Filter 'setup.html' -File -Recurse | Select-Object -First 1
-          if (-not $setup) { throw 'Original setup.html was not found in the v0.4.2 ZIP.' }
-          Write-Output 'ORIGINAL_SETUP_HTML_BEGIN'
-          Get-Content -LiteralPath $setup.FullName -Raw
-          Write-Output 'ORIGINAL_SETUP_HTML_END'
-
-      - name: Package the new Setup Studio and BernAPlan 2.0
+      - name: Package browser-based Setup Studio and BernAPlan 2.0
         shell: pwsh
         run: |
           $stage = Join-Path $env:RUNNER_TEMP 'BernAPlan_Setup_Studio_v2.0.0'
           if (Test-Path $stage) { Remove-Item $stage -Recurse -Force }
           New-Item -ItemType Directory -Path $stage -Force | Out-Null
-          Copy-Item -Path 'setup-studio\*' -Destination $stage -Recurse -Force
+          Copy-Item -LiteralPath 'setup-studio\setup.html' -Destination (Join-Path $stage 'setup.html') -Force
+          Copy-Item -LiteralPath 'setup-studio\README-Setup-Studio.txt' -Destination (Join-Path $stage 'README-Setup-Studio.txt') -Force
           New-Item -ItemType Directory -Path (Join-Path $stage 'BernAPlan') -Force | Out-Null
           Copy-Item -LiteralPath 'prototype\index.html' -Destination (Join-Path $stage 'BernAPlan\index.html') -Force
           $zipPath = Join-Path $env:GITHUB_WORKSPACE 'BernAPlan_Setup_Studio_v2.0.0.zip'
@@ -56,11 +49,11 @@ jobs:
           make_latest: false
           fail_on_unmatched_files: true
           body: |
-            New Setup Studio for the new BernAPlan 2.0 Desktop Command Center.
+            Browser-based Setup Studio for the new BernAPlan 2.0 Desktop Command Center.
 
-            This package includes the new standalone weekly planner plus a Windows Setup Studio that installs it separately, creates a desktop shortcut, and can update the app from the latest main branch.
+            Open setup.html from the extracted ZIP. It launches the bundled planner and provides the latest planner HTML for manual installation or updates. The ZIP contains no PowerShell or CMD launcher, so users do not need to run a custom Windows installer or disable Windows security.
 
-            It does not replace or uninstall the older v0.4.2 Lively Wallpaper/native notifier package. The new planner stores its data in browser local storage. Export a JSON backup before changing builds or computers.
+            Planner data is stored in browser local storage. Export a JSON backup before replacing the app or moving to another computer.
           files: BernAPlan_Setup_Studio_v2.0.0.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
